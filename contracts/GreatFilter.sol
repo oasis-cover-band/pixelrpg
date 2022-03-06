@@ -3,17 +3,15 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-error InvalidSender(address _target, address _sender, string _checkName);
+error InvalidFilterSender(address _target, address _sender, string _checkName);
 
 interface GameMaster {
-
     
     function placeProducable(
         uint256 _NFTID,
         string memory _location,
         uint256 _buildingNFTID
     ) external;
-
 
     function retrieveFromBuilding(
         string memory _location,
@@ -276,7 +274,7 @@ contract GreatFilter {
         if (
             _target != _sender &&
             AA("WEB3BYPASS") != _sender) {
-            revert InvalidSender({
+            revert InvalidFilterSender({
                 _target: _target,
                 _sender: _sender,
                 _checkName: _checkName

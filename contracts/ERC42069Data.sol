@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-error InvalidSender(address _target, address _sender);
+error InvalidDataSender(address _target, address _sender);
 
 contract ERC42069Data {
 
@@ -114,7 +114,7 @@ contract ERC42069Data {
         address _sender
     ) internal pure {
         if (_target != _sender) {
-            revert InvalidSender({
+            revert InvalidDataSender({
                 _target: _target,
                 _sender: _sender
             });

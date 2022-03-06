@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-error InvalidSender(address _target, address _sender);
+error InvalidERC42069Sender(address _target, address _sender);
 
 interface ERC42069Data {
 
@@ -169,6 +169,7 @@ contract ERC42069 is ERC721 {
             _producableProductionTypeUint,
             _amount
         );
+        console.log("Created ERC42069 Token (Character): CONSUMED:'%s' AMOUNT: '%s' ID:'%s'", _producableProductionType, _amount, _NFTID);
     }
 
     function gameTransferFrom(
@@ -377,6 +378,7 @@ contract ERC42069 is ERC721 {
         _location,
         _up
         );
+        console.log("Expanded ERC42069 Token (Building): ID:'%s' INDEX:'%s' UP?:'%s'", _NFTID, _location, _up);
     }
 
     function AA (
@@ -413,7 +415,7 @@ contract ERC42069 is ERC721 {
         address _sender
     ) internal pure {
         if (_target != _sender) {
-            revert InvalidSender({
+            revert InvalidERC42069Sender({
                 _target: _target,
                 _sender: _sender
             });

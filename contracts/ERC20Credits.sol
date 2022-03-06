@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-error InvalidSender(address _target, address _sender);
+error InvalidERC20CreditsSender(address _target, address _sender);
 
 interface ERC42069Data {
 
@@ -57,7 +57,7 @@ interface ERC42069 {
         address _sender
     ) internal pure {
         if (_target != _sender) {
-            revert InvalidSender({
+            revert InvalidERC20CreditsSender({
                 _target: _target,
                 _sender: _sender
             });

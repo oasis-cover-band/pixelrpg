@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 interface ERC42069 {
+
     function placeProducable(
         uint256 _NFTID,
         string memory _location,
         uint256 _buildingNFTID
     ) external;
-
 
     function retrieveFromBuilding(
         string memory _location,
