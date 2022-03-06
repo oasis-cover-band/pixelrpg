@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 error InvalidSender(address _target, address _sender);
@@ -28,7 +27,7 @@ interface ERC42069 {
     }
 
     function mintCoins(uint256 _NFTID, uint256 _amount) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("ERC42069ACTIONS"), msg.sender);
         _mint(ERC42069(AA("ERC42069")).ownerOf(_NFTID), _amount);
         console.log("Minted ERC20Credits TO:'%s' AMOUNT:'%s' D:'%s'", ERC42069(AA("ERC42069")).ownerOf(_NFTID), _amount);
     }
@@ -47,7 +46,7 @@ interface ERC42069 {
         _amount);
         console.log("Transferred ERC20Credits FROM:'%s' 'TO:'%s' AMOUNT:'%s'", _from, _to, _amount);
     }
-    function AA (
+    function AA(
         string memory _name
     ) internal view returns (address) {
         return d.getAA(_name);
