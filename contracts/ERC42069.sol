@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 error InvalidERC42069Sender(address _target, address _sender);
 
-interface ERC42069Data {
+interface ERC42069DataI {
 
     function setGD(
         string memory _symbol,
@@ -27,10 +27,8 @@ interface ERC42069Data {
     function getGS(string memory _setting) external view returns (uint256);
 
     function getAA(string memory _name) external view returns (address);
-
-    function n2s(uint _i) external pure returns (string memory);
 }
-interface ERC42069Helper {
+interface ERC42069HelperI {
     
     function placeProducable(
         uint256 _NFTID,
@@ -122,7 +120,7 @@ interface ERC42069Helper {
 
 contract ERC42069 is ERC721 {
 
-    ERC42069Data d;
+    ERC42069DataI d;
     uint256 public count;
     constructor(
         string memory _typeName,
@@ -130,7 +128,7 @@ contract ERC42069 is ERC721 {
         address _dataAddress
     ) ERC721(_typeName, _typeSymbol)
         {
-        d = ERC42069Data(_dataAddress);
+        d = ERC42069DataI(_dataAddress);
         count = 1;
         console.log("Created ERC42069 Factory: NAME:'%s' SYMBOL:'%s' D:'%s'", _typeName, _typeSymbol, _dataAddress);
     }
@@ -141,7 +139,7 @@ contract ERC42069 is ERC721 {
         uint256 _buildingNFTID
     ) external {
         addressCheck(AA("GAMEMASTER"), msg.sender);
-        uint256 producableNFTID = ERC42069Helper(AA("ERC42069HELPER")).placeProducable(_NFTID, _location, _buildingNFTID);
+        uint256 producableNFTID = ERC42069HelperI(AA("ERC42069HELPER")).placeProducable(_NFTID, _location, _buildingNFTID);
         if(producableNFTID > 0) {
             internalGameTransfer(producableNFTID, ownerOf(_buildingNFTID));
         }
@@ -153,7 +151,7 @@ contract ERC42069 is ERC721 {
         uint256 _NFTID
     ) external {
         addressCheck(AA("GAMEMASTER"), msg.sender);
-        internalGameTransfer(ERC42069Helper(AA("ERC42069HELPER")).retrieveFromBuilding(_location, _NFTID), ownerOf(_NFTID));
+        internalGameTransfer(ERC42069HelperI(AA("ERC42069HELPER")).retrieveFromBuilding(_location, _NFTID), ownerOf(_NFTID));
     }
     
     function consume(
@@ -163,7 +161,7 @@ contract ERC42069 is ERC721 {
         uint256 _amount
     ) external {
         addressCheck(AA("GAMEMASTER"), msg.sender);
-        ERC42069Helper(AA("ERC42069HELPER")).consume(
+        ERC42069HelperI(AA("ERC42069HELPER")).consume(
             _NFTID,
             _producableProductionType,
             _producableProductionTypeUint,
@@ -200,7 +198,7 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).createNewCharacter(
+        ERC42069HelperI(AA("ERC42069HELPER")).createNewCharacter(
             _level,
             _species,
             _special,
@@ -218,7 +216,7 @@ contract ERC42069 is ERC721 {
         uint256 _NFTID
     ) external {
         addressCheck(AA("ERC42069ACTIONS"), msg.sender); // SHOULD ONLY BE CALLED FROM BATTLE/QUESTER?
-        ERC42069Helper(AA("ERC42069HELPER")).gainExperience(
+        ERC42069HelperI(AA("ERC42069HELPER")).gainExperience(
             _amount,
             _NFTID
         );
@@ -231,7 +229,7 @@ contract ERC42069 is ERC721 {
         string memory _statName
     ) external {
         addressCheck(AA("GAMEMASTER"), msg.sender);
-        ERC42069Helper(AA("ERC42069HELPER")).giveStat(
+        ERC42069HelperI(AA("ERC42069HELPER")).giveStat(
             _NFTID,
             _amount,
             _statName
@@ -245,7 +243,7 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).breedTwoCharacters(
+        ERC42069HelperI(AA("ERC42069HELPER")).breedTwoCharacters(
             _NFT0ID,
             _NFT1ID,
             c
@@ -262,7 +260,7 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).mergeTwoCharacters(
+        ERC42069HelperI(AA("ERC42069HELPER")).mergeTwoCharacters(
             _NFT0ID,
             _NFT1ID,
             c
@@ -282,7 +280,7 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).createNewEquippable(
+        ERC42069HelperI(AA("ERC42069HELPER")).createNewEquippable(
             _level,
             _equipSlot,
             c
@@ -301,7 +299,7 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).createNewProducable(
+        ERC42069HelperI(AA("ERC42069HELPER")).createNewProducable(
             _level,
             _produces,
             c
@@ -320,7 +318,7 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).createNewConsumable(
+        ERC42069HelperI(AA("ERC42069HELPER")).createNewConsumable(
             _amount,
             _producableProductionType,
             _producableProductionTypeUint,
@@ -338,7 +336,7 @@ contract ERC42069 is ERC721 {
         uint256 _consumableNFTID
     ) external {
         addressCheck(AA("GAMEMASTER"), msg.sender);
-        ERC42069Helper(AA("ERC42069HELPER")).destroyConsumable(
+        ERC42069HelperI(AA("ERC42069HELPER")).destroyConsumable(
             _NFTID,
             _consumableNFTID
         );
@@ -353,17 +351,17 @@ contract ERC42069 is ERC721 {
     ) external returns (uint256) {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
-        ERC42069Helper(AA("ERC42069HELPER")).createNewConsumable(
+        ERC42069HelperI(AA("ERC42069HELPER")).createNewBuilding(
             _area,
             _location,
+            
             _locationUint,
-            _NFTID,
             c
         );
         _safeMint(ownerOf(_NFTID), c);
         count = c + 1;
         console.log("Created ERC42069 Token (Building): Sent:'%s' SentNFTID:'%s' ID:'%s'", ownerOf(_NFTID), _NFTID, c);
-        console.log("Building '%s' placed in Area '%s' Location '%s", c, _area, _location);
+        console.log("Building '%s' placed in Area '%s' Location '%s'", c, _area, _location);
         return c;
     }
 
@@ -373,7 +371,7 @@ contract ERC42069 is ERC721 {
         uint256 _up
     ) external {
         addressCheck(AA("GAMEMASTER"), msg.sender);
-        ERC42069Helper(AA("ERC42069HELPER")).expandBuilding(
+        ERC42069HelperI(AA("ERC42069HELPER")).expandBuilding(
         _NFTID,
         _location,
         _up

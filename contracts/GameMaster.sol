@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-interface ERC42069 {
+interface ERC42069I {
 
     function placeProducable(
         uint256 _NFTID,
@@ -93,7 +93,7 @@ interface ERC42069 {
         uint256 _NFTID
     ) external returns (address);
 }
-interface ERC20Credits {
+interface ERC20CreditsI {
 
     function burnCoins(uint256 _NFTID, uint256 _amount) external;
 
@@ -101,7 +101,7 @@ interface ERC20Credits {
 
     function gameTransferFrom(address _from, address _to, uint256 _amount) external;
 }
-interface ERC42069Data {
+interface ERC42069DataI {
 
     function setGD(
         string memory _symbol,
@@ -121,17 +121,19 @@ interface ERC42069Data {
     
     function r() external view returns (uint256);
 
-    function s2n(string memory numString) external pure returns(uint);
-
     function n2s(uint _i) external pure returns (string memory);
     
     function getGS(string memory _setting) external view returns (uint256);
 }
-interface ERC42069Reverts {
+interface ERC42069RevertsI {
+
+    function itemSlotChecked(
+        uint256 _equipSlotUint
+    ) external view;
 
     function maxBuildingSizeCheck(
         uint256 _buildingNFTID,
-        string memory _location
+        uint256 _location
     ) external view;
 
     function reproduceCheck(
@@ -140,11 +142,6 @@ interface ERC42069Reverts {
         string memory _speciesCheck,
         string memory _timerCheck,
         uint256 _timerValue
-    ) external view;
-
-    function sameNumberCheck(
-        uint256 _uint,
-        string memory _string
     ) external view;
 
     function borderingWorldSpaceOccupancyCheck(
@@ -159,7 +156,7 @@ interface ERC42069Reverts {
 
     function worldSpaceOccupancyCheck(
         uint256 _area,
-        string memory _location
+        uint256 _location
     ) external view;
 
     function itemEquippedChecked(
@@ -209,23 +206,66 @@ interface ERC42069Reverts {
 }
 contract GameMaster {
     
-    ERC42069Data d;
+    ERC42069DataI d;
     constructor(
         address _dataAddress
     ) {
-        d = ERC42069Data(_dataAddress);
+        d = ERC42069DataI(_dataAddress);
+    }
+
+    function generateCharacter(
+        uint256 _level,
+        uint256 _species,
+        uint256 _special,
+        uint256 _area,
+        address _mintTo
+    ) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        ERC42069I(AA("ERC42069")).createNewCharacter(_level, _species, _special, _area, _mintTo);
+    }
+
+    function generateEquippable(
+        uint256 _level,
+        uint256 _itemSlot,
+        uint256 _NFTID
+    ) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotChecked(_itemSlot);
+        ERC42069I(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
+    }
+
+    function generateBuilding(
+        uint256 _area,
+        uint256 _location,
+        uint256 _NFTID
+    ) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        worldSpaceOccupancyCheck(_area, _location);
+        maxAreaSizeCheck(_location);
+        ERC42069I(AA("ERC42069")).createNewBuilding(_area, n2s(_location), _location, _NFTID);
+    }
+
+    function replaceCapturedOrKilledCharacter(
+        uint256 _level,
+        uint256 _species,
+        uint256 _special,
+        uint256 _area,
+        address _mintTo
+    ) external {
+        addressCheck(AA("ERC42069HELPER"), msg.sender);
+        ERC42069I(AA("ERC42069")).createNewCharacter(_level, _species, _special, _area, _mintTo);
     }
 
     function placeProducable(
         uint256 _NFTID,
-        string memory _location,
+        uint256 _location,
         uint256 _buildingNFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 4);
         typeCheck(_buildingNFTID, "_BUILDINGNFTID", 5);
         maxBuildingSizeCheck(_buildingNFTID, _location);
-        ERC42069(AA("ERC42069")).placeProducable(_NFTID, _location, _buildingNFTID);
+        ERC42069I(AA("ERC42069")).placeProducable(_NFTID, n2s(_location), _buildingNFTID);
     }
 
     function retrieveFromBuilding(
@@ -234,25 +274,23 @@ contract GameMaster {
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 5);
-        ERC42069(AA("ERC42069")).retrieveFromBuilding(_location, _NFTID);
+        ERC42069I(AA("ERC42069")).retrieveFromBuilding(_location, _NFTID);
     }
 
     function expandBuilding(
         uint256 _NFTID,
-        string memory _location,
-        uint256 _locationUint,
+        uint256 _location,
         uint256 _up
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 5);
         takeCredits(_NFTID, "EXPANDBUILDINGCOST");
-        sameNumberCheck(_locationUint, _location);
         worldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), _location);
-        maxAreaSizeCheck(_locationUint);
-        borderingWorldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), _location, _NFTID);
-        ERC42069(AA("ERC42069")).expandBuilding(
+        maxAreaSizeCheck(_location);
+        borderingWorldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), n2s(_location), _NFTID);
+        ERC42069I(AA("ERC42069")).expandBuilding(
             _NFTID,
-            _location,
+            n2s(_location),
             _up
         );
     }
@@ -265,7 +303,7 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
         freeStatsBalanceCheck(_NFTID, _amount);
-        ERC42069(AA("ERC42069")).giveStat(_NFTID, _amount, _statName);
+        ERC42069I(AA("ERC42069")).giveStat(_NFTID, _amount, _statName);
     }
     
     function destroyConsumable(
@@ -275,7 +313,7 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
         typeCheck(_consumableNFTID, "_consumableNFTID", 2);
-        ERC42069(AA("ERC42069")).destroyConsumable(_NFTID, _consumableNFTID);
+        ERC42069I(AA("ERC42069")).destroyConsumable(_NFTID, _consumableNFTID);
     }
     
     function breedTwoCharacters(
@@ -295,7 +333,7 @@ contract GameMaster {
             "NEXTBREEDING",
             block.timestamp
         );
-        ERC42069(AA("ERC42069")).breedTwoCharacters(_NFT0ID, _NFT1ID);
+        ERC42069I(AA("ERC42069")).breedTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function mergeTwoCharacters(
@@ -310,31 +348,26 @@ contract GameMaster {
             "MERGED",
             1
         );
-        ERC42069(AA("ERC42069")).mergeTwoCharacters(_NFT0ID, _NFT1ID);
+        ERC42069I(AA("ERC42069")).mergeTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function newCharacter(
-        uint256 _level,
-        uint256 _species,
-        uint256 _special,
-        uint256 _area,
         address _mintTo
     ) external {
-        addressCheck(AA("GREATFILTER"), msg.sender); // SHOULD BE CHANG3D TO MINTER!!
-        ERC42069(AA("ERC42069")).createNewCharacter(_level, _species, _special, _area, _mintTo);
+        addressCheck(AA("GREATFILTER"), msg.sender);
+        ERC42069I(AA("ERC42069")).createNewCharacter(1, 0, 0, 0, _mintTo);
+        // takeCredits(_NFTID, "CHARACTERCOST"); // TAKE NETWORK CURRENCY INSTEAD
     }
 
     function newConsumable(
         uint256 _amount,
-        string memory _producableProductionType,
-        uint256 _producableProductionTypeUint,
+        uint256 _producableProductionType,
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        consumableBalanceCheck(_NFTID, _producableProductionType, _amount);
-        sameNumberCheck(_producableProductionTypeUint, _producableProductionType);
+        consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
-        ERC42069(AA("ERC42069")).createNewConsumable(_amount, _producableProductionType, _producableProductionTypeUint, _NFTID);
+        ERC42069I(AA("ERC42069")).createNewConsumable(_amount, n2s(_producableProductionType), _producableProductionType, _NFTID);
     }
 
     function newProducable(
@@ -343,7 +376,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        ERC42069(AA("ERC42069")).createNewProducable(_level, _produces, _NFTID);
+        ERC42069I(AA("ERC42069")).createNewProducable(_level, _produces, _NFTID);
         takeCredits(_NFTID, "PRODUCABLECOST");
     }
     
@@ -353,39 +386,36 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        ERC42069(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotChecked(_itemSlot);
+        ERC42069I(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
         takeCredits(_NFTID, "EQUIPPABLECOST");
     }
 
     function newBuilding(
         uint256 _area,
-        string memory _location,
-        uint256 _locationUint,
+        uint256 _location,
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
         worldSpaceOccupancyCheck(_area, _location);
-        sameNumberCheck(_locationUint, _location);
-        maxAreaSizeCheck(_locationUint);
-        ERC42069(AA("ERC42069")).createNewBuilding(_area, _location, _locationUint, _NFTID);
+        maxAreaSizeCheck(_location);
+        ERC42069I(AA("ERC42069")).createNewBuilding(_area, n2s(_location), _location, _NFTID);
         takeCredits(_NFTID, "BUILDINGCOST");
     }
     
     function equip(
-        uint256 _equipSlotUint,
-        string memory _equipSlot,
+        uint256 _equipSlot,
         uint256 _equipNFTID,
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        sameNumberCheck(_equipSlotUint, _equipSlot);
         typeCheck(_NFTID, "_NFTID", 0);
         typeCheck(_equipNFTID, "_equipNFTID", 3);
-        if (GG("CHARACTER", _NFTID, _equipSlot) != 0) {
-            internalUnequip(_equipSlot, _NFTID);
+        if (GG("CHARACTER", _NFTID, n2s(_equipSlot)) != 0) {
+            internalUnequip(n2s(_equipSlot), _NFTID);
         }
         
-        ERC42069(AA("ERC42069")).gameTransferFrom(_equipNFTID, address(this));
+        ERC42069I(AA("ERC42069")).gameTransferFrom(_equipNFTID, address(this));
         console.log("Equipped ERC42069 Token (Item): EquipNFTID:'%s' NFTID:'%s' Slot:'%s'", _equipNFTID, _NFTID, _equipSlot);
         SG("CHARACTER", _NFTID, "HEALTH", GG("CHARACTER", _NFTID, "HEALTH") + GG("EQUIPPABLE", _equipNFTID, "HEALTHBOOST"));
         SG("CHARACTER", _NFTID, "MAXHEALTH", GG("CHARACTER", _NFTID, "MAXHEALTH") + GG("EQUIPPABLE", _equipNFTID, "HEALTHBOOST"));
@@ -396,31 +426,29 @@ contract GameMaster {
         SG("CHARACTER", _NFTID, "INTELLIGENCE", GG("CHARACTER", _NFTID, "INTELLIGENCE") + GG("EQUIPPABLE", _equipNFTID, "INTELLIGENCEBOOST"));
         SG("CHARACTER", _NFTID, "CHARISMA", GG("CHARACTER", _NFTID, "CHARISMA") + GG("EQUIPPABLE", _equipNFTID, "CHARISMABOOST"));
         
-        SG("CHARACTER", _NFTID, _equipSlot, _equipNFTID);
+        SG("CHARACTER", _NFTID, n2s(_equipSlot), _equipNFTID);
     }
 
     function takeCredits(uint256 _NFTID, string memory _costs) internal {
-        balanceCheck(ERC42069(AA("ERC42069")).ownerOf(_NFTID), GS(_costs));
-        ERC20Credits(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (GS(_costs) / 4));
-        ERC20Credits(AA("ERC20CREDITS")).gameTransferFrom(ERC42069(AA("ERC42069")).ownerOf(_NFTID), AA("TREASURY"), GS(_costs) / 4);
+        balanceCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), GS(_costs));
+        ERC20CreditsI(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (GS(_costs) / 4));
+        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), AA("TREASURY"), GS(_costs) / 4);
     }
 
     function unequip(
-        uint256 _equipSlotUint,
-        string memory _equipSlot,
+        uint256 _equipSlot,
         uint256 _NFTID
     ) public {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        sameNumberCheck(_equipSlotUint, _equipSlot);
         typeCheck(_NFTID, "_NFTID", 0);
-        itemEquippedChecked(GG("CHARACTER", _NFTID, _equipSlot), _equipSlotUint, _NFTID);
-        internalUnequip(_equipSlot, _NFTID);
+        itemEquippedChecked(GG("CHARACTER", _NFTID, n2s(_equipSlot)), _equipSlot, _NFTID);
+        internalUnequip(n2s(_equipSlot), _NFTID);
     }
 
     function internalUnequip(
         string memory _equipSlot,
         uint256 _NFTID) internal {
-        ERC42069(AA("ERC42069")).gameTransferFrom(GG("CHARACTER", _NFTID, _equipSlot), ERC42069(AA("ERC42069")).ownerOf(_NFTID));
+        ERC42069I(AA("ERC42069")).gameTransferFrom(GG("CHARACTER", _NFTID, _equipSlot), ERC42069I(AA("ERC42069")).ownerOf(_NFTID));
         console.log("Unequipped ERC42069 Token (Item): UnequipNFTID:'%s' fromNFTID:'%s' Slot:'%s'", GG("CHARACTER", _NFTID, _equipSlot), _NFTID, _equipSlot);
         SG("CHARACTER", _NFTID, "HEALTH", GG("CHARACTER", _NFTID, "HEALTH") - GG("EQUIPPABLE", GG("CHARACTER", _NFTID, _equipSlot), "HEALTHBOOST"));
         SG("CHARACTER", _NFTID, "MAXHEALTH", GG("CHARACTER", _NFTID, "MAXHEALTH") - GG("EQUIPPABLE", GG("CHARACTER", _NFTID, _equipSlot), "HEALTHBOOST"));
@@ -445,26 +473,24 @@ contract GameMaster {
         SG(
             "INVENTORY",
             _NFTID,
-            d.n2s(GG("PRODUCABLE", _producableNFTID, "PRODUCES")),
-            GG("INVENTORY", _NFTID, d.n2s(GG("PRODUCABLE", _producableNFTID, "PRODUCES")))
+            n2s(GG("PRODUCABLE", _producableNFTID, "PRODUCES")),
+            GG("INVENTORY", _NFTID, n2s(GG("PRODUCABLE", _producableNFTID, "PRODUCES")))
             + d.r() % GG("PRODUCABLE", _producableNFTID, "PRODUCTION")
         ); 
     }
 
     function consume(
         uint256 _NFTID,
-        string memory _producableProductionType,
-        uint256 _producableProductionTypeUint,
+        uint256 _producableProductionType,
         uint256 _amount
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        consumableBalanceCheck(_NFTID, _producableProductionType, _amount);
-        sameNumberCheck(_producableProductionTypeUint, _producableProductionType);
+        consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
-        ERC42069(AA("ERC42069")).consume(
+        ERC42069I(AA("ERC42069")).consume(
             _NFTID,
+            n2s(_producableProductionType),
             _producableProductionType,
-            _producableProductionTypeUint,
             _amount
         );
     }
@@ -512,11 +538,8 @@ contract GameMaster {
         timerCheck(GG("CHARACTER", _NFT1ID, _timerCheck), _timerValue, "REPRODUCENFT1");
     }
 
-    function sameNumberCheck(
-        uint256 _uint,
-        string memory _string
-    ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).sameNumberCheck(_uint, _string);
+    function n2s(uint _i) internal view returns (string memory) {
+        return d.n2s(_i);
     }
 
     function borderingWorldSpaceOccupancyCheck(
@@ -524,35 +547,35 @@ contract GameMaster {
         string memory _location,
         uint256 _NFTID
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).borderingWorldSpaceOccupancyCheck(_area, _location, _NFTID);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).borderingWorldSpaceOccupancyCheck(_area, _location, _NFTID);
     }
 
     function maxAreaSizeCheck(
         uint256 _location
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).maxAreaSizeCheck(_location);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).maxAreaSizeCheck(_location);
     }
 
     function maxBuildingSizeCheck(
         uint256 _buildingNFTID,
-        string memory _location
+        uint256 _location
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).maxBuildingSizeCheck(_buildingNFTID, _location);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).maxBuildingSizeCheck(_buildingNFTID, _location);
     }
 
     function worldSpaceOccupancyCheck(
         uint256 _area,
-        string memory _location
+        uint256 _location
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).worldSpaceOccupancyCheck(_area, _location);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).worldSpaceOccupancyCheck(_area, _location);
     }
 
     function itemEquippedChecked(
         uint256 _current,
-        uint256 _equipSlotUint,
+        uint256 _equipSlot,
         uint256 _NFTID
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).itemEquippedChecked(_current, _equipSlotUint, _NFTID);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).itemEquippedChecked(_current, _equipSlot, _NFTID);
     }
 
     function typeCheck(
@@ -560,7 +583,7 @@ contract GameMaster {
         string memory _variableName,
         uint256 _type
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).typeCheck(_NFTID, _variableName, _type);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).typeCheck(_NFTID, _variableName, _type);
     }
 
     function speciesCheck(
@@ -568,14 +591,14 @@ contract GameMaster {
         uint256 _NFT1ID,
         string memory _variableName
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).speciesCheck(_NFT0ID, _NFT1ID, _variableName);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).speciesCheck(_NFT0ID, _NFT1ID, _variableName);
     }
 
     function addressCheck(
         address _target,
         address _sender
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).addressCheck(_target, _sender);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).addressCheck(_target, _sender);
     }
 
     function timerCheck(
@@ -583,14 +606,14 @@ contract GameMaster {
         uint256 _mustBeBefore,
         string memory _timerName
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).timerCheck(_value, _mustBeBefore, _timerName);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).timerCheck(_value, _mustBeBefore, _timerName);
     }
 
     function balanceCheck(
         address _from,
         uint256 _amount
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).balanceCheck(_from, _amount);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).balanceCheck(_from, _amount);
     }
 
     function consumableBalanceCheck(
@@ -598,13 +621,13 @@ contract GameMaster {
         string memory _producableProductionType,
         uint256 _amount
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).consumableBalanceCheck(_NFTID, _producableProductionType, _amount);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).consumableBalanceCheck(_NFTID, _producableProductionType, _amount);
     }
 
     function freeStatsBalanceCheck(
         uint256 _NFTID,
         uint256 _amount
     ) internal view {
-        ERC42069Reverts(AA("ERC42069REVERTS")).freeStatsBalanceCheck(_NFTID, _amount);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).freeStatsBalanceCheck(_NFTID, _amount);
     }
 }

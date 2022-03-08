@@ -9,6 +9,7 @@ error MaxAreaSize(uint256 _targetPlacementIndex);
 error InvalidSender(address _target, address _sender);
 error UintDiffersString(uint256 _uint, string _string);
 error EmptyEquipmentSlot(uint256 _current, uint256 _slot, uint256 _NFTID);
+error IncorrectEquipmentSlot(uint256 _slot);
 error InvalidType(uint256 _NFTID, string _variableName, uint256 _type);
 error InvalidSpecies(uint256 _NFT0ID, uint256 _NFT1ID, string _variableName);
 error InsufficientBalance(address _from, uint256 _amount);
@@ -16,12 +17,12 @@ error InsufficientConsumableBalance(uint256 _NFTID, string _producableProduction
 error InsufficientFreeStatsBalance(uint256 _NFTID, string _statName, uint256 _amount);
 error TimerNotReady(uint256 _value, uint256 _mustBeBefore, string _timerName);
 error GreaterThanBuildingSize(uint256 _size, uint256 _location);
-interface ERC20Credits {
+interface ERC20CreditsI {
 
     function balanceOf(address account) external view returns (uint256);
 }
 
-interface ERC42069Data {
+interface ERC42069DataI {
 
     function setGD(
         string memory _symbol,
@@ -41,8 +42,6 @@ interface ERC42069Data {
     
     function r() external view returns (uint256);
 
-    function s2n(string memory numString) external pure returns(uint);
-
     function n2s(uint _i) external pure returns (string memory);
     
     function getGS(string memory _setting) external view returns (uint256);
@@ -50,12 +49,12 @@ interface ERC42069Data {
 
 contract ERC42069Reverts {
 
-    ERC42069Data d;
+    ERC42069DataI d;
     constructor(
         address _dataAddress
     )
         {
-        d = ERC42069Data(_dataAddress);
+        d = ERC42069DataI(_dataAddress);
     }
 
     function AA (
@@ -80,43 +79,31 @@ contract ERC42069Reverts {
 
     function maxBuildingSizeCheck(
         uint256 _buildingNFTID,
-        string memory _location
+        uint256 _location
     ) external view {
-        if (d.s2n(_location) >= GG("BUILDING", _buildingNFTID, "SIZE")) {
+        if (_location >= GG("BUILDING", _buildingNFTID, "SIZE")) {
             revert GreaterThanBuildingSize({
                 _size: GG("BUILDING", _buildingNFTID, "SIZE"),
-                _location: d.s2n(_location)
-            });
-        }
-    }
-
-    function sameNumberCheck(
-        uint256 _uint,
-        string memory _string
-    ) external view {
-        if (_uint != d.s2n(_string)) {
-            revert UintDiffersString({
-                _uint: _uint,
-                _string: _string
+                _location: _location
             });
         }
     }
 
     function borderingWorldSpaceOccupancyCheck(
         uint256 _area,
-        string memory _location,
+        uint256 _location,
         uint256 _NFTID
     ) external view {
         if (
-            GG("WORLD", _area, d.n2s(d.s2n(_location) - 1)) != _NFTID &&
-            GG("WORLD", _area, d.n2s(d.s2n(_location) + 1)) != _NFTID &&
-            GG("WORLD", _area, d.n2s(d.s2n(_location) - GS("AREABLOCKSIZE"))) != _NFTID &&
-            GG("WORLD", _area, d.n2s(d.s2n(_location) + GS("AREABLOCKSIZE"))) != _NFTID
+            GG("WORLD", _area, d.n2s(_location - 1)) != _NFTID &&
+            GG("WORLD", _area, d.n2s(_location + 1)) != _NFTID &&
+            GG("WORLD", _area, d.n2s(_location - GS("AREABLOCKSIZE"))) != _NFTID &&
+            GG("WORLD", _area, d.n2s(_location + GS("AREABLOCKSIZE"))) != _NFTID
         ) {
             revert NotBorderingWorldSpace({
                 _targetArea: _area,
-                _targetPlacementIndex: _location,
-                _current: GG("WORLD", _area, _location)
+                _targetPlacementIndex: d.n2s(_location),
+                _current: GG("WORLD", _area, d.n2s(_location))
             });
         }
     }
@@ -125,7 +112,7 @@ contract ERC42069Reverts {
         uint256 _location
     ) external view {
         if (
-            _location > GS("AREASIZE")
+            _location >= GS("AREASIZE")
         ) {
             revert MaxAreaSize({
                 _targetPlacementIndex: _location
@@ -135,13 +122,23 @@ contract ERC42069Reverts {
 
     function worldSpaceOccupancyCheck(
         uint256 _area,
-        string memory _location
+        uint256 _location
     ) external view {
-        if (GG("WORLD", _area, _location) != 0) {
+        if (GG("WORLD", _area, d.n2s(_location)) != 0) {
             revert OccupiedWorldSpace({
                 _targetArea: _area,
-                _targetPlacementIndex: _location,
-                _current: GG("WORLD", _area, _location)
+                _targetPlacementIndex: d.n2s(_location),
+                _current: GG("WORLD", _area, d.n2s(_location))
+            });
+        }
+    }
+
+    function itemSlotChecked(
+        uint256 _equipSlotUint
+    ) external view {
+        if (_equipSlotUint >= GS("MAXITEMSLOTS")) {
+            revert IncorrectEquipmentSlot({
+                _slot: _equipSlotUint
             });
         }
     }
@@ -221,7 +218,7 @@ contract ERC42069Reverts {
         uint256 _amount
     ) external view {
         if (
-            ERC20Credits(AA("ERC20CREDITS")).balanceOf(_from) < _amount) {
+            ERC20CreditsI(AA("ERC20CREDITS")).balanceOf(_from) < _amount) {
             revert InsufficientBalance({
                 _from: _from,
                 _amount: _amount

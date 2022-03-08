@@ -10,12 +10,19 @@ contract ERC42069Data {
     mapping(string => address) public aa; // ACTIONABLE ADDRESSES
     mapping(string => mapping(uint256 => mapping(string => uint256))) gd; // GAME DATA
     mapping(string => uint256) gs; // GAME SETTINGS
+    uint256 setup;
+    uint256 private seed;
     constructor() {
         aa["OWNER"] = msg.sender;
+        aa["SETUP"] = msg.sender;
+        setup = 1;
+        seed = 42069;
     }
 
     function finishSetup() internal {
-        addressCheck(aa["OWNER"], msg.sender);
+        addressCheck(aa["SETUP"], msg.sender);
+        setup = 0;
+        aa["SETUP"] = address(0);
     }
 
     function setGD(
@@ -26,8 +33,13 @@ contract ERC42069Data {
         string memory _msgSender
     ) external {
         addressCheck(aa[_msgSender], msg.sender);
-
         gd[_symbol][_NFTID][_statName] = _statValue;
+    }
+
+    function messWithSeed() internal {
+        if (seed + (r() / 10) == 0) {
+            seed = 42069 + (r() / 20);
+        }
     }
 
     function getGD(
@@ -61,6 +73,9 @@ contract ERC42069Data {
     ) external {
         addressCheck(aa["OWNER"], msg.sender);
         aa[_name] = _address;
+        if (setup == 0) {
+            aa["SETUP"] = address(0);
+        }
     }
 
     function getAA(
@@ -68,23 +83,8 @@ contract ERC42069Data {
     ) external view returns (address) {
         return aa[_name];
     }
-    function r() external view returns (uint256) {
-        return 1 + uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp))) / 2;
-    }
-    function s2n(
-        string memory numString
-    ) public pure returns(uint) {
-        uint  val=0;
-        bytes   memory stringBytes = bytes(numString);
-        for (uint  i =  0; i<stringBytes.length; i++) {
-            uint exp = stringBytes.length - i;
-            bytes1 ival = stringBytes[i];
-            uint8 uval = uint8(ival);
-           uint jval = uval - uint(0x30);
-   
-           val +=  (uint(jval) * (10**(exp-1))); 
-        }
-      return val;
+    function r() public view returns (uint256) {
+        return 42 + uint(keccak256(abi.encodePacked(seed, block.timestamp))) / 2;
     }
     function n2s(
         uint _i
@@ -285,15 +285,15 @@ contract ERC42069Data {
     // INVENTORIES ARE SPECIAL AND KEEP TRACK OF
     // PRODUCED ITEMS FOR CONSUMPTION + SELLING
     // THEY ARE AS SUCH DESCRIBED ABOVE.
-    // 0 == HEALTH REPLENISH POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 1 == ENERGY REPLENISH POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 2 == STRENGTH POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 3 == DEXTERITY POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 4 == INTELLIGENCE POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 5 == CHARISMA POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 6 == HEALTH BOOST POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 7 == ENERGY BOOST POTION? (SEE: d.GG("CONSUMABLETYPES"))
-    // 8 == BREED REPLENISH POTION? (SEE: d.GG("CONSUMABLETYPES"))
+    // 0 == HEALTH REPLENISH POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 1 == ENERGY REPLENISH POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 2 == STRENGTH POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 3 == DEXTERITY POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 4 == INTELLIGENCE POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 5 == CHARISMA POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 6 == HEALTH BOOST POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 7 == ENERGY BOOST POTION? (SEE: d.GG("CONSUMABLETYPE"))
+    // 8 == BREED REPLENISH POTION? (SEE: d.GG("CONSUMABLETYPE"))
     // ***************************************
     //  ** IMPORTANT IDENTIFIERS END **
 
@@ -325,14 +325,14 @@ contract ERC42069Data {
 
     //  ** IMPORTANT IDENTIFIERS START **
     // ***************************************
-    // **CONSUMABLETYPES** IS A GENERAL DATA SECTION
-    // THAT IS USED TO CONTAIN DATA FROM CONSUMABLETYPES
+    // **CONSUMABLETYPE** IS A GENERAL DATA SECTION
+    // THAT IS USED TO CONTAIN DATA FROM CONSUMABLETYPE
     // TYPES
     // 
     // 
     // IS A GENERAL DATA SECTIONO
     // 
-    // **CONSUMABLETYPES** -> CONSUMABLETYPE -> STATNAME = 
+    // **CONSUMABLETYPE** -> CONSUMABLETYPE -> STATNAME = 
     // HEALTHRESTORE INDEX: 0 / VALUE: 1
     // ENERGYRESTORE INDEX: 1 / VALUE: 1
     // STRENGTHBOOST INDEX: 2 / VALUE: 1
