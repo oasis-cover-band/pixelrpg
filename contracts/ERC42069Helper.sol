@@ -117,10 +117,10 @@ contract ERC42069Helper {
         SG("CHARACTER", _createdNFTID, "MAXHEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
         SG("CHARACTER", _createdNFTID, "ENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
         SG("CHARACTER", _createdNFTID, "MAXENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
-        SG("CHARACTER", _createdNFTID, "STRENGTH", 1 + _level * (r + 312932131931931293 % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "DEXTERITY", 1 + _level * (r + 1993381931931293 % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "INTELLIGENCE", 1 + _level * (r + 9555551931931293 % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "CHARISMA", 1 + _level * (r + 74499292929129 % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "STRENGTH", 1 + _level * ((r + 312932131931931293) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "DEXTERITY", 1 + _level * ((r + 1993381931931293) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "INTELLIGENCE", 1 + _level * ((r + 9555551931931293) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "CHARISMA", 1 + _level * ((r + 74499292929129) % GS("STARTINGSTATS")));
         SG("CHARACTER", _createdNFTID, "NEXTBREEDING", block.timestamp + GS("BREEDINGRESET"));
         SG("CHARACTER", _createdNFTID, "FREESTATS", r % GS("STARTINGSTATS") + 3);
         SG("CHARACTER", _createdNFTID, "EXPERIENCE", 0);

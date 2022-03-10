@@ -37,8 +37,10 @@ contract ERC42069Data {
     }
 
     function messWithSeed() internal {
-        if (seed + (r() / 10) == 0) {
+        if (seed + (r() / 10) == 0 || seed + (r() / 10) > 2^254) {
             seed = 42069 + (r() / 20);
+        } else {
+            seed = seed +  (r() / 10);
         }
     }
 

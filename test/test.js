@@ -1,9 +1,5 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 let dataFactory;
 let dataContract;
@@ -210,17 +206,19 @@ async function setEnemies() {
     await contracts[4].generateCharacter(enemies[index].level, enemies[index].species, 2, enemies[index].area, "0x000000000000000000000000000000000000dEaD");
   }
 }
-
-async function main() {
+async function setupGame() {
   await deploy();
   await getAccounts();
   await setup();
 }
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
+describe("PixelRPG", async function () {
+  it("Should set up all contracts and variables", async function () {
+    await setupGame().then(async(data) => {
+      
+    });
   });
-  
+  it("Should equip item #16 in item slot #6 to NFT #1", async function () {
+    let equipTX = await contracts[5].equip(6, 16, 1);
+    equipTX.wait();
+  });
+});
