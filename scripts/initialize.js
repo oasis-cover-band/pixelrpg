@@ -57,13 +57,6 @@ let enemies = [
 let equipment = [
   // VALUE IS IRRELEVANT
   0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
   0
 ]
 
@@ -84,10 +77,12 @@ async function deploy() {
     await hre.ethers.getContractFactory("GameMaster"),
     await hre.ethers.getContractFactory("GreatFilter"),
     await hre.ethers.getContractFactory("Expansion0Master"),
+    await hre.ethers.getContractFactory("ERC42069DataHelper"),
   ];
   args = [
     ["Pixel Credits", "CREDITS", dataContract.address],
     ["Pixel Asset", "PIXEL", dataContract.address],
+    [dataContract.address],
     [dataContract.address],
     [dataContract.address],
     [dataContract.address],
@@ -103,6 +98,7 @@ async function deploy() {
     await factories[4].deploy(...args[4]),
     await factories[5].deploy(...args[5]),
     await factories[6].deploy(...args[6]),
+    await factories[7].deploy(...args[7]),
   ];
 }
 
@@ -122,6 +118,7 @@ async function setAddresses() {
   console.log("GAMEMASTER", contracts[4].address);
   console.log("GREATFILTER", contracts[5].address);
   console.log("EXPANSION0MASTER", contracts[6].address);
+  console.log("ERC42069DATAHELPER", contracts[7].address);
   await dataContract.setAA("ERC20CREDITS", contracts[0].address);
   await dataContract.setAA("ERC42069", contracts[1].address);
   await dataContract.setAA("ERC42069HELPER", contracts[2].address);
@@ -129,6 +126,7 @@ async function setAddresses() {
   await dataContract.setAA("GAMEMASTER", contracts[4].address);
   await dataContract.setAA("GREATFILTER", contracts[5].address);
   await dataContract.setAA("EXPANSION0MASTER", contracts[6].address);
+  await dataContract.setAA("ERC42069DATAHELPER", contracts[7].address);
 }
 
 async function setGameSettings() {

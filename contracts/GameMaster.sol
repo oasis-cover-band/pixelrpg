@@ -218,7 +218,7 @@ contract GameMaster {
         address _mintTo
     ) external {
         addressCheck(AA("SETUP"), msg.sender);
-        ERC42069I(AA("ERC42069")).createNewCharacter(_level, _species, _special, _area, _mintTo);
+        E().createNewCharacter(_level, _species, _special, _area, _mintTo);
     }
 
     function generateEquippable(
@@ -228,7 +228,7 @@ contract GameMaster {
     ) external {
         addressCheck(AA("SETUP"), msg.sender);
         ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotCheck(_itemSlot);
-        ERC42069I(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
+        E().createNewEquippable(_level, _itemSlot, _NFTID);
     }
 
     function generateBuilding(
@@ -239,7 +239,7 @@ contract GameMaster {
         addressCheck(AA("SETUP"), msg.sender);
         worldSpaceOccupancyCheck(_area, _location);
         maxAreaSizeCheck(_location);
-        ERC42069I(AA("ERC42069")).createNewBuilding(_area, n2s(_location), _location, _NFTID);
+        E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
     }
 
     function replaceCapturedOrKilledCharacter(
@@ -250,7 +250,7 @@ contract GameMaster {
         address _mintTo
     ) external {
         addressCheck(AA("ERC42069HELPER"), msg.sender);
-        ERC42069I(AA("ERC42069")).createNewCharacter(_level, _species, _special, _area, _mintTo);
+        E().createNewCharacter(_level, _species, _special, _area, _mintTo);
     }
 
     function placeProducable(
@@ -262,7 +262,7 @@ contract GameMaster {
         typeCheck(_NFTID, "_NFTID", 4);
         typeCheck(_buildingNFTID, "_BUILDINGNFTID", 5);
         maxBuildingSizeCheck(_buildingNFTID, _location);
-        ERC42069I(AA("ERC42069")).placeProducable(_NFTID, n2s(_location), _buildingNFTID);
+        E().placeProducable(_NFTID, n2s(_location), _buildingNFTID);
     }
 
     function retrieveFromBuilding(
@@ -271,7 +271,7 @@ contract GameMaster {
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 5);
-        ERC42069I(AA("ERC42069")).retrieveFromBuilding(_location, _NFTID);
+        E().retrieveFromBuilding(_location, _NFTID);
     }
 
     function expandBuilding(
@@ -285,7 +285,7 @@ contract GameMaster {
         worldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), _location);
         maxAreaSizeCheck(_location);
         borderingWorldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), n2s(_location), _NFTID);
-        ERC42069I(AA("ERC42069")).expandBuilding(
+        E().expandBuilding(
             _NFTID,
             n2s(_location),
             _up
@@ -300,7 +300,7 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
         freeStatsBalanceCheck(_NFTID, _amount);
-        ERC42069I(AA("ERC42069")).giveStat(_NFTID, _amount, _statName);
+        E().giveStat(_NFTID, _amount, _statName);
     }
     
     function destroyConsumable(
@@ -310,7 +310,7 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
         typeCheck(_consumableNFTID, "_consumableNFTID", 2);
-        ERC42069I(AA("ERC42069")).destroyConsumable(_NFTID, _consumableNFTID);
+        E().destroyConsumable(_NFTID, _consumableNFTID);
     }
     
     function breedTwoCharacters(
@@ -330,7 +330,7 @@ contract GameMaster {
             "NEXTBREEDING",
             block.timestamp
         );
-        ERC42069I(AA("ERC42069")).breedTwoCharacters(_NFT0ID, _NFT1ID);
+        E().breedTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function mergeTwoCharacters(
@@ -345,14 +345,14 @@ contract GameMaster {
             "MERGED",
             1
         );
-        ERC42069I(AA("ERC42069")).mergeTwoCharacters(_NFT0ID, _NFT1ID);
+        E().mergeTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function newCharacter(
         address _mintTo
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        ERC42069I(AA("ERC42069")).createNewCharacter(1, 0, 0, 0, _mintTo);
+        E().createNewCharacter(1, 0, 0, 0, _mintTo);
         // takeCredits(_NFTID, "CHARACTERCOST"); // TAKE NETWORK CURRENCY INSTEAD
     }
 
@@ -364,7 +364,7 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
-        ERC42069I(AA("ERC42069")).createNewConsumable(_amount, n2s(_producableProductionType), _producableProductionType, _NFTID);
+        E().createNewConsumable(_amount, n2s(_producableProductionType), _producableProductionType, _NFTID);
     }
 
     function newProducable(
@@ -373,7 +373,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        ERC42069I(AA("ERC42069")).createNewProducable(_level, _produces, _NFTID);
+        E().createNewProducable(_level, _produces, _NFTID);
         takeCredits(_NFTID, "PRODUCABLECOST");
     }
     
@@ -384,7 +384,7 @@ contract GameMaster {
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
         ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotCheck(_itemSlot);
-        ERC42069I(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
+        E().createNewEquippable(_level, _itemSlot, _NFTID);
         takeCredits(_NFTID, "EQUIPPABLECOST");
     }
 
@@ -396,7 +396,7 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         worldSpaceOccupancyCheck(_area, _location);
         maxAreaSizeCheck(_location);
-        ERC42069I(AA("ERC42069")).createNewBuilding(_area, n2s(_location), _location, _NFTID);
+        E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
         takeCredits(_NFTID, "BUILDINGCOST");
     }
     
@@ -412,7 +412,7 @@ contract GameMaster {
             internalUnequip(n2s(_equipSlot), _NFTID);
         }
         
-        ERC42069I(AA("ERC42069")).gameTransferFrom(_equipNFTID, address(this));
+        E().gameTransferFrom(_equipNFTID, address(this));
         console.log("Equipped ERC42069 Token (Item): EquipNFTID:'%s' NFTID:'%s' Slot:'%s'", _equipNFTID, _NFTID, _equipSlot);
         SG("CHARACTER", _NFTID, "HEALTH", GG("CHARACTER", _NFTID, "HEALTH") + GG("EQUIPPABLE", _equipNFTID, "HEALTHBOOST"));
         SG("CHARACTER", _NFTID, "MAXHEALTH", GG("CHARACTER", _NFTID, "MAXHEALTH") + GG("EQUIPPABLE", _equipNFTID, "HEALTHBOOST"));
@@ -427,9 +427,9 @@ contract GameMaster {
     }
 
     function takeCredits(uint256 _NFTID, string memory _costs) internal {
-        balanceCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), GS(_costs));
+        balanceCheck(E().ownerOf(_NFTID), GS(_costs));
         ERC20CreditsI(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (GS(_costs) / 4));
-        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), AA("TREASURY"), GS(_costs) / 4);
+        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(E().ownerOf(_NFTID), AA("TREASURY"), GS(_costs) / 4);
     }
 
     function unequip(
@@ -445,7 +445,7 @@ contract GameMaster {
     function internalUnequip(
         string memory _equipSlot,
         uint256 _NFTID) internal {
-        ERC42069I(AA("ERC42069")).gameTransferFrom(GG("CHARACTER", _NFTID, _equipSlot), ERC42069I(AA("ERC42069")).ownerOf(_NFTID));
+        E().gameTransferFrom(GG("CHARACTER", _NFTID, _equipSlot), E().ownerOf(_NFTID));
         console.log("Unequipped ERC42069 Token (Item): UnequipNFTID:'%s' fromNFTID:'%s' Slot:'%s'", GG("CHARACTER", _NFTID, _equipSlot), _NFTID, _equipSlot);
         SG("CHARACTER", _NFTID, "HEALTH", GG("CHARACTER", _NFTID, "HEALTH") - GG("EQUIPPABLE", GG("CHARACTER", _NFTID, _equipSlot), "HEALTHBOOST"));
         SG("CHARACTER", _NFTID, "MAXHEALTH", GG("CHARACTER", _NFTID, "MAXHEALTH") - GG("EQUIPPABLE", GG("CHARACTER", _NFTID, _equipSlot), "HEALTHBOOST"));
@@ -484,12 +484,16 @@ contract GameMaster {
         addressCheck(AA("GREATFILTER"), msg.sender);
         consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
-        ERC42069I(AA("ERC42069")).consume(
+        E().consume(
             _NFTID,
             n2s(_producableProductionType),
             _producableProductionType,
             _amount
         );
+    }
+
+    function E() internal view returns (ERC42069I) {
+        return ERC42069I(AA("ERC42069"));
     }
 
     function AA(

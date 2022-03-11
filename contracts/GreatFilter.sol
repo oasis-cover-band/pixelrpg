@@ -6,7 +6,7 @@ import "hardhat/console.sol";
 error InvalidFilterSender(address _target, address _sender, string _checkName);
 
 interface Expansion0MasterI {
-    
+
     function rename(
         uint256 _NFTID,
         string memory _newName
@@ -122,9 +122,9 @@ contract GreatFilter {
         string memory _location,
         uint256 _buildingNFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNNFT");
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_buildingNFTID), msg.sender, "OWNBUILDINGNFT");
-        GameMasterI(AA("GAMEMASTER")).placeProducable(_NFTID, _location, _buildingNFTID);
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
+        addressCheck(E().ownerOf(_buildingNFTID), msg.sender, "OWNBUILDINGNFT");
+        GM().placeProducable(_NFTID, _location, _buildingNFTID);
     }
 
 
@@ -132,8 +132,8 @@ contract GreatFilter {
         string memory _location,
         uint256 _NFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNNFT");
-        GameMasterI(AA("GAMEMASTER")).retrieveFromBuilding(_location, _NFTID);
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
+        GM().retrieveFromBuilding(_location, _NFTID);
     }
 
     function giveStat(
@@ -141,30 +141,30 @@ contract GreatFilter {
         uint256 _amount,
         string memory _statName
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNNFT");
-        GameMasterI(AA("GAMEMASTER")).giveStat(_NFTID, _amount, _statName);
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
+        GM().giveStat(_NFTID, _amount, _statName);
     }
     
     function breedTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
-        GameMasterI(AA("GAMEMASTER")).breedTwoCharacters(_NFT0ID, _NFT1ID);
+        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
+        GM().breedTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function mergeTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
-        GameMasterI(AA("GAMEMASTER")).mergeTwoCharacters(_NFT0ID, _NFT1ID);
+        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
+        GM().mergeTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function newCharacter() external {
-        GameMasterI(AA("GAMEMASTER")).newCharacter(
+        GM().newCharacter(
         msg.sender
         );
     }
@@ -173,7 +173,7 @@ contract GreatFilter {
         uint256 _NFTID,
         string memory _newName
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE");
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE");
         Expansion0MasterI(AA("EXPANSION0MASTER")).rename(_NFTID, _newName);
     }
     
@@ -181,18 +181,18 @@ contract GreatFilter {
         uint256 _NFTID,
         uint256 _consumableNFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_consumableNFTID), msg.sender, "OWNTYPE2");
-        GameMasterI(AA("GAMEMASTER")).destroyConsumable(_NFTID, _consumableNFTID);
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(E().ownerOf(_consumableNFTID), msg.sender, "OWNTYPE2");
+        GM().destroyConsumable(_NFTID, _consumableNFTID);
     }
 
     function produce(
         uint256 _NFTID,
         uint256 _producableNFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(GG("PRODUCABLE", _producableNFTID, "PLACEDIN")), msg.sender, "OWNTYPE5");
-        GameMasterI(AA("GAMEMASTER")).produce(
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(E().ownerOf(GG("PRODUCABLE", _producableNFTID, "PLACEDIN")), msg.sender, "OWNTYPE5");
+        GM().produce(
             _NFTID,
             _producableNFTID
         );
@@ -202,8 +202,8 @@ contract GreatFilter {
         uint256 _produces,
         uint256 _NFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GameMasterI(AA("GAMEMASTER")).newProducable(
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        GM().newProducable(
             1,
             _produces,
             _NFTID
@@ -214,8 +214,8 @@ contract GreatFilter {
         uint256 _itemSlot,
         uint256 _NFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GameMasterI(AA("GAMEMASTER")).newEquippable(
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        GM().newEquippable(
             1,
             _itemSlot,
             _NFTID
@@ -227,8 +227,8 @@ contract GreatFilter {
         uint256 _location,
         uint256 _NFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GameMasterI(AA("GAMEMASTER")).newBuilding(
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        GM().newBuilding(
             _area,
             _location,
             _NFTID
@@ -240,9 +240,9 @@ contract GreatFilter {
         uint256 _equipNFTID,
         uint256 _NFTID
     ) external {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_equipNFTID), msg.sender, "OWNTYPE3");
-        GameMasterI(AA("GAMEMASTER")).equip(
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(E().ownerOf(_equipNFTID), msg.sender, "OWNTYPE3");
+        GM().equip(
             _equipSlot,
             _equipNFTID,
             _NFTID
@@ -253,11 +253,19 @@ contract GreatFilter {
         uint256 _equipSlot,
         uint256 _NFTID
     ) public {
-        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GameMasterI(AA("GAMEMASTER")).unequip(
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        GM().unequip(
             _equipSlot,
             _NFTID
         );
+    }
+
+    function E() internal view returns (ERC42069I) {
+        return ERC42069I(AA("ERC42069"));
+    }
+
+    function GM() internal view returns (GameMasterI) {
+        return GameMasterI(AA("GAMEMASTER"));
     }
     
     function AA(

@@ -4,32 +4,171 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 interface ERC42069DataI {
+
     function getGD(
         string memory _symbol,
         uint256 _NFTID,
         string memory _statName
     ) external view returns (uint256);
+
+    function getGDN(
+        string memory _symbol,
+        uint256 _NFTID,
+        string memory _statName
+    ) external view returns (string memory);
 }
 contract ERC42069DataHelper {
     ERC42069DataI d;
     constructor(
         address _dataAddress
     ) {
-
+        d = ERC42069DataI(_dataAddress);
     }
 
-    function getCharacterData(
+    function getCharacterStats(
         uint256 _NFTID
-    ) external view returns (uint256) {
-        
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "LEVEL"),
+            getGD("CHARACTER", _NFTID, "EXPERIENCE"),
+            getGD("CHARACTER", _NFTID, "SPECIES"),
+            getGD("CHARACTER", _NFTID, "STRENGTH"),
+            getGD("CHARACTER", _NFTID, "DEXTERITY"),
+            getGD("CHARACTER", _NFTID, "INTELLIGENCE"),
+            getGD("CHARACTER", _NFTID, "CHARISMA")
+        );
+    }
+
+    function getCharacterInfo(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "MERGED"),
+            getGD("CHARACTER", _NFTID, "EVOLUTION"),
+            getGD("CHARACTER", _NFTID, "STATE"),
+            getGD("GENERAL", _NFTID, "DNA"),
+            getGD("GENERAL", _NFTID, "TYPE"),
+            getGD("GENERAL", _NFTID, "EVOLUTION"),
+            getGD("GENERAL", _NFTID, "SPECIAL")
+        );
+    }
+
+    function getCharacterVitality(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, string memory, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "HEALTH"),
+            getGD("CHARACTER", _NFTID, "MAXHEALTH"),
+            getGD("CHARACTER", _NFTID, "ENERGY"),
+            getGD("CHARACTER", _NFTID, "MAXENERGY"),
+            getGD("CHARACTER", _NFTID, "FREESTATS"),
+            getGDN("GENERAL", _NFTID, "NAME"),
+            getGD("CHARACTER", _NFTID, "NEXTBREEDING")
+        );
+    }
+
+    function getCharacterEquipped0(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "0"),
+            getGD("CHARACTER", _NFTID, "1"),
+            getGD("CHARACTER", _NFTID, "2"),
+            getGD("CHARACTER", _NFTID, "3"),
+            getGD("CHARACTER", _NFTID, "4"),
+            getGD("CHARACTER", _NFTID, "5"),
+            getGD("CHARACTER", _NFTID, "6")
+        );
+    }
+
+    function getCharacterEquipped1(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "7"),
+            getGD("CHARACTER", _NFTID, "8"),
+            getGD("CHARACTER", _NFTID, "9"),
+            getGD("CHARACTER", _NFTID, "10"),
+            getGD("CHARACTER", _NFTID, "11"),
+            getGD("CHARACTER", _NFTID, "12"),
+            getGD("CHARACTER", _NFTID, "13")
+        );
+    }
+
+    function getProducableInfo(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("PRODUCABLE", _NFTID, "PRODUCES"),
+            getGD("PRODUCABLE", _NFTID, "PRODUCTION"),
+            getGD("PRODUCABLE", _NFTID, "NEXTPRODUCTION"),
+            getGD("PRODUCABLE", _NFTID, "PLACEDIN"),
+            getGD("GENERAL", _NFTID, "DNA"),
+            getGD("GENERAL", _NFTID, "TYPE")
+        );
+    }
+
+    function getBuildingInfo(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("BUILDING", _NFTID, "SIZE"),
+            getGD("BUILDING", _NFTID, "STORIES"),
+            getGD("BUILDING", _NFTID, "LOCATION"),
+            getGD("GENERAL", _NFTID, "DNA"),
+            getGD("GENERAL", _NFTID, "TYPE"),
+            getGD("GENERAL", _NFTID, "AREA")
+        );
+    }
+
+    function getConsumableInfo(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CONSUMABLE", _NFTID, "TYPE"),
+            getGD("CONSUMABLE", _NFTID, "AMOUNT"),
+            getGD("GENERAL", _NFTID, "DNA"),
+            getGD("GENERAL", _NFTID, "TYPE")
+        );
+    }
+
+    function getEquippableInfo(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256) {
+        return (
+            getGD("GENERAL", _NFTID, "DNA"),
+            getGD("GENERAL", _NFTID, "TYPE")
+        );
+    }
+
+    function getEquippableStats(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("EQUIPPABLE", _NFTID, "HEALTHBOOST"),
+            getGD("EQUIPPABLE", _NFTID, "ENERGYBOOST"),
+            getGD("EQUIPPABLE", _NFTID, "STRENGTHBOOST"),
+            getGD("EQUIPPABLE", _NFTID, "DEXTERITYBOOST"),
+            getGD("EQUIPPABLE", _NFTID, "INTELLIGENCEBOOST"),
+            getGD("EQUIPPABLE", _NFTID, "CHARISMABOOST"),
+            getGD("EQUIPPABLE", _NFTID, "EQUIPSLOT")
+        );
     }
 
     function getGD(
         string memory _symbol,
         uint256 _NFTID,
         string memory _statName
-    ) external view returns (uint256) {
+    ) internal view returns (uint256) {
         return d.getGD(_symbol, _NFTID, _statName);
+    }
+
+    function getGDN(
+        string memory _symbol,
+        uint256 _NFTID,
+        string memory _statName
+    ) internal view returns (string memory) {
+        return d.getGDN(_symbol, _NFTID, _statName);
     }
 }
 // aa (ACTIONABLE ADDRESSES)

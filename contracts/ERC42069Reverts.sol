@@ -134,7 +134,7 @@ contract ERC42069Reverts {
         }
     }
 
-    function itemSlotChecked(
+    function itemSlotCheck(
         uint256 _equipSlotUint
     ) external view {
         if (_equipSlotUint >= GS("MAXITEMSLOTS")) {
@@ -144,7 +144,7 @@ contract ERC42069Reverts {
         }
     }
 
-    function itemEquippedChecked(
+    function itemEquippedCheck(
         uint256 _current,
         uint256 _equipSlotUint,
         uint256 _NFTID

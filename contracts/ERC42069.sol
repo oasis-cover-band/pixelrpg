@@ -5,6 +5,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 error InvalidERC42069Sender(address _target, address _sender);
+error InvalidERC42069SenderOr(address _target0, address _target1, address _sender);
 
 interface ERC42069DataI {
 
@@ -126,8 +127,7 @@ contract ERC42069 is ERC721 {
         string memory _typeName,
         string memory _typeSymbol,
         address _dataAddress
-    ) ERC721(_typeName, _typeSymbol)
-        {
+    ) ERC721(_typeName, _typeSymbol) {
         d = ERC42069DataI(_dataAddress);
         count = 1;
         console.log("Created ERC42069 Factory: NAME:'%s' SYMBOL:'%s' D:'%s'", _typeName, _typeSymbol, _dataAddress);
@@ -196,7 +196,7 @@ contract ERC42069 is ERC721 {
         uint256 _area,
         address _mintTo
     ) external returns (uint256) {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewCharacter(
             _level,
@@ -278,7 +278,7 @@ contract ERC42069 is ERC721 {
         uint256 _equipSlot,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewEquippable(
             _level,
@@ -297,7 +297,7 @@ contract ERC42069 is ERC721 {
         uint256 _produces,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewProducable(
             _level,
@@ -316,7 +316,7 @@ contract ERC42069 is ERC721 {
         uint256 _producableProductionTypeUint,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewConsumable(
             _amount,
@@ -349,7 +349,7 @@ contract ERC42069 is ERC721 {
         uint256 _locationUint,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewBuilding(
             _area,
@@ -415,6 +415,20 @@ contract ERC42069 is ERC721 {
         if (_target != _sender) {
             revert InvalidERC42069Sender({
                 _target: _target,
+                _sender: _sender
+            });
+        }
+    }
+
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) internal pure {
+        if (_sender != _target0 && _sender != _target1) {
+            revert InvalidERC42069SenderOr({
+                _target0: _target0,
+                _target1: _target1,
                 _sender: _sender
             });
         }
