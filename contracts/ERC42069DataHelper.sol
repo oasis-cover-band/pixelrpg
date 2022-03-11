@@ -3,57 +3,25 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-error InvalidDataSender(address _target, address _sender);
-
-contract ERC42069Data {
-
-    mapping(string => address) public aa; // ACTIONABLE ADDRESSES
-    mapping(string => mapping(uint256 => mapping(string => uint256))) gd; // GAME DATA
-    mapping(string => mapping(uint256 => mapping(string => string))) gdn; // GAME DATA
-    mapping(string => uint256) gs; // GAME SETTINGS
-    uint256 setup;
-    uint256 private seed;
-    constructor() {
-        aa["OWNER"] = msg.sender;
-        aa["SETUP"] = msg.sender;
-        setup = 1;
-        seed = 42069;
-    }
-
-    function finishSetup() internal {
-        addressCheck(aa["SETUP"], msg.sender);
-        setup = 0;
-        aa["SETUP"] = address(0);
-    }
-
-    function setGD(
+interface ERC42069DataI {
+    function getGD(
         string memory _symbol,
         uint256 _NFTID,
-        string memory _statName,
-        uint256 _statValue,
-        string memory _msgSender
-    ) external {
-        addressCheck(aa[_msgSender], msg.sender);
-        gd[_symbol][_NFTID][_statName] = _statValue;
+        string memory _statName
+    ) external view returns (uint256);
+}
+contract ERC42069DataHelper {
+    ERC42069DataI d;
+    constructor(
+        address _dataAddress
+    ) {
+
     }
 
-    function setGDN(
-        string memory _symbol,
-        uint256 _NFTID,
-        string memory _statName,
-        string memory _statValue,
-        string memory _msgSender
-    ) external {
-        addressCheck(aa[_msgSender], msg.sender);
-        gdn[_symbol][_NFTID][_statName] = _statValue;
-    }
-
-    function messWithSeed() internal {
-        if (seed + (r() % 10) == 0 || seed + (r() % 10) > 2^254) {
-            seed = 42069 + (r() / 40);
-        } else {
-            seed = seed +  (r() % 393);
-        }
+    function getCharacterData(
+        uint256 _NFTID
+    ) external view returns (uint256) {
+        
     }
 
     function getGD(
@@ -61,87 +29,7 @@ contract ERC42069Data {
         uint256 _NFTID,
         string memory _statName
     ) external view returns (uint256) {
-
-        return gd[_symbol][_NFTID][_statName];
-    }
-
-    function getGDN(
-        string memory _symbol,
-        uint256 _NFTID,
-        string memory _statName
-    ) external view returns (string memory) {
-
-        return gdn[_symbol][_NFTID][_statName];
-    }
-
-    function setGS(
-        string memory _setting,
-        uint256 _settingValue
-    ) external {
-        addressCheck(aa["OWNER"], msg.sender);
-        
-        gs[_setting] = _settingValue;
-    }
-
-    function getGS(
-        string memory _setting
-        ) external view returns (uint256) {
-
-        return gs[_setting];
-    }
-
-    function setAA(
-        string memory _name,
-        address _address
-    ) external {
-        addressCheck(aa["OWNER"], msg.sender);
-        aa[_name] = _address;
-        if (setup == 0) {
-            aa["SETUP"] = address(0);
-        }
-    }
-
-    function getAA(
-        string memory _name
-    ) external view returns (address) {
-        return aa[_name];
-    }
-    function r() public view returns (uint256) {
-        return 40 + uint(keccak256(abi.encodePacked(seed, block.timestamp))) / 2;
-    }
-    function n2s(
-        uint _i
-    ) public pure returns (string memory) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint j = _i;
-        uint len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len;
-        while (_i != 0) {
-            k = k-1;
-            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
-            _i /= 10;
-        }
-        return string(bstr);
-    }
-    function addressCheck(
-        address _target,
-        address _sender
-    ) internal pure {
-        if (_target != _sender) {
-            revert InvalidDataSender({
-                _target: _target,
-                _sender: _sender
-            });
-        }
+        return d.getGD(_symbol, _NFTID, _statName);
     }
 }
 // aa (ACTIONABLE ADDRESSES)

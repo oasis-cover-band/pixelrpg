@@ -5,6 +5,13 @@ import "hardhat/console.sol";
 
 error InvalidFilterSender(address _target, address _sender, string _checkName);
 
+interface Expansion0MasterI {
+    
+    function rename(
+        uint256 _NFTID,
+        string memory _newName
+    ) external;
+}
 interface GameMasterI {
 
     function newCharacter(
@@ -160,6 +167,14 @@ contract GreatFilter {
         GameMasterI(AA("GAMEMASTER")).newCharacter(
         msg.sender
         );
+    }
+
+    function rename(
+        uint256 _NFTID,
+        string memory _newName
+    ) external {
+        addressCheck(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), msg.sender, "OWNTYPE");
+        Expansion0MasterI(AA("EXPANSION0MASTER")).rename(_NFTID, _newName);
     }
     
     function destroyConsumable(

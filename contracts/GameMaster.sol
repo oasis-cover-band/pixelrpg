@@ -127,21 +127,18 @@ interface ERC42069DataI {
 }
 interface ERC42069RevertsI {
 
-    function itemSlotChecked(
+    function differsCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external view;
+
+    function itemSlotCheck(
         uint256 _equipSlotUint
     ) external view;
 
     function maxBuildingSizeCheck(
         uint256 _buildingNFTID,
         uint256 _location
-    ) external view;
-
-    function reproduceCheck(
-        uint256 _NFT0ID,
-        uint256 _NFT1ID,
-        string memory _speciesCheck,
-        string memory _timerCheck,
-        uint256 _timerValue
     ) external view;
 
     function borderingWorldSpaceOccupancyCheck(
@@ -159,7 +156,7 @@ interface ERC42069RevertsI {
         uint256 _location
     ) external view;
 
-    function itemEquippedChecked(
+    function itemEquippedCheck(
         uint256 _current,
         uint256 _equipSlotUint,
         uint256 _NFTID
@@ -230,7 +227,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(AA("SETUP"), msg.sender);
-        ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotChecked(_itemSlot);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotCheck(_itemSlot);
         ERC42069I(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
     }
 
@@ -386,7 +383,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotChecked(_itemSlot);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).itemSlotCheck(_itemSlot);
         ERC42069I(AA("ERC42069")).createNewEquippable(_level, _itemSlot, _NFTID);
         takeCredits(_NFTID, "EQUIPPABLECOST");
     }
@@ -441,7 +438,7 @@ contract GameMaster {
     ) public {
         addressCheck(AA("GREATFILTER"), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
-        itemEquippedChecked(GG("CHARACTER", _NFTID, n2s(_equipSlot)), _equipSlot, _NFTID);
+        itemEquippedCheck(GG("CHARACTER", _NFTID, n2s(_equipSlot)), _equipSlot, _NFTID);
         internalUnequip(n2s(_equipSlot), _NFTID);
     }
 
@@ -531,6 +528,7 @@ contract GameMaster {
         string memory _timerCheck,
         uint256 _timerValue
     ) internal view {
+        differsCheck(_NFT0ID, _NFT1ID);
         typeCheck(_NFT0ID, "_NFT0ID", 0);
         typeCheck(_NFT1ID, "_NFT1ID", 0);
         speciesCheck(_NFT0ID, _NFT1ID, _speciesCheck);
@@ -556,6 +554,13 @@ contract GameMaster {
         ERC42069RevertsI(AA("ERC42069REVERTS")).maxAreaSizeCheck(_location);
     }
 
+    function differsCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) internal view {
+        ERC42069RevertsI(AA("ERC42069REVERTS")).differsCheck(_NFT0ID, _NFT1ID);
+    }
+
     function maxBuildingSizeCheck(
         uint256 _buildingNFTID,
         uint256 _location
@@ -570,12 +575,12 @@ contract GameMaster {
         ERC42069RevertsI(AA("ERC42069REVERTS")).worldSpaceOccupancyCheck(_area, _location);
     }
 
-    function itemEquippedChecked(
+    function itemEquippedCheck(
         uint256 _current,
         uint256 _equipSlot,
         uint256 _NFTID
     ) internal view {
-        ERC42069RevertsI(AA("ERC42069REVERTS")).itemEquippedChecked(_current, _equipSlot, _NFTID);
+        ERC42069RevertsI(AA("ERC42069REVERTS")).itemEquippedCheck(_current, _equipSlot, _NFTID);
     }
 
     function typeCheck(

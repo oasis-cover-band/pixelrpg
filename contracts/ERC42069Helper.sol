@@ -112,15 +112,15 @@ contract ERC42069Helper {
         uint256 _special,
         uint256 _area,
         uint256 _createdNFTID) internal {
-        uint256 r = d.r();
+        uint256 r = d.r() + _createdNFTID;
         SG("CHARACTER", _createdNFTID, "HEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
         SG("CHARACTER", _createdNFTID, "MAXHEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
         SG("CHARACTER", _createdNFTID, "ENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
         SG("CHARACTER", _createdNFTID, "MAXENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
-        SG("CHARACTER", _createdNFTID, "STRENGTH", 1 + _level * ((r + 312932131931931293) % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "DEXTERITY", 1 + _level * ((r + 1993381931931293) % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "INTELLIGENCE", 1 + _level * ((r + 9555551931931293) % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "CHARISMA", 1 + _level * ((r + 74499292929129) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "STRENGTH", 1 + _level * ((r + 415) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "DEXTERITY", 1 + _level * ((r + 948) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "INTELLIGENCE", 1 + _level * ((r + 307) % GS("STARTINGSTATS")));
+        SG("CHARACTER", _createdNFTID, "CHARISMA", 1 + _level * ((r + 81) % GS("STARTINGSTATS")));
         SG("CHARACTER", _createdNFTID, "NEXTBREEDING", block.timestamp + GS("BREEDINGRESET"));
         SG("CHARACTER", _createdNFTID, "FREESTATS", r % GS("STARTINGSTATS") + 3);
         SG("CHARACTER", _createdNFTID, "EXPERIENCE", 0);
@@ -146,13 +146,13 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r();
+        uint256 r = d.r() + _createdNFTID;
         SG("EQUIPPABLE", _createdNFTID, "HEALTHBOOST", 10 + _level * (r % GS("MAXITEMHEALTH")));
         SG("EQUIPPABLE", _createdNFTID, "ENERGYBOOST", 10 + _level * (r % GS("MAXITEMENERGY")));
-        SG("EQUIPPABLE", _createdNFTID, "STRENGTHBOOST", 1 * _level * ((r + 49438249242378) % GS("MAXITEMSTATS")));
-        SG("EQUIPPABLE", _createdNFTID, "DEXTERITYBOOST", 1 * _level * ((r + 9448242378) % GS("MAXITEMSTATS")));
-        SG("EQUIPPABLE", _createdNFTID, "INTELLIGENCEBOOST", 1 * _level * ((r + 6945932378) % GS("MAXITEMSTATS")));
-        SG("EQUIPPABLE", _createdNFTID, "CHARISMABOOST", 1 * _level * ((r + 189348242378) % GS("MAXITEMSTATS")));
+        SG("EQUIPPABLE", _createdNFTID, "STRENGTHBOOST", 1 * _level * ((r + 415) % GS("MAXITEMSTATS")));
+        SG("EQUIPPABLE", _createdNFTID, "DEXTERITYBOOST", 1 * _level * ((r + 948) % GS("MAXITEMSTATS")));
+        SG("EQUIPPABLE", _createdNFTID, "INTELLIGENCEBOOST", 1 * _level * ((r + 307) % GS("MAXITEMSTATS")));
+        SG("EQUIPPABLE", _createdNFTID, "CHARISMABOOST", 1 * _level * ((r + 81) % GS("MAXITEMSTATS")));
         SG("EQUIPPABLE", _createdNFTID, "EQUIPSLOT", _equipSlot);
         // SG("EQUIPPABLE", _createdNFTID, "EQUIPPEDBY", 0); 
         SG("GENERAL", _createdNFTID, "DNA", r);
@@ -165,7 +165,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r();
+        uint256 r = d.r() + _createdNFTID;
         SG("PRODUCABLE", _createdNFTID, "PRODUCES", _produces);
         SG("PRODUCABLE", _createdNFTID, "PRODUCTION", 1 + _level * ((r + 49438249242378) % GS("MAXPRODUCTION")));
         SG("PRODUCABLE", _createdNFTID, "NEXTPRODUCTION", block.timestamp + GS("PRODUCTIONRESET")); 
@@ -182,7 +182,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r();
+        uint256 r = d.r() + _createdNFTID;
         SG("INVENTORY", _NFTID, _producableProductionType, GG("INVENTORY", _NFTID, _producableProductionType) - _amount);
         SG("CONSUMABLE", _createdNFTID, "TYPE", _producableProductionTypeUint);
         SG("CONSUMABLE", _createdNFTID, "AMOUNT", _amount);
@@ -206,7 +206,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external returns (uint256) {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r();
+        uint256 r = d.r() + _createdNFTID;
         SG("BUILDING", _createdNFTID, "SIZE", 1);
         SG("BUILDING", _createdNFTID, "STORIES", 1);
         SG("BUILDING", _createdNFTID, "LOCATION", _locationUint);

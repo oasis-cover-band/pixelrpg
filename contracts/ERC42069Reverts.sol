@@ -6,6 +6,7 @@ import "hardhat/console.sol";
 error OccupiedWorldSpace(uint256 _targetArea, string _targetPlacementIndex, uint256 _current);
 error NotBorderingWorldSpace(uint256 _targetArea, string _targetPlacementIndex, uint256 _current);
 error MaxAreaSize(uint256 _targetPlacementIndex);
+error SameNFT(uint256 _NFT0ID, uint256 _NFT1ID);
 error InvalidSender(address _target, address _sender);
 error UintDiffersString(uint256 _uint, string _string);
 error EmptyEquipmentSlot(uint256 _current, uint256 _slot, uint256 _NFTID);
@@ -209,6 +210,18 @@ contract ERC42069Reverts {
                 _value: _value,
                 _mustBeBefore: _mustBeBefore,
                 _timerName: _timerName
+            });
+        }
+    }
+
+    function differsCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external pure {
+        if ( _NFT0ID == _NFT1ID) {
+            revert SameNFT({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID
             });
         }
     }
