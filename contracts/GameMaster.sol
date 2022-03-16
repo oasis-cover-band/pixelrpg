@@ -346,9 +346,11 @@ contract GameMaster {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(GF(), msg.sender); // SHOULD BE CHANG3D TO MINTER!!
+        addressCheck(GF(), msg.sender);
         typeCheck(_NFT0ID, "_NFT0ID", 0);
         typeCheck(_NFT1ID, "_NFT1ID", 0);
+        stateCheck(_NFT0ID, 0);
+        stateCheck(_NFT1ID, 0);
         speciesCheck(_NFT0ID, _NFT1ID, "BREED");
         timerCheck(GG("CHARACTER", _NFT0ID, "NEXTBREEDING"), block.timestamp, "BREEDNFT0");
         timerCheck(GG("CHARACTER", _NFT1ID, "NEXTBREEDING"), block.timestamp, "BREEDNFT1");
@@ -366,7 +368,9 @@ contract GameMaster {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(GF(), msg.sender); // SHOULD BE CHANG3D TO MINTER!!
+        addressCheck(GF(), msg.sender);
+        stateCheck(_NFT0ID, 0);
+        stateCheck(_NFT1ID, 0);
         reproduceCheck(
             _NFT0ID,
             _NFT1ID,
@@ -391,6 +395,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(GF(), msg.sender);
+        stateCheck(_NFTID, 0);
         consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
         E().createNewConsumable(_amount, n2s(_producableProductionType), _producableProductionType, _NFTID);
@@ -402,6 +407,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(GF(), msg.sender);
+        stateCheck(_NFTID, 0);
         E().createNewProducable(_level, _produces, _NFTID);
         takeCredits(_NFTID, "PRODUCABLECOST");
     }
@@ -412,6 +418,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(GF(), msg.sender);
+        stateCheck(_NFTID, 0);
         RV().itemSlotCheck(_itemSlot);
         E().createNewEquippable(_level, _itemSlot, _NFTID);
         takeCredits(_NFTID, "EQUIPPABLECOST");
@@ -423,6 +430,7 @@ contract GameMaster {
         uint256 _NFTID
     ) external {
         addressCheck(GF(), msg.sender);
+        stateCheck(_NFTID, 0);
         worldSpaceOccupancyCheck(_area, _location);
         maxAreaSizeCheck(_location);
         E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
@@ -437,6 +445,7 @@ contract GameMaster {
         addressCheck(GF(), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
         typeCheck(_equipNFTID, "_equipNFTID", 3);
+        stateCheck(_NFTID, 0);
         if (GG("CHARACTER", _NFTID, n2s(_equipSlot)) != 0) {
             internalUnequip(n2s(_equipSlot), _NFTID);
         }
@@ -467,6 +476,7 @@ contract GameMaster {
     ) public {
         addressCheck(GF(), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
+        stateCheck(_NFTID, 0);
         itemEquippedCheck(GG("CHARACTER", _NFTID, n2s(_equipSlot)), _equipSlot, _NFTID);
         internalUnequip(n2s(_equipSlot), _NFTID);
     }
@@ -494,6 +504,7 @@ contract GameMaster {
     ) external {
         addressCheck(GF(), msg.sender);
         typeCheck(_NFTID, "_NFTID", 0);
+        stateCheck(_NFTID, 0);
         timerCheck(GG("PRODUCABLE", _producableNFTID, "NEXTPRODUCTION"), block.timestamp, "PRODUCE");
         SG("PRODUCABLE", _producableNFTID, "NEXTPRODUCTION", block.timestamp + GS("PRODUCTIONRESET")); 
         SG(

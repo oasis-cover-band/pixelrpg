@@ -7,7 +7,18 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 error InvalidERC42069Sender(address _target, address _sender);
 error InvalidERC42069SenderOr(address _target0, address _target1, address _sender);
 
+interface NameGeneratorI {
+     function getRandomName() external view returns (string memory);
+}
 interface ERC42069DataI {
+
+    function setGDN(
+        string memory _symbol,
+        uint256 _NFTID,
+        string memory _statName,
+        string memory _statValue,
+        string memory _msgSender
+    ) external;
 
     function setGD(
         string memory _symbol,
@@ -210,6 +221,8 @@ contract ERC42069 is ERC721 {
         );
         _safeMint(_mintTo, c);
         count = c + 1;
+        
+        SGN("GENERAL", c, "NAME", NameGeneratorI(d.getAA("NAMEGENERATOR")).getRandomName());
         console.log("Created ERC42069 Token (Character): Sent:'%s' ID:'%s'", _mintTo, c);
         return c;
     }
@@ -253,6 +266,7 @@ contract ERC42069 is ERC721 {
         );
         _safeMint(ownerOf(_NFT0ID), c);
         count = c + 1;
+        SGN("GENERAL", c, "NAME", NameGeneratorI(d.getAA("NAMEGENERATOR")).getRandomName());
         console.log("Breeded Two ERC42069 Token (Character): NFT0ID:'%s' NFT1ID:'%s' NFTID:'%s'", _NFT0ID, _NFT1ID, c);
         return c;
     }
@@ -272,6 +286,7 @@ contract ERC42069 is ERC721 {
         internalGameTransfer(_NFT0ID, address(this));
         internalGameTransfer(_NFT1ID, address(this));
         count = c + 1;
+        SGN("GENERAL", c, "NAME", NameGeneratorI(d.getAA("NAMEGENERATOR")).getRandomName());
         console.log("Merged Two ERC42069 Token (Character): NFT0ID:'%s' NFT1ID:'%s' NFTID:'%s'", _NFT0ID, _NFT1ID, c);
         return c;
     }
@@ -395,6 +410,15 @@ contract ERC42069 is ERC721 {
         uint256 _statValue
     ) internal {
             d.setGD(_symbol, _NFTID, _statName, _statValue, "ERC42069");
+    }
+
+    function SGN(
+        string memory _symbol,
+        uint256 _NFTID,
+        string memory _statName,
+        string memory _statValue
+    ) internal {
+            d.setGDN(_symbol, _NFTID, _statName, _statValue, "ERC42069");
     }
 
     function GS (

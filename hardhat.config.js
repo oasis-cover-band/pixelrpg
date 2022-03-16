@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ganache");
+require('hardhat-contract-sizer');
 
 const ROPSTEN_ALCHEMY_URL = "https://eth-ropsten.alchemyapi.io/v2/0a0d8fded9b44eee0ec1a84891bb134a9a363733c36d5f74839295819a177ddf";
 const RINKEBY_ALCHEMY_URL = "https://eth-rinkeby.alchemyapi.io/v2/e102b787251011f89ebb8901ae93e455a53b26e4b633b3912244b42b72af1089";
