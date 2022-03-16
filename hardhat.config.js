@@ -1,6 +1,11 @@
 require("@nomiclabs/hardhat-waffle");
-const ALCHEMY_API_KEY = "EBbF5DnGDkdIJWap_6Lv0caEs3sEv1DW";
-const ROPSTEN_PRIVATE_KEY = "8b6eb9d66a80167dbc9da5aea5bc7edfccba07df89521c90ccdae6e77396fed6";
+require("@nomiclabs/hardhat-ganache");
+
+const ROPSTEN_ALCHEMY_URL = "https://eth-ropsten.alchemyapi.io/v2/0a0d8fded9b44eee0ec1a84891bb134a9a363733c36d5f74839295819a177ddf";
+const RINKEBY_ALCHEMY_URL = "https://eth-rinkeby.alchemyapi.io/v2/e102b787251011f89ebb8901ae93e455a53b26e4b633b3912244b42b72af1089";
+const RINKEBY_INFURA_URL = "https://rinkeby.infura.io/v3/21fc828c47394e7591eb60b4bc807d07";
+const PRIVATE_KEY = "e102b787251011f89ebb8901ae93e455a53b26e4b633b3912244b42b72af1089";
+const GANACHE_URL = 'http://127.0.0.1:7545';
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -22,10 +27,21 @@ module.exports = {
   solidity: "0.8.4",
   networks: {
     ropsten: {
-      url: `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-      accounts: [`${ROPSTEN_PRIVATE_KEY}`],
-      gas: 2100000,
-      gasPrice: 8000000000
-    }
+      url: ROPSTEN_ALCHEMY_URL,
+      accounts: [PRIVATE_KEY],
+      gas: 50000000000,
+      gasPrice: 30000000000
+    },
+    rinkeby: {
+      url: RINKEBY_INFURA_URL,
+      accounts: [PRIVATE_KEY],
+      gas: 50000000000,
+      gasPrice: 30000000000
+    },
+    ganache: {
+      url: GANACHE_URL,
+      gasLimit: 6000000000,
+      defaultBalanceEther: 10,
+    },
   }
 };

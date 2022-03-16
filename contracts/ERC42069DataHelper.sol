@@ -16,13 +16,44 @@ interface ERC42069DataI {
         uint256 _NFTID,
         string memory _statName
     ) external view returns (string memory);
+    
+    function n2s(uint _i) external pure returns (string memory);
 }
+
 contract ERC42069DataHelper {
     ERC42069DataI d;
     constructor(
         address _dataAddress
     ) {
         d = ERC42069DataI(_dataAddress);
+    }
+
+    function getCharacterConsumablesInfo0(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("INVENTORY", _NFTID, "0"),
+            getGD("INVENTORY", _NFTID, "1"),
+            getGD("INVENTORY", _NFTID, "2"),
+            getGD("INVENTORY", _NFTID, "3"),
+            getGD("INVENTORY", _NFTID, "4"),
+            getGD("INVENTORY", _NFTID, "5"),
+            getGD("INVENTORY", _NFTID, "6")
+        );
+    }
+
+    function getCharacterConsumablesInfo1(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("INVENTORY", _NFTID, "7"),
+            getGD("INVENTORY", _NFTID, "8"),
+            getGD("INVENTORY", _NFTID, "9"),
+            getGD("INVENTORY", _NFTID, "10"),
+            getGD("INVENTORY", _NFTID, "11"),
+            getGD("INVENTORY", _NFTID, "12"),
+            getGD("INVENTORY", _NFTID, "13")
+        );
     }
 
     function getCharacterStats(
@@ -152,6 +183,19 @@ contract ERC42069DataHelper {
             getGD("EQUIPPABLE", _NFTID, "INTELLIGENCEBOOST"),
             getGD("EQUIPPABLE", _NFTID, "CHARISMABOOST"),
             getGD("EQUIPPABLE", _NFTID, "EQUIPSLOT")
+        );
+    }
+
+    function getAreaInfo(
+        uint256 _areaID,
+        uint256 _indiceStart
+    ) external view returns (uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("WORLD", _areaID, d.n2s(_indiceStart)),
+            getGD("WORLD", _areaID, d.n2s(_indiceStart + 1)),
+            getGD("WORLD", _areaID, d.n2s(_indiceStart + 2)),
+            getGD("WORLD", _areaID, d.n2s(_indiceStart + 3)),
+            getGD("WORLD", _areaID, d.n2s(_indiceStart + 4))
         );
     }
 

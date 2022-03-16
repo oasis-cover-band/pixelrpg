@@ -13,6 +13,13 @@ interface Expansion0MasterI {
     ) external;
 }
 interface GameMasterI {
+    
+    function consume(
+        uint256 _NFTID,
+        uint256 _consumingNFTID,
+        uint256 _producableProductionType,
+        uint256 _amount
+    ) external;
 
     function newCharacter(
         address _mintTo
@@ -134,6 +141,17 @@ contract GreatFilter {
     ) external {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
         GM().retrieveFromBuilding(_location, _NFTID);
+    }
+
+    function consume(
+        uint256 _NFTID,
+        uint256 _consumingNFTID,
+        uint256 _producableProductionType,
+        uint256 _amount
+    ) external {
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
+        addressCheck(E().ownerOf(_consumingNFTID), msg.sender, "OWNNFT");
+        GM().consume(_NFTID, _consumingNFTID, _producableProductionType, _amount);
     }
 
     function giveStat(

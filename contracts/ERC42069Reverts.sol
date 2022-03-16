@@ -18,6 +18,7 @@ error InsufficientConsumableBalance(uint256 _NFTID, string _producableProduction
 error InsufficientFreeStatsBalance(uint256 _NFTID, string _statName, uint256 _amount);
 error TimerNotReady(uint256 _value, uint256 _mustBeBefore, string _timerName);
 error GreaterThanBuildingSize(uint256 _size, uint256 _location);
+error InvalidState(uint256 _NFTID, uint256 _actual, uint256 _required);
 interface ERC20CreditsI {
 
     function balanceOf(address account) external view returns (uint256);
@@ -53,8 +54,7 @@ contract ERC42069Reverts {
     ERC42069DataI d;
     constructor(
         address _dataAddress
-    )
-        {
+    ) {
         d = ERC42069DataI(_dataAddress);
     }
 
@@ -130,6 +130,19 @@ contract ERC42069Reverts {
                 _targetArea: _area,
                 _targetPlacementIndex: d.n2s(_location),
                 _current: GG("WORLD", _area, d.n2s(_location))
+            });
+        }
+    }
+
+    function stateCheck(
+        uint256 _NFTID,
+        uint256 _requiredState
+    ) external view {
+        if (GG("CHARACTER", _NFTID, "STATE") != _requiredState) {
+            revert InvalidState({
+                _NFTID: _NFTID,
+                _actual: GG("CHARACTER", _NFTID, "STATE"),
+                _required: _requiredState
             });
         }
     }

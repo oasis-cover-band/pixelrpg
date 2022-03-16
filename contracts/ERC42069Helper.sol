@@ -5,7 +5,18 @@ import "hardhat/console.sol";
 
 error InvalidHelperSender(address _target, address _sender);
 
+interface NameGeneratorI {
+     function getRandomName() external view returns (string memory);
+}
 interface ERC42069DataI {
+
+    function setGDN(
+        string memory _symbol,
+        uint256 _NFTID,
+        string memory _statName,
+        string memory _statValue,
+        string memory _msgSender
+    ) external;
 
     function setGD(
         string memory _symbol,
@@ -50,7 +61,7 @@ contract ERC42069Helper {
         ) {
             SG("CHARACTER", _NFTID, "LEVEL", GG("CHARACTER",_NFTID, "LEVEL") + 1);
             SG("CHARACTER", _NFTID, "EXPERIENCE", 0);
-            SG("CHARACTER", _NFTID, "FREESTATS", GG("CHARACTER",_NFTID, "FREESTATS") + 1 + (d.r() % GS("MAXLEVELSTATS")));
+            SG("CHARACTER", _NFTID, "FREESTATS", GG("CHARACTER",_NFTID, "FREESTATS") + 1 + (dr()% GS("MAXLEVELSTATS")));
         } else {
             SG("CHARACTER", _NFTID, "EXPERIENCE", (GG("CHARACTER",_NFTID, "EXPERIENCE") + _amount));
         }
@@ -112,7 +123,7 @@ contract ERC42069Helper {
         uint256 _special,
         uint256 _area,
         uint256 _createdNFTID) internal {
-        uint256 r = d.r() + _createdNFTID;
+        uint256 r = dr() + _createdNFTID;
         SG("CHARACTER", _createdNFTID, "HEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
         SG("CHARACTER", _createdNFTID, "MAXHEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
         SG("CHARACTER", _createdNFTID, "ENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
@@ -126,6 +137,8 @@ contract ERC42069Helper {
         SG("CHARACTER", _createdNFTID, "EXPERIENCE", 0);
         SG("CHARACTER", _createdNFTID, "LEVEL", _level);
         SG("CHARACTER", _createdNFTID, "SPECIES", _species);
+        SGN("GENERAL", _createdNFTID, "NAME", NameGeneratorI(AA("NAMEGENERATOR")).getRandomName());
+        console.log(NameGeneratorI(AA("NAMEGENERATOR")).getRandomName(), "NameGeneratorI(AA(NAMEGENERATOR)).getRandomName()");
         // SG("CHARACTER", _createdNFTID, "0", 0);
         // SG("CHARACTER", _createdNFTID, "1", 0);
         // SG("CHARACTER", _createdNFTID, "2", 0);
@@ -146,7 +159,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r() + _createdNFTID;
+        uint256 r = dr() + _createdNFTID;
         SG("EQUIPPABLE", _createdNFTID, "HEALTHBOOST", 10 + _level * (r % GS("MAXITEMHEALTH")));
         SG("EQUIPPABLE", _createdNFTID, "ENERGYBOOST", 10 + _level * (r % GS("MAXITEMENERGY")));
         SG("EQUIPPABLE", _createdNFTID, "STRENGTHBOOST", 1 * _level * ((r + 415) % GS("MAXITEMSTATS")));
@@ -165,7 +178,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r() + _createdNFTID;
+        uint256 r = dr() + _createdNFTID;
         SG("PRODUCABLE", _createdNFTID, "PRODUCES", _produces);
         SG("PRODUCABLE", _createdNFTID, "PRODUCTION", 1 + _level * ((r + 49438249242378) % GS("MAXPRODUCTION")));
         SG("PRODUCABLE", _createdNFTID, "NEXTPRODUCTION", block.timestamp + GS("PRODUCTIONRESET")); 
@@ -182,7 +195,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r() + _createdNFTID;
+        uint256 r = dr() + _createdNFTID;
         SG("INVENTORY", _NFTID, _producableProductionType, GG("INVENTORY", _NFTID, _producableProductionType) - _amount);
         SG("CONSUMABLE", _createdNFTID, "TYPE", _producableProductionTypeUint);
         SG("CONSUMABLE", _createdNFTID, "AMOUNT", _amount);
@@ -206,7 +219,7 @@ contract ERC42069Helper {
         uint256 _createdNFTID
     ) external returns (uint256) {
         addressCheck(AA("ERC42069"), msg.sender);
-        uint256 r = d.r() + _createdNFTID;
+        uint256 r = dr() + _createdNFTID;
         SG("BUILDING", _createdNFTID, "SIZE", 1);
         SG("BUILDING", _createdNFTID, "STORIES", 1);
         SG("BUILDING", _createdNFTID, "LOCATION", _locationUint);
@@ -267,41 +280,42 @@ contract ERC42069Helper {
     
     function consume(
         uint256 _NFTID,
+        uint256 _consumingNFTID,
         string memory _producableProductionType,
         uint256 _producableProductionTypeUint,
         uint256 _amount
     ) external {
         addressCheck(AA("ERC42069"), msg.sender);
         if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "HEALTHRESTORE") > 1) {
-            SG("CHARACTER", _NFTID, "HEALTH", GG("CHARACTER", _NFTID, "MAXHEALTH"));
+            SG("CHARACTER", _consumingNFTID, "HEALTH", GG("CHARACTER", _consumingNFTID, "MAXHEALTH"));
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "ENERGYRESTORE") > 1) {
-            SG("CHARACTER", _NFTID, "ENERGY", GG("CHARACTER", _NFTID, "MAXENERGY"));
+            SG("CHARACTER", _consumingNFTID, "ENERGY", GG("CHARACTER", _consumingNFTID, "MAXENERGY"));
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "STRENGTHBOOST") > 1) {
-            if (GG("CHARACTER", _NFTID, "STRENGTH") + _amount < GS("MAXTOTALSTATS")) {
-                SG("CHARACTER", _NFTID, "STRENGTH", (GG("CHARACTER", _NFTID, "STRENGTH")) + _amount);
+            if (GG("CHARACTER", _consumingNFTID, "STRENGTH") + _amount < GS("MAXTOTALSTATS")) {
+                SG("CHARACTER", _consumingNFTID, "STRENGTH", (GG("CHARACTER", _consumingNFTID, "STRENGTH")) + _amount);
             }
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "DEXTERITYBOOST") > 1) {
-            if (GG("CHARACTER", _NFTID, "DEXTERITY") + _amount < GS("MAXTOTALSTATS")) {
-                SG("CHARACTER", _NFTID, "DEXTERITY", (GG("CHARACTER", _NFTID, "DEXTERITY")) + _amount);
+            if (GG("CHARACTER", _consumingNFTID, "DEXTERITY") + _amount < GS("MAXTOTALSTATS")) {
+                SG("CHARACTER", _consumingNFTID, "DEXTERITY", (GG("CHARACTER", _consumingNFTID, "DEXTERITY")) + _amount);
             }
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "INTELLIGENCEBOOST") > 1) {
-            if (GG("CHARACTER", _NFTID, "INTELLIGENCE") + _amount < GS("MAXTOTALSTATS")) {
-                SG("CHARACTER", _NFTID, "INTELLIGENCE", (GG("CHARACTER", _NFTID, "INTELLIGENCE")) + _amount);
+            if (GG("CHARACTER", _consumingNFTID, "INTELLIGENCE") + _amount < GS("MAXTOTALSTATS")) {
+                SG("CHARACTER", _consumingNFTID, "INTELLIGENCE", (GG("CHARACTER", _consumingNFTID, "INTELLIGENCE")) + _amount);
             }
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "CHARISMABOOST") > 1) {
-            if (GG("CHARACTER", _NFTID, "CHARISMA") + _amount < GS("MAXTOTALSTATS")) {
-                SG("CHARACTER", _NFTID, "CHARISMA", (GG("CHARACTER", _NFTID, "CHARISMA")) + _amount);
+            if (GG("CHARACTER", _consumingNFTID, "CHARISMA") + _amount < GS("MAXTOTALSTATS")) {
+                SG("CHARACTER", _consumingNFTID, "CHARISMA", (GG("CHARACTER", _consumingNFTID, "CHARISMA")) + _amount);
             }
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "HEALTHBOOST") > 1) {
-            if (GG("CHARACTER", _NFTID, "MAXHEALTH") + _amount < GS("MAXTOTALHEALTH")) {
-                SG("CHARACTER", _NFTID, "MAXHEALTH", (GG("CHARACTER", _NFTID, "MAXHEALTH")) + (_amount * (d.r() % GS("STARTINGHEALTH"))));
+            if (GG("CHARACTER", _consumingNFTID, "MAXHEALTH") + _amount < GS("MAXTOTALHEALTH")) {
+                SG("CHARACTER", _consumingNFTID, "MAXHEALTH", (GG("CHARACTER", _consumingNFTID, "MAXHEALTH")) + (_amount * (dr()% GS("STARTINGHEALTH"))));
             }
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "ENERGYBOOST") > 1) {
-            if (GG("CHARACTER", _NFTID, "MAXENERGY") + _amount < GS("MAXTOTALENERGY")) {
-                SG("CHARACTER", _NFTID, "MAXENERGY", (GG("CHARACTER", _NFTID, "MAXENERGY")) + (_amount * (d.r() % GS("STARTINGENERGY"))));
+            if (GG("CHARACTER", _consumingNFTID, "MAXENERGY") + _amount < GS("MAXTOTALENERGY")) {
+                SG("CHARACTER", _consumingNFTID, "MAXENERGY", (GG("CHARACTER", _consumingNFTID, "MAXENERGY")) + (_amount * (dr()% GS("STARTINGENERGY"))));
             }
         } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "BREEDINGRESET") > 1) {
-            SG("CHARACTER", _NFTID, "NEXTBREEDING", 1);
+            SG("CHARACTER", _consumingNFTID, "NEXTBREEDING", 1);
         }
         SG("INVENTORY", _NFTID, _producableProductionType, GG("INVENTORY", _NFTID, _producableProductionType) - _amount);
     }
@@ -325,6 +339,19 @@ contract ERC42069Helper {
         string memory _setting
     ) internal view returns (uint256) {
             return d.getGS(_setting);
+    }
+
+    function SGN(
+        string memory _symbol,
+        uint256 _NFTID,
+        string memory _statName,
+        string memory _statValue
+    ) internal {
+            d.setGDN(_symbol, _NFTID, _statName, _statValue, "ERC42069HELPER");
+    }
+
+    function dr() internal view returns (uint256) {
+        return d.r();
     }
 
     function GG(

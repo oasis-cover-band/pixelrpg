@@ -81,6 +81,7 @@ async function deploy() {
     await hre.ethers.getContractFactory("GreatFilter"),
     await hre.ethers.getContractFactory("Expansion0Master"),
     await hre.ethers.getContractFactory("ERC42069DataHelper"),
+    await hre.ethers.getContractFactory("NameGenerator"),
   ];
   args = [
     ["Pixel Credits", "CREDITS", dataContract.address],
@@ -102,6 +103,7 @@ async function deploy() {
     await factories[5].deploy(...args[5]),
     await factories[6].deploy(...args[6]),
     await factories[7].deploy(...args[7]),
+    await factories[8].deploy(...args[8])
   ];
 }
 
@@ -122,6 +124,7 @@ async function setAddresses() {
   console.log("GREATFILTER", contracts[5].address);
   console.log("EXPANSION0MASTER", contracts[6].address);
   console.log("ERC42069DATAHELPER", contracts[7].address);
+  console.log("NAMEGENERATOR", contracts[8].address);
   await dataContract.setAA("ERC20CREDITS", contracts[0].address);
   await dataContract.setAA("ERC42069", contracts[1].address);
   await dataContract.setAA("ERC42069HELPER", contracts[2].address);
@@ -130,6 +133,7 @@ async function setAddresses() {
   await dataContract.setAA("GREATFILTER", contracts[5].address);
   await dataContract.setAA("EXPANSION0MASTER", contracts[6].address);
   await dataContract.setAA("ERC42069DATAHELPER", contracts[7].address);
+  await dataContract.setAA("NAMEGENERATOR", contracts[8].address);
 }
 
 async function setGameSettings() {

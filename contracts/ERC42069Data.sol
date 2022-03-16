@@ -107,7 +107,7 @@ contract ERC42069Data {
         return aa[_name];
     }
     function r() public view returns (uint256) {
-        return 40 + uint(keccak256(abi.encodePacked(seed, block.timestamp))) / 2;
+        return 40 + (uint(keccak256(abi.encodePacked(seed, block.timestamp))) / 2);
     }
     function n2s(
         uint _i
@@ -407,6 +407,6 @@ contract ERC42069Data {
     // EXPANDBUILDINGCOST (COST TO BUILD A BUILDING NFT ITEM (TYPE 5)) 2000 (ERC20CREDITS)
 // WORLD
 // 
-    // AREABLOCKSIZE (AMOUNT OF PLOTS OF LAND IN AN AREA) // 16 
-    // AREASIZE (AMOUNT OF PLOTS OF LAND IN AN AREA) // 256 
+    // AREABLOCKSIZE (AMOUNT OF PLOTS OF LAND IN AN AREA ROW) // 16 
+    // AREASIZE (TOTAL AMOUNT OF PLOTS OF LAND IN AN AREA) // 256 
     // MAXAREAS (AMOUNT OF AREAS IN THE WORLD) // 4096

@@ -50,6 +50,7 @@ interface ERC42069HelperI {
     
     function consume(
         uint256 _NFTID,
+        uint256 _consumingNFTID,
         string memory _producableProductionType,
         uint256 _producableProductionTypeUint,
         uint256 _amount
@@ -156,6 +157,7 @@ contract ERC42069 is ERC721 {
     
     function consume(
         uint256 _NFTID,
+        uint256 _consumingNFTID,
         string memory _producableProductionType,
         uint256 _producableProductionTypeUint,
         uint256 _amount
@@ -163,6 +165,7 @@ contract ERC42069 is ERC721 {
         addressCheck(AA("GAMEMASTER"), msg.sender);
         ERC42069HelperI(AA("ERC42069HELPER")).consume(
             _NFTID,
+            _consumingNFTID,
             _producableProductionType,
             _producableProductionTypeUint,
             _amount
