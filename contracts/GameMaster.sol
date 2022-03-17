@@ -222,9 +222,9 @@ contract GameMaster {
         uint256 _special,
         uint256 _area,
         address _mintTo
-    ) external {
+    ) external returns (uint256) {
         addressCheck(AA("SETUP"), msg.sender);
-        E().createNewCharacter(_level, _species, _special, _area, _mintTo);
+        return E().createNewCharacter(_level, _species, _special, _area, _mintTo);
     }
 
     function generateConsumable(
@@ -245,30 +245,30 @@ contract GameMaster {
         uint256 _level,
         uint256 _produces,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(AA("SETUP"), msg.sender);
-        E().createNewProducable(_level, _produces, _NFTID);
+        return E().createNewProducable(_level, _produces, _NFTID);
     }
 
     function generateEquippable(
         uint256 _level,
         uint256 _itemSlot,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(AA("SETUP"), msg.sender);
         RV().itemSlotCheck(_itemSlot);
-        E().createNewEquippable(_level, _itemSlot, _NFTID);
+        return E().createNewEquippable(_level, _itemSlot, _NFTID);
     }
 
     function generateBuilding(
         uint256 _area,
         uint256 _location,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(AA("SETUP"), msg.sender);
         worldSpaceOccupancyCheck(_area, _location);
         maxAreaSizeCheck(_location);
-        E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
+        return E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
     }
 
     function replaceCapturedOrKilledCharacter(
@@ -277,9 +277,9 @@ contract GameMaster {
         uint256 _special,
         uint256 _area,
         address _mintTo
-    ) external {
+    ) external returns (uint256) {
         addressCheck(AA("ERC42069HELPER"), msg.sender);
-        E().createNewCharacter(_level, _species, _special, _area, _mintTo);
+        return E().createNewCharacter(_level, _species, _special, _area, _mintTo);
     }
 
     function placeProducable(
@@ -345,7 +345,7 @@ contract GameMaster {
     function breedTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
         typeCheck(_NFT0ID, "_NFT0ID", 0);
         typeCheck(_NFT1ID, "_NFT1ID", 0);
@@ -361,13 +361,13 @@ contract GameMaster {
             "NEXTBREEDING",
             block.timestamp
         );
-        E().breedTwoCharacters(_NFT0ID, _NFT1ID);
+        return E().breedTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function mergeTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
         stateCheck(_NFT0ID, 0);
         stateCheck(_NFT1ID, 0);
@@ -378,14 +378,14 @@ contract GameMaster {
             "MERGED",
             1
         );
-        E().mergeTwoCharacters(_NFT0ID, _NFT1ID);
+        return E().mergeTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function newCharacter(
         address _mintTo
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
-        E().createNewCharacter(1, 0, 0, 0, _mintTo);
+        return E().createNewCharacter(1, 0, 0, 0, _mintTo);
         // takeCredits(_NFTID, "CHARACTERCOST"); // TAKE NETWORK CURRENCY INSTEAD
     }
 
@@ -393,48 +393,48 @@ contract GameMaster {
         uint256 _amount,
         uint256 _producableProductionType,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
         stateCheck(_NFTID, 0);
         consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
-        E().createNewConsumable(_amount, n2s(_producableProductionType), _producableProductionType, _NFTID);
+        return E().createNewConsumable(_amount, n2s(_producableProductionType), _producableProductionType, _NFTID);
     }
 
     function newProducable(
         uint256 _level,
         uint256 _produces,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
         stateCheck(_NFTID, 0);
-        E().createNewProducable(_level, _produces, _NFTID);
         takeCredits(_NFTID, "PRODUCABLECOST");
+        return E().createNewProducable(_level, _produces, _NFTID);
     }
     
     function newEquippable(
         uint256 _level,
         uint256 _itemSlot,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
         stateCheck(_NFTID, 0);
         RV().itemSlotCheck(_itemSlot);
-        E().createNewEquippable(_level, _itemSlot, _NFTID);
         takeCredits(_NFTID, "EQUIPPABLECOST");
+        return E().createNewEquippable(_level, _itemSlot, _NFTID);
     }
 
     function newBuilding(
         uint256 _area,
         uint256 _location,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(GF(), msg.sender);
         stateCheck(_NFTID, 0);
         worldSpaceOccupancyCheck(_area, _location);
         maxAreaSizeCheck(_location);
-        E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
         takeCredits(_NFTID, "BUILDINGCOST");
+        return E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
     }
     
     function equip(

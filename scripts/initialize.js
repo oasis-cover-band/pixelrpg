@@ -2075,6 +2075,7 @@ async function setConsumableType() {
 async function setWorld() {
   await addNames();
   await setFreeCharacters();
+  await setFreeRoamingCharacters();
   await setFreeConsumables();
   await setFreeProducables();
   await setNPCs();
@@ -2102,6 +2103,35 @@ async function setFreeCharacters() {
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
+}
+
+async function setFreeRoamingCharacters() {
+  for (let index = 0; index < 1; index++) {
+    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+  }
 }
 
 async function setFreeConsumables() {

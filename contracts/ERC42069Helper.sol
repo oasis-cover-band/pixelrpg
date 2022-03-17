@@ -111,14 +111,14 @@ contract ERC42069Helper {
         uint256 _area,
         uint256 _createdNFTID) internal {
         uint256 r = dr() + _createdNFTID;
-        SG("CHARACTER", _createdNFTID, "HEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
-        SG("CHARACTER", _createdNFTID, "MAXHEALTH", 10 + _level * (r % GS("STARTINGHEALTH")));
-        SG("CHARACTER", _createdNFTID, "ENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
-        SG("CHARACTER", _createdNFTID, "MAXENERGY", 10 + _level * (r % GS("STARTINGENERGY")));
-        SG("CHARACTER", _createdNFTID, "STRENGTH", 1 + _level * ((r + 415) % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "DEXTERITY", 1 + _level * ((r + 948) % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "INTELLIGENCE", 1 + _level * ((r + 307) % GS("STARTINGSTATS")));
-        SG("CHARACTER", _createdNFTID, "CHARISMA", 1 + _level * ((r + 81) % GS("STARTINGSTATS")));
+        setGeneralCharacter(
+            10 + _level * (r % GS("STARTINGHEALTH")),
+            10 + _level * (r % GS("STARTINGENERGY")),
+            1 + _level * ((r + 415) % GS("STARTINGSTATS")),
+            1 + _level * ((r + 948) % GS("STARTINGSTATS")),
+            1 + _level * ((r + 307) % GS("STARTINGSTATS")),
+            1 + _level * ((r + 81) % GS("STARTINGSTATS")),
+            _createdNFTID);
         SG("CHARACTER", _createdNFTID, "NEXTBREEDING", block.timestamp + GS("BREEDINGRESET"));
         SG("CHARACTER", _createdNFTID, "FREESTATS", r % GS("STARTINGSTATS") + 3);
         SG("CHARACTER", _createdNFTID, "EXPERIENCE", 0);
@@ -141,14 +141,14 @@ contract ERC42069Helper {
         uint256 _NFT1ID,
         uint256 _createdNFTID) internal {
         uint256 r = dr() + _createdNFTID;
-        SG("CHARACTER", _createdNFTID, "HEALTH",  GG("CHARACTER", _NFT0ID, "HEALTH") + GG("CHARACTER", _NFT1ID, "HEALTH"));
-        SG("CHARACTER", _createdNFTID, "MAXHEALTH",  GG("CHARACTER", _NFT0ID, "MAXHEALTH") + GG("CHARACTER", _NFT1ID, "MAXHEALTH"));
-        SG("CHARACTER", _createdNFTID, "ENERGY",  GG("CHARACTER", _NFT0ID, "ENERGY") + GG("CHARACTER", _NFT1ID, "ENERGY"));
-        SG("CHARACTER", _createdNFTID, "MAXENERGY",  GG("CHARACTER", _NFT0ID, "MAXENERGY") + GG("CHARACTER", _NFT1ID, "MAXENERGY"));
-        SG("CHARACTER", _createdNFTID, "STRENGTH",  GG("CHARACTER", _NFT0ID, "STRENGTH") + GG("CHARACTER", _NFT1ID, "STRENGTH"));
-        SG("CHARACTER", _createdNFTID, "DEXTERITY",  GG("CHARACTER", _NFT0ID, "DEXTERITY") + GG("CHARACTER", _NFT1ID, "DEXTERITY"));
-        SG("CHARACTER", _createdNFTID, "INTELLIGENCE",  GG("CHARACTER", _NFT0ID, "INTELLIGENCE") + GG("CHARACTER", _NFT1ID, "INTELLIGENCE"));
-        SG("CHARACTER", _createdNFTID, "CHARISMA",  GG("CHARACTER", _NFT0ID, "CHARISMA") + GG("CHARACTER", _NFT1ID, "CHARISMA"));
+        setGeneralCharacter(
+            GG("CHARACTER", _NFT0ID, "MAXHEALTH") + GG("CHARACTER", _NFT1ID, "MAXHEALTH"),
+            GG("CHARACTER", _NFT0ID, "MAXENERGY") + GG("CHARACTER", _NFT1ID, "MAXENERGY"),
+            GG("CHARACTER", _NFT0ID, "STRENGTH") + GG("CHARACTER", _NFT1ID, "STRENGTH"),
+            GG("CHARACTER", _NFT0ID, "DEXTERITY") + GG("CHARACTER", _NFT1ID, "DEXTERITYY"),
+            GG("CHARACTER", _NFT0ID, "INTELLIGENCE") + GG("CHARACTER", _NFT1ID, "INTELLIGENCE"),
+            GG("CHARACTER", _NFT0ID, "CHARISMA") + GG("CHARACTER", _NFT1ID, "CHARISMA"),
+            _createdNFTID);
         SG("CHARACTER", _createdNFTID, "NEXTBREEDING", block.timestamp + GS("BREEDINGRESET"));
         SG("CHARACTER", _createdNFTID, "FREESTATS", r % GS("STARTINGSTATS") + 3);
         SG("CHARACTER", _createdNFTID, "EXPERIENCE", 0);
@@ -339,6 +339,7 @@ contract ERC42069Helper {
         SG("CHARACTER", _NFTID, "HEALTH", _health);
         SG("CHARACTER", _NFTID, "MAXHEALTH", _health);
         SG("CHARACTER", _NFTID, "ENERGY", _energy);
+        SG("CHARACTER", _NFTID, "MAXENERGY", _energy);
         SG("CHARACTER", _NFTID, "STRENGTH", _strength);
         SG("CHARACTER", _NFTID, "DEXTERITY", _dexterity);
         SG("CHARACTER", _NFTID, "INTELLIGENCE", _intelligence);

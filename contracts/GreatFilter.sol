@@ -23,7 +23,7 @@ interface GameMasterI {
 
     function newCharacter(
         address _mintTo
-    ) external;
+    ) external returns (uint256);
     
     function placeProducable(
         uint256 _NFTID,
@@ -45,11 +45,11 @@ interface GameMasterI {
     function breedTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external;
+    ) external returns (uint256);
     function mergeTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external;
+    ) external returns (uint256);
     
     function destroyConsumable(
         uint256 _NFTID,
@@ -60,19 +60,19 @@ interface GameMasterI {
         uint256 _level,
         uint256 _produces,
         uint256 _NFTID
-    ) external;
+    ) external returns (uint256);
 
     function newEquippable(
         uint256 _level,
         uint256 _itemSlot,
         uint256 _NFTID
-    ) external;
+    ) external returns (uint256);
 
     function newBuilding(
         uint256 _area,
         uint256 _location,
         uint256 _NFTID
-    ) external;
+    ) external returns (uint256);
     
     function equip(
         uint256 _equipSlot,
@@ -166,23 +166,23 @@ contract GreatFilter {
     function breedTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
-        GM().breedTwoCharacters(_NFT0ID, _NFT1ID);
+        return GM().breedTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
     function mergeTwoCharacters(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
-        GM().mergeTwoCharacters(_NFT0ID, _NFT1ID);
+        return GM().mergeTwoCharacters(_NFT0ID, _NFT1ID);
     }
 
-    function newCharacter() external {
-        GM().newCharacter(
+    function newCharacter() external returns (uint256) {
+        return GM().newCharacter(
         msg.sender
         );
     }
@@ -219,9 +219,9 @@ contract GreatFilter {
     function buyProducable(
         uint256 _produces,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GM().newProducable(
+        return GM().newProducable(
             1,
             _produces,
             _NFTID
@@ -231,9 +231,9 @@ contract GreatFilter {
     function buyEquippable(
         uint256 _itemSlot,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GM().newEquippable(
+        return GM().newEquippable(
             1,
             _itemSlot,
             _NFTID
@@ -244,9 +244,9 @@ contract GreatFilter {
         uint256 _area,
         uint256 _location,
         uint256 _NFTID
-    ) external {
+    ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        GM().newBuilding(
+        return GM().newBuilding(
             _area,
             _location,
             _NFTID
