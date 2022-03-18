@@ -79,7 +79,7 @@ contract ERC42069DataHelper {
             getGD("CHARACTER", _NFTID, "STATE"),
             getGD("GENERAL", _NFTID, "DNA"),
             getGD("GENERAL", _NFTID, "TYPE"),
-            getGD("GENERAL", _NFTID, "EVOLUTION"),
+            getGD("COMPANION", _NFTID, "0"),
             getGD("GENERAL", _NFTID, "SPECIAL")
         );
     }

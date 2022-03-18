@@ -55,6 +55,10 @@ interface Expansion0MasterI {
     ) external;
 }
 interface GameMasterI {
+
+    function evolve(
+        uint256 _NFTID
+    ) external;
     
     function setCompanion(
         uint256 _NFT0ID,
@@ -174,7 +178,7 @@ interface ERC42069I {
 contract GreatFilter {
     event Attack(uint256 _NFT0Dmg, uint256 _NFT1Dmg);
     event NewNFT(uint256 _NFTID);
-    event NewName(string _newName);
+    event NewNFTName(string _newName);
 
     ERC42069DataI d;
     constructor(
@@ -263,6 +267,13 @@ contract GreatFilter {
             ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(_NFT0ID,  d.r() % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1));
         }
     }
+    
+    function evolve(
+        uint256 _NFTID
+    ) external {
+        addressCheck(E().ownerOf(_NFTID), msg.sender, "EVOLVE");
+        GM().evolve(_NFTID);
+    }
 
     function setCompanion(
         uint256 _NFT0ID,
@@ -346,7 +357,9 @@ contract GreatFilter {
         string memory _newName
     ) external returns (string memory) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE");
-        return E0M().rename(_NFTID, _newName);
+        string memory newNFTName = E0M().rename(_NFTID, _newName);
+        emit NewNFTName(newNFTName);
+        return newNFTName;
     }
     
     function destroyConsumable(
@@ -375,11 +388,13 @@ contract GreatFilter {
         uint256 _NFTID
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        return GM().newProducable(
+        uint256 newNFTID = GM().newProducable(
             1,
             _produces,
             _NFTID
         );
+        emit NewNFT(newNFTID);
+        return newNFTID;
     }
     
     function buyEquippable(
@@ -387,11 +402,13 @@ contract GreatFilter {
         uint256 _NFTID
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        return GM().newEquippable(
+        uint256 newNFTID = GM().newEquippable(
             1,
             _itemSlot,
             _NFTID
         );
+        emit NewNFT(newNFTID);
+        return newNFTID;
     }
 
     function buyBuilding(
@@ -400,11 +417,13 @@ contract GreatFilter {
         uint256 _NFTID
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        return GM().newBuilding(
+        uint256 newNFTID = GM().newBuilding(
             _area,
             _location,
             _NFTID
         );
+        emit NewNFT(newNFTID);
+        return newNFTID;
     }
     
     function equip(

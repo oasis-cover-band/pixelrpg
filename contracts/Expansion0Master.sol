@@ -81,6 +81,17 @@ interface ERC42069DataI {
 
     function r() external view returns (uint256);
 }
+interface ERC42069I {
+
+    function gameTransferFrom(
+        uint256 _NFTID,
+        address _to
+    ) external;
+
+    function ownerOf(
+        uint256 _NFTID
+    ) external returns (address);
+}
 contract Expansion0Master {
     
     ERC42069DataI d;
@@ -203,6 +214,10 @@ contract Expansion0Master {
         captureEnemyChecks(_NFT0ID, _NFT1ID);
         SG("GENERAL", _NFT1ID, "SPECIAL", 0);
         SG("STATS", _NFT0ID, "CAPTURED", GG("STATS", _NFT0ID, "CAPTURED") + 1);
+        ERC42069I(AA("ERC42069I")).gameTransferFrom(
+            _NFT1ID,
+            ERC42069I(AA("ERC42069I")).ownerOf(_NFT0ID)
+        );
         fleeBattle(_NFT0ID, _NFT1ID);
     }
 

@@ -2099,10 +2099,15 @@ async function setFreeProducables() {
 }
 
 async function setFreeCharacters() {
-  await contracts[4].generateCharacter(1, 1, 0, 0, address);
-  await contracts[4].generateCharacter(1, 1, 0, 0, address);
-  await contracts[4].generateCharacter(1, 1, 0, 0, address);
-  await contracts[4].generateCharacter(1, 1, 0, 0, address);
+  await contracts[4].generateCharacter(0, 0, 0, 0, address);
+  await contracts[4].generateCharacter(0, 0, 0, 0, address);
+  await contracts[4].generateCharacter(0, 0, 0, 0, address);
+  await contracts[4].generateCharacter(0, 0, 0, 0, address);
+  await contracts[4].generateCharacter(0, 0, 0, 0, address);
+  await contracts[4].generateCharacter(33, 1, 0, 0, address);
+  await contracts[4].generateCharacter(66, 1, 0, 0, address);
+  await contracts[4].generateCharacter(34, 1, 0, 0, address);
+  await contracts[4].generateCharacter(70, 1, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);

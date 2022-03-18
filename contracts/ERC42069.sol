@@ -188,7 +188,7 @@ contract ERC42069 is ERC721 {
         uint256 _NFTID,
         address _to
     ) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("GAMEMASTER"), AA("EXPANSION0MASTER"), msg.sender);
         internalGameTransfer(_NFTID, _to);
     }
 
@@ -210,7 +210,7 @@ contract ERC42069 is ERC721 {
         uint256 _area,
         address _mintTo
     ) external returns (uint256) {
-        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("MINTMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewCharacter(
             _level,
@@ -237,6 +237,17 @@ contract ERC42069 is ERC721 {
             _NFTID
         );
         console.log("ERC42069 gained Experience (Character): AMOUNT:'%s' ID:'%s'", _amount, _NFTID);
+    }
+
+    function evolve(
+        uint256 _NFTID
+    ) external {
+        addressCheck(AA("GAMEMASTER"), msg.sender);
+        if (GG("CHARACTER", _NFTID, "LEVEL") >= 66) {
+            SG("CHARACTER", _NFTID, "EVOLUTION", 2);    
+        } else if (GG("CHARACTER", _NFTID, "LEVEL") >= 33) {
+            SG("CHARACTER", _NFTID, "EVOLUTION", 1);    
+        }
     }
 
     function giveStat(
@@ -296,7 +307,7 @@ contract ERC42069 is ERC721 {
         uint256 _equipSlot,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("MINTMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewEquippable(
             _level,
@@ -315,7 +326,7 @@ contract ERC42069 is ERC721 {
         uint256 _produces,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("MINTMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewProducable(
             _level,
@@ -334,7 +345,7 @@ contract ERC42069 is ERC721 {
         uint256 _producableProductionTypeUint,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("MINTMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewConsumable(
             _amount,
@@ -367,7 +378,7 @@ contract ERC42069 is ERC721 {
         uint256 _locationUint,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheckOr(AA("EXPANSION0MASTER"), AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("MINTMASTER"), msg.sender);
         uint256 c = count;
         ERC42069HelperI(AA("ERC42069HELPER")).createNewBuilding(
             _area,

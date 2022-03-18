@@ -13,6 +13,7 @@ error EmptyEquipmentSlot(uint256 _current, uint256 _slot, uint256 _NFTID);
 error IncorrectEquipmentSlot(uint256 _slot);
 error InvalidType(uint256 _NFTID, string _variableName, uint256 _type);
 error InvalidSpecies(uint256 _NFT0ID, uint256 _NFT1ID, string _variableName);
+error InvalidSingleSpecies(uint256 _NFTID, uint256 _requiredSpecies);
 error InsufficientBalance(address _from, uint256 _amount);
 error InsufficientConsumableBalance(uint256 _NFTID, string _producableProductionType, uint256 _amount);
 error InsufficientFreeStatsBalance(uint256 _NFTID, string _statName, uint256 _amount);
@@ -204,11 +205,23 @@ contract ERC42069Reverts {
         }
     }
 
+    function singleSpeciesCheck(
+        uint256 _NFTID,
+        uint256 _requiredSpecies
+    ) external view {
+        if (GG("CHARACTER", _NFTID, "SPECIES") != _requiredSpecies) {
+            revert InvalidSingleSpecies({
+                _NFTID: _NFTID,
+                _requiredSpecies: _requiredSpecies
+            });
+        }
+    }
+
     function speciesCheck(
         uint256 _NFT0ID,
         uint256 _NFT1ID,
         string memory _variableName
-    ) public view {
+    ) external view {
         if (GG("CHARACTER", _NFT0ID, "SPECIES") != GG("CHARACTER", _NFT1ID, "SPECIES")) {
             revert InvalidSpecies({
                 _NFT0ID: _NFT0ID,
@@ -222,7 +235,7 @@ contract ERC42069Reverts {
         uint256 _NFT0ID,
         uint256 _NFT1ID,
         string memory _variableName
-    ) public view {
+    ) external view {
         if (GG("CHARACTER", _NFT0ID, "SPECIES") != 0 ||
         GG("CHARACTER", _NFT1ID, "SPECIES") == 0) {
             revert InvalidSpecies({
@@ -249,7 +262,7 @@ contract ERC42069Reverts {
         uint256 _value,
         uint256 _mustBeBefore,
         string memory _timerName
-    ) public pure {
+    ) external pure {
         if (
             _value >= _mustBeBefore
         ) {
