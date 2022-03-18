@@ -4,8 +4,6 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-error InvalidERC20CreditsSender(address _target, address _sender);
-
 interface ERC42069DataI {
 
     function getAA(string memory _name) external view returns (address);
@@ -13,6 +11,20 @@ interface ERC42069DataI {
 interface ERC42069I {
 
     function ownerOf(uint256 _tokenID) external returns (address owner_);
+}
+interface ERC42069RevertsI {
+
+    function addressCheck(
+        address _target,
+        address _sender
+    ) external pure;
+
+
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) external pure;
 }
  contract ERC20Credits is ERC20 {
 
@@ -33,13 +45,13 @@ interface ERC42069I {
     }
 
     function burnCoins(uint256 _NFTID, uint256 _amount) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("GAMEMASTER"), AA("MINTMASTER"), msg.sender);
         _burn(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), _amount);
         console.log("Burned ERC20Credits FROM:'%s' AMOUNT:'%s' D:'%s'", ERC42069I(AA("ERC42069")).ownerOf(_NFTID), _amount);
     }
 
     function gameTransferFrom(address _from, address _to, uint256 _amount) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheckOr(AA("GAMEMASTER"), AA("MINTMASTER"), msg.sender);
         _transfer(
         _from,
         _to,
@@ -52,15 +64,22 @@ interface ERC42069I {
         return d.getAA(_name);
     }
 
+    function RV() internal view returns (ERC42069RevertsI) {
+        return ERC42069RevertsI(AA("ERC42069REVERTS"));
+    }
+
     function addressCheck(
         address _target,
         address _sender
-    ) internal pure {
-        if (_target != _sender) {
-            revert InvalidERC20CreditsSender({
-                _target: _target,
-                _sender: _sender
-            });
-        }
+    ) internal view {
+        RV().addressCheck(_target, _sender);
+    }
+
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) internal view {
+        RV().addressCheckOr(_target0, _target1, _sender);
     }
 }

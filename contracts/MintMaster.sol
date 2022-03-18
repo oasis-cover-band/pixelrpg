@@ -2,8 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-error InvalidERC42069Sender(address _target, address _sender);
-error InvalidERC42069SenderOr(address _target0, address _target1, address _sender);
 
 interface ERC42069DataI {
 
@@ -80,40 +78,13 @@ interface ERC42069I {
 }
 interface ERC42069RevertsI {
 
-    function singleSpeciesCheck(
-        uint256 _NFTID,
-        uint256 _requiredSpecies
-    ) external view;
-
-    function companionCheck(
-        uint256 _NFT0ID,
-        uint256 _NFT1ID,
-        string memory _variableName
-    ) external view;
-
     function stateCheck(
         uint256 _NFTID,
         uint256 _requiredState
     ) external view;
 
-    function differsCheck(
-        uint256 _NFT0ID,
-        uint256 _NFT1ID
-    ) external view;
-
     function itemSlotCheck(
         uint256 _equipSlotUint
-    ) external view;
-
-    function maxBuildingSizeCheck(
-        uint256 _buildingNFTID,
-        uint256 _location
-    ) external view;
-
-    function borderingWorldSpaceOccupancyCheck(
-        uint256 _area,
-        string memory _location,
-        uint256 _NFTID
     ) external view;
 
     function maxAreaSizeCheck(
@@ -125,33 +96,15 @@ interface ERC42069RevertsI {
         uint256 _location
     ) external view;
 
-    function itemEquippedCheck(
-        uint256 _current,
-        uint256 _equipSlotUint,
-        uint256 _NFTID
-    ) external pure;
-
     function typeCheck(
         uint256 _NFTID,
         string memory _variableName,
         uint256 _type
     ) external view;
 
-    function speciesCheck(
-        uint256 _NFT0ID,
-        uint256 _NFT1ID,
-        string memory _variableName
-    ) external view;
-
     function addressCheck(
         address _target,
         address _sender
-    ) external pure;
-
-    function timerCheck(
-        uint256 _value,
-        uint256 _mustBeBefore,
-        string memory _timerName
     ) external pure;
 
     function balanceCheck(
@@ -162,11 +115,6 @@ interface ERC42069RevertsI {
     function consumableBalanceCheck(
         uint256 _NFTID,
         string memory _producableProductionType,
-        uint256 _amount
-    ) external view;
-
-    function freeStatsBalanceCheck(
-        uint256 _NFTID,
         uint256 _amount
     ) external view;
 }
@@ -306,17 +254,13 @@ contract MintMaster {
         takeCredits(_NFTID, "BUILDINGCOST");
         return E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
     }
-
-    function addressCheck(
-        address _target,
-        address _sender
-    ) internal pure {
-        if (_target != _sender) {
-            revert InvalidERC42069Sender({
-                _target: _target,
-                _sender: _sender
-            });
-        }
+    
+    function destroyConsumable(
+        uint256 _NFTID,
+        uint256 _consumableNFTID
+    ) external {
+        addressCheck(GF(), msg.sender);
+        return E().destroyConsumable(_NFTID, _consumableNFTID);
     }
 
     function E() internal view returns (ERC42069I) {
@@ -347,7 +291,7 @@ contract MintMaster {
         string memory _statName,
         uint256 _statValue
     ) internal {
-            d.setGD(_symbol, _NFTID, _statName, _statValue, "GAMEMASTER");
+            d.setGD(_symbol, _NFTID, _statName, _statValue, "MINTMASTER");
     }
     
     function GS(
@@ -362,6 +306,13 @@ contract MintMaster {
         string memory _statName
     ) internal view returns (uint256) {
         return d.getGD(_symbol, _NFTID, _statName);
+    }
+
+    function addressCheck(
+        address _target,
+        address _sender
+    ) internal view {
+        RV().addressCheck(_target, _sender);
     }
 
     function typeCheck(
@@ -385,14 +336,6 @@ contract MintMaster {
         uint256 _location
     ) internal view {
         RV().worldSpaceOccupancyCheck(_area, _location);
-    }
-
-    function borderingWorldSpaceOccupancyCheck(
-        uint256 _area,
-        string memory _location,
-        uint256 _NFTID
-    ) internal view {
-        RV().borderingWorldSpaceOccupancyCheck(_area, _location, _NFTID);
     }
 
     function maxAreaSizeCheck(

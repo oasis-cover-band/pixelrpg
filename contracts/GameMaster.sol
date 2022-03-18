@@ -114,10 +114,6 @@ interface ERC42069RevertsI {
         uint256 _NFT1ID
     ) external view;
 
-    function itemSlotCheck(
-        uint256 _equipSlotUint
-    ) external view;
-
     function maxBuildingSizeCheck(
         uint256 _buildingNFTID,
         uint256 _location

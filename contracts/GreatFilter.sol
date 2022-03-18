@@ -54,6 +54,30 @@ interface Expansion0MasterI {
         uint256 _NFT1ID
     ) external;
 }
+interface MintMasterI {
+
+    function newCharacter(
+        address _mintTo
+    ) external returns (uint256);
+    
+    function newProducable(
+        uint256 _level,
+        uint256 _produces,
+        uint256 _NFTID
+    ) external returns (uint256);
+
+    function newEquippable(
+        uint256 _level,
+        uint256 _itemSlot,
+        uint256 _NFTID
+    ) external returns (uint256);
+
+    function newBuilding(
+        uint256 _area,
+        uint256 _location,
+        uint256 _NFTID
+    ) external returns (uint256);
+}
 interface GameMasterI {
 
     function evolve(
@@ -267,7 +291,7 @@ contract GreatFilter {
             ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(_NFT0ID,  d.r() % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1));
         }
     }
-    
+
     function evolve(
         uint256 _NFTID
     ) external {
@@ -345,7 +369,7 @@ contract GreatFilter {
     }
 
     function newCharacter() external returns (uint256) {
-        uint256 newNFTID = GM().newCharacter(
+        uint256 newNFTID = MM().newCharacter(
         msg.sender
         );
         emit NewNFT(newNFTID);
@@ -388,7 +412,7 @@ contract GreatFilter {
         uint256 _NFTID
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        uint256 newNFTID = GM().newProducable(
+        uint256 newNFTID = MM().newProducable(
             1,
             _produces,
             _NFTID
@@ -402,7 +426,7 @@ contract GreatFilter {
         uint256 _NFTID
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        uint256 newNFTID = GM().newEquippable(
+        uint256 newNFTID = MM().newEquippable(
             1,
             _itemSlot,
             _NFTID
@@ -417,7 +441,7 @@ contract GreatFilter {
         uint256 _NFTID
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        uint256 newNFTID = GM().newBuilding(
+        uint256 newNFTID = MM().newBuilding(
             _area,
             _location,
             _NFTID
@@ -457,6 +481,10 @@ contract GreatFilter {
 
     function GM() internal view returns (GameMasterI) {
         return GameMasterI(AA("GAMEMASTER"));
+    }
+
+    function MM() internal view returns (MintMasterI) {
+        return MintMasterI(AA("MINTMASTER"));
     }
 
     function E0M() internal view returns (Expansion0MasterI) {

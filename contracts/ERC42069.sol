@@ -4,9 +4,6 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-error InvalidERC42069Sender(address _target, address _sender);
-error InvalidERC42069SenderOr(address _target0, address _target1, address _sender);
-
 interface NameGeneratorI {
      function getRandomName() external view returns (string memory);
 }
@@ -129,6 +126,20 @@ interface ERC42069HelperI {
         uint256 _locationUint,
         uint256 _createdNFTID
     ) external;
+}
+interface ERC42069RevertsI {
+
+    function addressCheck(
+        address _target,
+        address _sender
+    ) external pure;
+
+
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) external pure;
 }
 
 contract ERC42069 is ERC721 {
@@ -364,7 +375,7 @@ contract ERC42069 is ERC721 {
         uint256 _NFTID,
         uint256 _consumableNFTID
     ) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
+        addressCheck(AA("MINTMASTER"), msg.sender);
         ERC42069HelperI(AA("ERC42069HELPER")).destroyConsumable(
             _NFTID,
             _consumableNFTID
@@ -446,29 +457,22 @@ contract ERC42069 is ERC721 {
         return d.getGD(_symbol, _NFTID, _statName);
     }
 
+    function RV() internal view returns (ERC42069RevertsI) {
+        return ERC42069RevertsI(AA("ERC42069REVERTS"));
+    }
+
     function addressCheck(
         address _target,
         address _sender
-    ) internal pure {
-        if (_target != _sender) {
-            revert InvalidERC42069Sender({
-                _target: _target,
-                _sender: _sender
-            });
-        }
+    ) internal view {
+        RV().addressCheck(_target, _sender);
     }
 
     function addressCheckOr(
         address _target0,
         address _target1,
         address _sender
-    ) internal pure {
-        if (_sender != _target0 && _sender != _target1) {
-            revert InvalidERC42069SenderOr({
-                _target0: _target0,
-                _target1: _target1,
-                _sender: _sender
-            });
-        }
+    ) internal view {
+        RV().addressCheckOr(_target0, _target1, _sender);
     }
 }

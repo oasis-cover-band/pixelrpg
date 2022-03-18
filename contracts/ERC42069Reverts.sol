@@ -3,11 +3,12 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
+error InvalidSender(address _target, address _sender);
+error InvalidSenderOr(address _target0, address _target1, address _sender);
 error OccupiedWorldSpace(uint256 _targetArea, string _targetPlacementIndex, uint256 _current);
 error NotBorderingWorldSpace(uint256 _targetArea, string _targetPlacementIndex, uint256 _current);
 error MaxAreaSize(uint256 _targetPlacementIndex);
 error SameNFT(uint256 _NFT0ID, uint256 _NFT1ID);
-error InvalidSender(address _target, address _sender);
 error UintDiffersString(uint256 _uint, string _string);
 error EmptyEquipmentSlot(uint256 _current, uint256 _slot, uint256 _NFTID);
 error IncorrectEquipmentSlot(uint256 _slot);
@@ -246,18 +247,6 @@ contract ERC42069Reverts {
         }
     }
 
-    function addressCheck(
-        address _target,
-        address _sender
-    ) external pure {
-        if (_target != _sender) {
-            revert InvalidSender({
-                _target: _target,
-                _sender: _sender
-            });
-        }
-    }
-
     function timerCheck(
         uint256 _value,
         uint256 _mustBeBefore,
@@ -445,6 +434,32 @@ contract ERC42069Reverts {
                 _NFTID: _NFTID,
                 _statName: "FREESTATS",
                 _amount: _amount
+            });
+        }
+    }
+
+    function addressCheck(
+        address _target,
+        address _sender
+    ) external pure {
+        if (_target != _sender) {
+            revert InvalidSender({
+                _target: _target,
+                _sender: _sender
+            });
+        }
+    }
+
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) external pure {
+        if (_sender != _target0 && _sender != _target1) {
+            revert InvalidSenderOr({
+                _target0: _target0,
+                _target1: _target1,
+                _sender: _sender
             });
         }
     }
