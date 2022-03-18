@@ -19,6 +19,13 @@ error InsufficientFreeStatsBalance(uint256 _NFTID, string _statName, uint256 _am
 error TimerNotReady(uint256 _value, uint256 _mustBeBefore, string _timerName);
 error GreaterThanBuildingSize(uint256 _size, uint256 _location);
 error InvalidState(uint256 _NFTID, uint256 _actual, uint256 _required);
+error InvalidAttackState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
+error InvalidStartBattleState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
+error InvalidEndBattleState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
+error InvalidFleeBattleState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
+error InvalidCaptureEnemyState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
+error InvalidQuest(uint256 _NFTID, uint256 _questID);
+
 interface ERC20CreditsI {
 
     function balanceOf(address account) external view returns (uint256);
@@ -134,10 +141,22 @@ contract ERC42069Reverts {
         }
     }
 
+    function questCheck(
+        uint256 _NFTID,
+        uint256 _questID
+    ) external view {
+        if (GG("CHARACTER", _NFTID, "QUESTID") != _questID) {
+            revert InvalidQuest({
+                _NFTID: _NFTID,
+                _questID: _questID
+            });
+        }
+    }
+
     function stateCheck(
         uint256 _NFTID,
         uint256 _requiredState
-    ) external view {
+    ) public view {
         if (GG("CHARACTER", _NFTID, "STATE") != _requiredState) {
             revert InvalidState({
                 _NFTID: _NFTID,
@@ -199,6 +218,21 @@ contract ERC42069Reverts {
         }
     }
 
+    function companionCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        string memory _variableName
+    ) public view {
+        if (GG("CHARACTER", _NFT0ID, "SPECIES") != 0 ||
+        GG("CHARACTER", _NFT1ID, "SPECIES") == 0) {
+            revert InvalidSpecies({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID,
+                _variableName: _variableName
+            });
+        }
+    }
+
     function addressCheck(
         address _target,
         address _sender
@@ -248,6 +282,127 @@ contract ERC42069Reverts {
             revert InsufficientBalance({
                 _from: _from,
                 _amount: _amount
+            });
+        }
+    }
+
+    function attackChecks(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external view {
+        stateCheck(_NFT0ID, 420);
+        stateCheck(_NFT1ID, 420);
+        if (
+            GG("CHARACTER", _NFT0ID, "BATTLEID") !=
+            GG("CHARACTER", _NFT1ID, "BATTLEID") ||
+            GG("CHARACTER", _NFT0ID, "HEALTH") == 0 ||
+            GG("CHARACTER", _NFT1ID, "HEALTH") == 0
+        ) {
+            revert InvalidAttackState({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID,
+                _NFT0HEALTH: GG("CHARACTER", _NFT0ID, "HEALTH"),
+                _NFT1HEALTH: GG("CHARACTER", _NFT1ID, "HEALTH"),
+                _NFT0BATTLEID: GG("CHARACTER", _NFT0ID, "BATTLEID"),
+                _NFT1BATTLEID: GG("CHARACTER", _NFT1ID, "BATTLEID")
+            });
+        }
+    }
+
+    function startBattleChecks(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external view {
+        typeCheck(_NFT0ID, "_NFT0ID", 0);
+        typeCheck(_NFT1ID, "_NFT1ID", 0);
+        stateCheck(_NFT0ID, 0);
+        stateCheck(_NFT1ID, 0);
+        if (
+            GG("CHARACTER", _NFT0ID, "BATTLEID") != 0 ||
+            GG("CHARACTER", _NFT1ID, "BATTLEID") != 0 ||
+            GG("CHARACTER", _NFT0ID, "HEALTH") == 0 ||
+            GG("CHARACTER", _NFT1ID, "HEALTH") == 0
+        ) {
+            revert InvalidStartBattleState({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID,
+                _NFT0HEALTH: GG("CHARACTER", _NFT0ID, "HEALTH"),
+                _NFT1HEALTH: GG("CHARACTER", _NFT1ID, "HEALTH"),
+                _NFT0BATTLEID: GG("CHARACTER", _NFT0ID, "BATTLEID"),
+                _NFT1BATTLEID: GG("CHARACTER", _NFT1ID, "BATTLEID")
+            });
+        }
+    }
+
+    function endBattleChecks(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external view {
+        typeCheck(_NFT0ID, "_NFT0ID", 0);
+        typeCheck(_NFT1ID, "_NFT1ID", 0);
+        stateCheck(_NFT0ID, 420);
+        stateCheck(_NFT1ID, 420);
+        if (
+            GG("CHARACTER", _NFT0ID, "BATTLEID") !=
+            GG("CHARACTER", _NFT1ID, "BATTLEID") ||
+            GG("CHARACTER", _NFT1ID, "HEALTH") != 0
+        ) {
+            revert InvalidEndBattleState({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID,
+                _NFT0HEALTH: GG("CHARACTER", _NFT0ID, "HEALTH"),
+                _NFT1HEALTH: GG("CHARACTER", _NFT1ID, "HEALTH"),
+                _NFT0BATTLEID: GG("CHARACTER", _NFT0ID, "BATTLEID"),
+                _NFT1BATTLEID: GG("CHARACTER", _NFT1ID, "BATTLEID")
+            });
+        }
+    }
+
+    function fleeBattleChecks(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external view {
+        typeCheck(_NFT0ID, "_NFT0ID", 0);
+        typeCheck(_NFT1ID, "_NFT1ID", 0);
+        stateCheck(_NFT0ID, 420);
+        stateCheck(_NFT1ID, 420);
+        if (
+            GG("CHARACTER", _NFT0ID, "BATTLEID") !=
+            GG("CHARACTER", _NFT1ID, "BATTLEID")
+        ) {
+            revert InvalidFleeBattleState({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID,
+                _NFT0HEALTH: GG("CHARACTER", _NFT0ID, "HEALTH"),
+                _NFT1HEALTH: GG("CHARACTER", _NFT1ID, "HEALTH"),
+                _NFT0BATTLEID: GG("CHARACTER", _NFT0ID, "BATTLEID"),
+                _NFT1BATTLEID: GG("CHARACTER", _NFT1ID, "BATTLEID")
+            });
+        }
+    }
+
+    function captureEnemyChecks(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external view {
+        typeCheck(_NFT0ID, "_NFT0ID", 0);
+        typeCheck(_NFT1ID, "_NFT1ID", 0);
+        stateCheck(_NFT0ID, 420);
+        stateCheck(_NFT1ID, 420);
+        if (
+            GG("CHARACTER", _NFT0ID, "BATTLEID") !=
+            GG("CHARACTER", _NFT1ID, "BATTLEID") ||
+            GG("CHARACTER", _NFT1ID, "HEALTH") != 0 ||
+            GG("CHARACTER", _NFT1ID, "SPECIES") == 0 ||
+            GG("GENERAL", _NFT1ID, "SPECIAL") == 0
+        ) {
+            revert InvalidCaptureEnemyState({
+                _NFT0ID: _NFT0ID,
+                _NFT1ID: _NFT1ID,
+                _NFT0HEALTH: GG("CHARACTER", _NFT0ID, "HEALTH"),
+                _NFT1HEALTH: GG("CHARACTER", _NFT1ID, "HEALTH"),
+                _NFT0BATTLEID: GG("CHARACTER", _NFT0ID, "BATTLEID"),
+                _NFT1BATTLEID: GG("CHARACTER", _NFT1ID, "BATTLEID")
             });
         }
     }

@@ -27,7 +27,7 @@ interface ERC42069I {
     }
 
     function mintCoins(uint256 _NFTID, uint256 _amount) external {
-        addressCheck(AA("ERC42069ACTIONS"), msg.sender);
+        addressCheck(AA("GREATFILTER"), msg.sender);
         _mint(ERC42069I(AA("ERC42069")).ownerOf(_NFTID), _amount);
         console.log("Minted ERC20Credits TO:'%s' AMOUNT:'%s' D:'%s'", ERC42069I(AA("ERC42069")).ownerOf(_NFTID), _amount);
     }

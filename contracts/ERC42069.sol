@@ -231,7 +231,7 @@ contract ERC42069 is ERC721 {
         uint256 _amount,
         uint256 _NFTID
     ) external {
-        addressCheck(AA("ERC42069ACTIONS"), msg.sender); // SHOULD ONLY BE CALLED FROM BATTLE/QUESTER?
+        addressCheck(AA("GREATFILTER"), msg.sender); // SHOULD ONLY BE CALLED FROM BATTLE/QUESTER?
         ERC42069HelperI(AA("ERC42069HELPER")).gainExperience(
             _amount,
             _NFTID
@@ -397,7 +397,7 @@ contract ERC42069 is ERC721 {
         console.log("Expanded ERC42069 Token (Building): ID:'%s' INDEX:'%s' UP?:'%s'", _NFTID, _location, _up);
     }
 
-    function AA (
+    function AA(
         string memory _name
     ) internal view returns (address) {
         return d.getAA(_name);

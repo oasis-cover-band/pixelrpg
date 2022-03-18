@@ -2058,6 +2058,8 @@ async function setGameSettings() {
   await dataContract.setGS("AREABLOCKSIZE", 16);
   await dataContract.setGS("AREASIZE", (16 * 16));
   await dataContract.setGS("MAXAREAS", 4096);
+  await dataContract.setGS("QUESTTIMER", 3600);
+  await dataContract.setGS("QUESTREWARD", 10);
 }
 
 async function setConsumableType() {
@@ -2097,8 +2099,10 @@ async function setFreeProducables() {
 }
 
 async function setFreeCharacters() {
-  await contracts[4].generateCharacter(1, 0, 0, 0, address);
-  await contracts[4].generateCharacter(1, 0, 0, 0, address);
+  await contracts[4].generateCharacter(1, 1, 0, 0, address);
+  await contracts[4].generateCharacter(1, 1, 0, 0, address);
+  await contracts[4].generateCharacter(1, 1, 0, 0, address);
+  await contracts[4].generateCharacter(1, 1, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
   await contracts[4].generateCharacter(1, 0, 0, 0, address);
@@ -2163,7 +2167,7 @@ async function setFreeItems() {
 }
 
 async function setBuildings() {
-  for (let index = 0; index < 255; index++) {
+  for (let index = 0; index < 10; index++) {
     await contracts[4].generateBuilding(0, index, 1);
   }
 }

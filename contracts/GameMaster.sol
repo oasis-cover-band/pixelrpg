@@ -128,6 +128,12 @@ interface ERC42069DataI {
 }
 interface ERC42069RevertsI {
 
+    function companionCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        string memory _variableName
+    ) external view;
+
     function stateCheck(
         uint256 _NFTID,
         uint256 _requiredState
@@ -292,6 +298,19 @@ contract GameMaster {
         typeCheck(_buildingNFTID, "_BUILDINGNFTID", 5);
         maxBuildingSizeCheck(_buildingNFTID, _location);
         E().placeProducable(_NFTID, n2s(_location), _buildingNFTID);
+    }
+
+    function setCompanion(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID
+    ) external {
+        addressCheck(GF(), msg.sender);
+        typeCheck(_NFT0ID, "_NFT0ID", 0);
+        typeCheck(_NFT1ID, "_NFT1ID", 0);
+        stateCheck(_NFT0ID, 0);
+        stateCheck(_NFT1ID, 0);
+        companionCheck(_NFT0ID, _NFT1ID, "Invalid Species");
+        SG("COMPANION", _NFT0ID, "0", _NFT1ID);
     }
 
     function retrieveFromBuilding(
@@ -667,6 +686,14 @@ contract GameMaster {
         address _sender
     ) internal view {
         RV().addressCheck(_target, _sender);
+    }
+
+    function companionCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        string memory _value
+    ) internal view {
+        RV().companionCheck(_NFT0ID, _NFT1ID, _value);
     }
 
     function timerCheck(
