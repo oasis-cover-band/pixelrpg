@@ -160,6 +160,11 @@ contract ERC42069 is ERC721 {
         count = 1;
         console.log("Created ERC42069 Factory: NAME:'%s' SYMBOL:'%s' D:'%s'", _typeName, _typeSymbol, _dataAddress);
     }
+    
+    function exists(uint256 tokenId) external view virtual returns (bool) {
+        return _exists(tokenId);
+    }
+
 
     function placeProducable(
         uint256 _NFTID,
