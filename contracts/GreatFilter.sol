@@ -56,6 +56,26 @@ interface Expansion0MasterI {
 }
 interface MintMasterI {
 
+    function generateConsumable(
+        uint256 _amount,
+        uint256 _produces,
+        uint256 _NFTID
+    ) external;
+
+
+    function generateProducable(
+        uint256 _level,
+        uint256 _produces,
+        uint256 _NFTID
+    ) external returns (uint256);
+
+
+    function generateEquippable(
+        uint256 _level,
+        uint256 _itemSlot,
+        uint256 _NFTID
+    ) external returns (uint256);
+
     function newCharacter(
         address _mintTo
     ) external returns (uint256);
@@ -203,6 +223,9 @@ contract GreatFilter {
     event Attack(uint256 _NFT0Dmg, uint256 _NFT1Dmg);
     event NewNFT(uint256 _NFTID);
     event NewNFTName(string _newName);
+    event FightReward(uint256 _experience, uint256 _credits);
+    event QuestReward(uint256 _experience, uint256 _credits);
+    event RewardItem(uint256 _NFTID, uint256 _type, uint256 _levelOrAmount);
 
     ERC42069DataI d;
     constructor(
@@ -278,6 +301,59 @@ contract GreatFilter {
     ) internal {
         ERC42069I(AA("ERC42069")).gainExperience(_NFTID, (d.r() + 3921) % ((_questID * GS("QUESTREWARD")) + 1));
         ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(_NFTID,  d.r() % ((_questID * GS("QUESTREWARD")) + 1));
+        emit QuestReward(
+            (d.r() + 3921) % _questID * GS("QUESTREWARD") + 1,
+            d.r() % ((_questID * GS("QUESTREWARD")) + 1)
+        );
+            uint256 _level = 0;
+            uint256 _modifier = (d.r() + 94329432) % 500000;
+            if (_modifier >= 499999) {
+                _level = 10;
+            } else if (_modifier >= 499900) {
+                _level = 9;
+            } else if (_modifier > 499500) {
+                _level = 8;
+            } else if (_modifier > 499000) {
+                _level = 7;
+            } else if (_modifier > 498000) {
+                _level = 6;
+            } else if (_modifier > 497000) {
+                _level = 5;
+            } else if (_modifier > 496000) {
+                _level = 4;
+            } else if (_modifier > 495000) {
+                _level = 3;
+            } else if (_modifier > 494000) {
+                _level = 2;
+            } else if (_modifier > 490000) {
+                _level = 1;
+            }
+            if ((_modifier + 758421) % 100 <= 15) {
+                    MM().generateConsumable((_level + 1) * 10, (_modifier + _questID) % 2, _NFTID);
+                emit RewardItem(
+                        0,
+                        2,
+                        _level
+                    );
+            } else if ((_modifier + 758421) % 100 <= 20 && GG("CHARACTER", _NFTID, "LEVEL") >= 33) {
+                emit RewardItem(
+                        MM().generateProducable(_level + 1, (_modifier + _questID) % 2, _NFTID),
+                        4,
+                        _level
+                    );
+            } else if ((_modifier + 758421) % 100 <= 22 && GG("CHARACTER", _NFTID, "LEVEL") >= 33) {
+                emit RewardItem(
+                        MM().generateProducable(_level + 1, (_modifier + _questID) % 6, _NFTID),
+                        4,
+                        _level
+                    );
+            } else if ((_modifier + 758421) % 100 <= 25 && GG("CHARACTER", _NFTID, "LEVEL") >= 66) {
+                emit RewardItem(
+                        MM().generateEquippable(_level + 1, (_modifier + _questID) % GS("MAXITEMSLOTS"), _NFTID),
+                        3,
+                        _level
+                    );
+            }
     }
 
     function giveFightReward(
@@ -286,9 +362,67 @@ contract GreatFilter {
     ) internal {
         if (GG("GENERAL", _NFT1ID, "SPECIAL") == 0) {
             ERC42069I(AA("ERC42069")).gainExperience(_NFT0ID, (d.r() + 3921) % ((GG("CHARACTER", _NFT1ID, "LEVEL") / 2) + 1));
+            emit FightReward(
+                (d.r() + 3921) % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1),
+                0
+            );
+            return;
         } else {
             ERC42069I(AA("ERC42069")).gainExperience(_NFT0ID, (d.r() + 3921) % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1));
             ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(_NFT0ID,  d.r() % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1));
+            emit FightReward(
+                (d.r() + 3921) % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1),
+                d.r() % (GG("CHARACTER", _NFT1ID, "LEVEL") + 1)
+            );
+            uint256 _level = 0;
+            uint256 _modifier = (d.r() + 94329432) % 500000;
+            if (_modifier >= 499999) {
+                _level = 10;
+            } else if (_modifier >= 499900) {
+                _level = 9;
+            } else if (_modifier > 499500) {
+                _level = 8;
+            } else if (_modifier > 499000) {
+                _level = 7;
+            } else if (_modifier > 498000) {
+                _level = 6;
+            } else if (_modifier > 497000) {
+                _level = 5;
+            } else if (_modifier > 496000) {
+                _level = 4;
+            } else if (_modifier > 495000) {
+                _level = 3;
+            } else if (_modifier > 494000) {
+                _level = 2;
+            } else if (_modifier > 490000) {
+                _level = 1;
+            }
+            if ((_modifier + 758421) % 100 <= 10) {
+                        MM().generateConsumable((_level + 1) * 2, _NFT1ID % 2, _NFT0ID);
+                emit RewardItem(
+                        0,
+                        2,
+                        _level
+                    );
+            } else if ((_modifier + 758421) % 100 <= 15 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 33) {
+                emit RewardItem(
+                        MM().generateProducable(_level, _NFT1ID % 2, _NFT0ID),
+                        4,
+                        _level
+                    );
+            } else if ((_modifier + 758421) % 100 <= 16 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 33) {
+                emit RewardItem(
+                        MM().generateProducable(_level, _NFT1ID % 6, _NFT0ID),
+                        4,
+                        _level
+                    );
+            } else if ((_modifier + 758421) % 100 <= 18 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 66) {
+                emit RewardItem(
+                        MM().generateEquippable(_level, _NFT1ID % GS("MAXITEMSLOTS"), _NFT0ID),
+                        3,
+                        _level
+                    );
+            }
         }
     }
 
@@ -339,11 +473,16 @@ contract GreatFilter {
 
     function giveStat(
         uint256 _NFTID,
-        uint256 _amount,
-        string memory _statName
+        uint256 _strength,
+        uint256 _dexterity,
+        uint256 _intelligence,
+        uint256 _charisma
     ) external {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
-        GM().giveStat(_NFTID, _amount, _statName);
+        GM().giveStat(_NFTID, _strength, "STRENGTH");
+        GM().giveStat(_NFTID, _dexterity, "DEXTERITY");
+        GM().giveStat(_NFTID, _intelligence, "INTELLIGENCE");
+        GM().giveStat(_NFTID, _charisma, "CHARISMA");
     }
     
     function breedTwoCharacters(
@@ -413,7 +552,7 @@ contract GreatFilter {
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         uint256 newNFTID = MM().newProducable(
-            1,
+            2,
             _produces,
             _NFTID
         );
@@ -427,7 +566,7 @@ contract GreatFilter {
     ) external returns (uint256) {
         addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         uint256 newNFTID = MM().newEquippable(
-            1,
+            2,
             _itemSlot,
             _NFTID
         );
@@ -527,7 +666,7 @@ contract GreatFilter {
     ) internal view {
         if (
             _target != _sender &&
-            AA("WEB3BYPASS") != _sender) { // add a check to see if user has web3bypass enabled
+            AA("WEB3BYPASSER") != _sender) { // add a check to see if user has web3bypass enabled
             revert InvalidFilterSender({
                 _target: _target,
                 _sender: _sender,

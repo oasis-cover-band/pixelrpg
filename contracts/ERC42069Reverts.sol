@@ -323,7 +323,8 @@ contract ERC42069Reverts {
             GG("CHARACTER", _NFT0ID, "BATTLEID") != 0 ||
             GG("CHARACTER", _NFT1ID, "BATTLEID") != 0 ||
             GG("CHARACTER", _NFT0ID, "HEALTH") == 0 ||
-            GG("CHARACTER", _NFT1ID, "HEALTH") == 0
+            GG("CHARACTER", _NFT1ID, "HEALTH") == 0 ||
+            _NFT0ID == _NFT1ID
         ) {
             revert InvalidStartBattleState({
                 _NFT0ID: _NFT0ID,
@@ -396,7 +397,8 @@ contract ERC42069Reverts {
             GG("CHARACTER", _NFT1ID, "BATTLEID") ||
             GG("CHARACTER", _NFT1ID, "HEALTH") != 0 ||
             GG("CHARACTER", _NFT1ID, "SPECIES") == 0 ||
-            GG("GENERAL", _NFT1ID, "SPECIAL") == 0
+            GG("GENERAL", _NFT1ID, "SPECIAL") == 0 ||
+            GG("CHARACTER", _NFT0ID, "SPECIES") != 0
         ) {
             revert InvalidCaptureEnemyState({
                 _NFT0ID: _NFT0ID,

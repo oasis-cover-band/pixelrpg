@@ -293,35 +293,35 @@ contract ERC42069Helper {
         uint256 _amount
     ) external {
         addressCheck(msg.sender);
-        if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "HEALTHRESTORE") > 1) {
+        if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "HEALTHRESTORE") > 0) {
             SG("CHARACTER", _consumingNFTID, "HEALTH", GG("CHARACTER", _consumingNFTID, "MAXHEALTH"));
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "ENERGYRESTORE") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "ENERGYRESTORE") > 0) {
             SG("CHARACTER", _consumingNFTID, "ENERGY", GG("CHARACTER", _consumingNFTID, "MAXENERGY"));
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "STRENGTHBOOST") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "STRENGTHBOOST") > 0) {
             if (GG("CHARACTER", _consumingNFTID, "STRENGTH") + _amount < GS("MAXTOTALSTATS")) {
                 SG("CHARACTER", _consumingNFTID, "STRENGTH", (GG("CHARACTER", _consumingNFTID, "STRENGTH")) + _amount);
             }
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "DEXTERITYBOOST") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "DEXTERITYBOOST") > 0) {
             if (GG("CHARACTER", _consumingNFTID, "DEXTERITY") + _amount < GS("MAXTOTALSTATS")) {
                 SG("CHARACTER", _consumingNFTID, "DEXTERITY", (GG("CHARACTER", _consumingNFTID, "DEXTERITY")) + _amount);
             }
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "INTELLIGENCEBOOST") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "INTELLIGENCEBOOST") > 0) {
             if (GG("CHARACTER", _consumingNFTID, "INTELLIGENCE") + _amount < GS("MAXTOTALSTATS")) {
                 SG("CHARACTER", _consumingNFTID, "INTELLIGENCE", (GG("CHARACTER", _consumingNFTID, "INTELLIGENCE")) + _amount);
             }
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "CHARISMABOOST") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "CHARISMABOOST") > 0) {
             if (GG("CHARACTER", _consumingNFTID, "CHARISMA") + _amount < GS("MAXTOTALSTATS")) {
                 SG("CHARACTER", _consumingNFTID, "CHARISMA", (GG("CHARACTER", _consumingNFTID, "CHARISMA")) + _amount);
             }
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "HEALTHBOOST") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "HEALTHBOOST") > 0) {
             if (GG("CHARACTER", _consumingNFTID, "MAXHEALTH") + _amount < GS("MAXTOTALHEALTH")) {
                 SG("CHARACTER", _consumingNFTID, "MAXHEALTH", (GG("CHARACTER", _consumingNFTID, "MAXHEALTH")) + (_amount * (dr()% GS("STARTINGHEALTH"))));
             }
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "ENERGYBOOST") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "ENERGYBOOST") > 0) {
             if (GG("CHARACTER", _consumingNFTID, "MAXENERGY") + _amount < GS("MAXTOTALENERGY")) {
                 SG("CHARACTER", _consumingNFTID, "MAXENERGY", (GG("CHARACTER", _consumingNFTID, "MAXENERGY")) + (_amount * (dr()% GS("STARTINGENERGY"))));
             }
-        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "BREEDINGRESET") > 1) {
+        } else if (GG("CONSUMABLETYPE", _producableProductionTypeUint, "BREEDINGRESET") > 0) {
             SG("CHARACTER", _consumingNFTID, "NEXTBREEDING", 1);
         }
         SG("INVENTORY", _NFTID, _producableProductionType, GG("INVENTORY", _NFTID, _producableProductionType) - _amount);

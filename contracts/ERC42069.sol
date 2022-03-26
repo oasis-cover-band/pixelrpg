@@ -129,6 +129,11 @@ interface ERC42069HelperI {
 }
 interface ERC42069RevertsI {
 
+    function stateCheck(
+        uint256 _NFTID,
+        uint256 _requiredState
+    ) external view;
+
     function addressCheck(
         address _target,
         address _sender
@@ -474,5 +479,13 @@ contract ERC42069 is ERC721 {
         address _sender
     ) internal view {
         RV().addressCheckOr(_target0, _target1, _sender);
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override {
+        RV().stateCheck(tokenId, 0);
     }
 }

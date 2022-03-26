@@ -1951,7 +1951,7 @@ let equipment = [
 
 async function getAccounts() {
   const accounts = await hre.ethers.getSigners();
-  address = accounts[0].address;
+  address = accounts[1].address;
 }
 
 async function deploy() {
@@ -1967,11 +1967,13 @@ async function deploy() {
     await hre.ethers.getContractFactory("GreatFilter"),
     await hre.ethers.getContractFactory("Expansion0Master"),
     await hre.ethers.getContractFactory("ERC42069DataHelper"),
-    await hre.ethers.getContractFactory("NameGenerator")
+    await hre.ethers.getContractFactory("NameGenerator"),
+    await hre.ethers.getContractFactory("MintMaster")
   ];
   args = [
     ["Pixel Credits", "CREDITS", dataContract.address],
     ["Pixel Asset", "PIXEL", dataContract.address],
+    [dataContract.address],
     [dataContract.address],
     [dataContract.address],
     [dataContract.address],
@@ -1989,7 +1991,8 @@ async function deploy() {
     await factories[5].deploy(...args[5]),
     await factories[6].deploy(...args[6]),
     await factories[7].deploy(...args[7]),
-    await factories[8].deploy(...args[8])
+    await factories[8].deploy(...args[8]),
+    await factories[9].deploy(...args[9])
   ];
   await contracts[0].deployed();
   await contracts[1].deployed();
@@ -2000,6 +2003,7 @@ async function deploy() {
   await contracts[6].deployed();
   await contracts[7].deployed();
   await contracts[8].deployed();
+  await contracts[9].deployed();
 }
 
 async function setup() {
@@ -2020,6 +2024,8 @@ async function setAddresses() {
   console.log("EXPANSION0MASTER", contracts[6].address);
   console.log("ERC42069DATAHELPER", contracts[7].address);
   console.log("NAMEGENERATOR", contracts[8].address);
+  console.log("MINTMASTER", contracts[9].address);
+  console.log("WEB3BYPASSER", "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
   await dataContract.setAA("ERC20CREDITS", contracts[0].address);
   await dataContract.setAA("ERC42069", contracts[1].address);
   await dataContract.setAA("ERC42069HELPER", contracts[2].address);
@@ -2029,6 +2035,8 @@ async function setAddresses() {
   await dataContract.setAA("EXPANSION0MASTER", contracts[6].address);
   await dataContract.setAA("ERC42069DATAHELPER", contracts[7].address);
   await dataContract.setAA("NAMEGENERATOR", contracts[8].address);
+  await dataContract.setAA("MINTMASTER", contracts[9].address);
+  await dataContract.setAA("WEB3BYPASSER", "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
 }
 
 async function setGameSettings() {
@@ -2076,116 +2084,131 @@ async function setConsumableType() {
 
 async function setWorld() {
   await addNames();
-  await setFreeCharacters();
-  await setFreeRoamingCharacters();
-  await setFreeConsumables();
-  await setFreeProducables();
-  await setNPCs();
-  await setEnemies();
-  await setBuildings();
-  await setFreeItems();
 }
 
 async function setFreeProducables() {
-  await contracts[4].generateProducable(1, 0, 1);
-  await contracts[4].generateProducable(1, 1, 1);
-  await contracts[4].generateProducable(1, 2, 1);
-  await contracts[4].generateProducable(1, 3, 1);
-  await contracts[4].generateProducable(1, 4, 1);
-  await contracts[4].generateProducable(1, 5, 1);
-  await contracts[4].generateProducable(1, 6, 1);
-  await contracts[4].generateProducable(1, 7, 1);
-  await contracts[4].generateProducable(1, 8, 1);
+  await contracts[9].generateProducable(1, 0, 1);
+  await contracts[9].generateProducable(1, 1, 1);
+  await contracts[9].generateProducable(1, 2, 1);
+  await contracts[9].generateProducable(1, 3, 1);
+  await contracts[9].generateProducable(1, 4, 1);
+  await contracts[9].generateProducable(1, 5, 1);
+  await contracts[9].generateProducable(1, 6, 1);
+  await contracts[9].generateProducable(1, 7, 1);
+  await contracts[9].generateProducable(1, 8, 1);
 }
 
 async function setFreeCharacters() {
-  await contracts[4].generateCharacter(0, 0, 0, 0, address);
-  await contracts[4].generateCharacter(0, 0, 0, 0, address);
-  await contracts[4].generateCharacter(0, 0, 0, 0, address);
-  await contracts[4].generateCharacter(0, 0, 0, 0, address);
-  await contracts[4].generateCharacter(0, 0, 0, 0, address);
-  await contracts[4].generateCharacter(33, 1, 0, 0, address);
-  await contracts[4].generateCharacter(66, 1, 0, 0, address);
-  await contracts[4].generateCharacter(34, 1, 0, 0, address);
-  await contracts[4].generateCharacter(70, 1, 0, 0, address);
-  await contracts[4].generateCharacter(1, 0, 0, 0, address);
-  await contracts[4].generateCharacter(1, 0, 0, 0, address);
-  await contracts[4].generateCharacter(1, 0, 0, 0, address);
-  await contracts[4].generateCharacter(1, 0, 0, 0, address);
+  const address = "0xbcd4042de499d14e55001ccbb24a551f3b954096";
+  await contracts[9].generateEquippedCharacter(0, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateCharacter(1, 2, 0, 0, address);
+  await contracts[9].generateCharacter(1, 2, 0, 0, address);
+  await contracts[9].generateCharacter(1, 2, 0, 0, address);
+  await contracts[9].generateCharacter(1, 2, 0, 0, address);
+  await contracts[9].generateCharacter(33, 2, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateCharacter(33, 2, 0, 0, address);
+  await contracts[9].generateCharacter(33, 1, 0, 0, address);
+  await contracts[9].generateCharacter(66, 1, 0, 0, address);
+  await contracts[9].generateCharacter(34, 1, 0, 0, address);
+  await contracts[9].generateCharacter(70, 1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
+  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
 }
 
 async function setFreeRoamingCharacters() {
-  for (let index = 0; index < 1; index++) {
-    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[4].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-  }
+  const index = 1;
+    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateEquippedCharacter(59, 0, 0, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(4 * (index % 14) + 1, 2, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(5 * (index % 14) + 1, 2, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(5 * (index % 14) + 1, 2, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
 }
 
 async function setFreeConsumables() {
-  for (let index = 0; index < equipment.length; index++) {
-    await contracts[4].generateConsumable(200, 0, 1);
-    await contracts[4].generateConsumable(200, 1, 1);
-    await contracts[4].generateConsumable(200, 2, 1);
-    await contracts[4].generateConsumable(200, 3, 1);
-    await contracts[4].generateConsumable(200, 4, 1);
-    await contracts[4].generateConsumable(200, 5, 1);
-    await contracts[4].generateConsumable(200, 6, 1);
-    await contracts[4].generateConsumable(200, 7, 1);
-    await contracts[4].generateConsumable(200, 8, 1);
-  }
+  await contracts[9].generateConsumable(200, 0, 1);
+  await contracts[9].generateConsumable(200, 1, 1);
+  await contracts[9].generateConsumable(200, 2, 1);
+  await contracts[9].generateConsumable(200, 3, 1);
+  await contracts[9].generateConsumable(200, 4, 1);
+  await contracts[9].generateConsumable(200, 5, 1);
+  await contracts[9].generateConsumable(200, 6, 1);
+  await contracts[9].generateConsumable(200, 7, 1);
+  await contracts[9].generateConsumable(200, 8, 1);
 }
 
 async function setFreeItems() {
-  for (let index = 0; index < equipment.length; index++) {
-    await contracts[4].generateEquippable(2, 0, 1);
-    await contracts[4].generateEquippable(2, 1, 1);
-    await contracts[4].generateEquippable(2, 2, 1);
-    await contracts[4].generateEquippable(2, 3, 1);
-    await contracts[4].generateEquippable(2, 4, 1);
-    await contracts[4].generateEquippable(2, 5, 1);
-    await contracts[4].generateEquippable(2, 6, 1);
-    await contracts[4].generateEquippable(2, 7, 1);
-    await contracts[4].generateEquippable(2, 8, 1);
-  }
+  await contracts[9].generateEquippable(2, 0, 1);
+  await contracts[9].generateEquippable(2, 1, 1);
+  await contracts[9].generateEquippable(2, 2, 1);
+  await contracts[9].generateEquippable(2, 3, 1);
+  await contracts[9].generateEquippable(2, 4, 1);
+  await contracts[9].generateEquippable(2, 5, 1);
+  await contracts[9].generateEquippable(2, 6, 1);
+  await contracts[9].generateEquippable(2, 7, 1);
+  await contracts[9].generateEquippable(2, 8, 1);
 }
 
 async function setBuildings() {
   for (let index = 0; index < 10; index++) {
-    await contracts[4].generateBuilding(0, index, 1);
+    await contracts[9].generateBuilding(0, index, 1);
   }
 }
 
 async function setNPCs() {
   for (let index = 0; index < npcs.length; index++) {
-    await contracts[4].generateCharacter(npcs[index].level, 0, 1, npcs[index].area, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(npcs[index].level, 0, 1, npcs[index].area, "0x000000000000000000000000000000000000dEaD");
   }
 }
 
 async function setEnemies() {
   for (let index = 0; index < enemies.length; index++) {
-    await contracts[4].generateCharacter(enemies[index].level, enemies[index].species, 2, enemies[index].area, "0x000000000000000000000000000000000000dEaD");
+    await contracts[9].generateCharacter(enemies[index].level, enemies[index].species, 2, enemies[index].area, "0x000000000000000000000000000000000000dEaD");
   }
 }
 

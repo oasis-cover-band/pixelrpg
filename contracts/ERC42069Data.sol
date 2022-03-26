@@ -34,6 +34,7 @@ contract ERC42069Data {
         string memory _msgSender
     ) external {
         addressCheck(aa[_msgSender], msg.sender);
+        messWithSeed();
         gd[_symbol][_NFTID][_statName] = _statValue;
     }
 
@@ -49,10 +50,10 @@ contract ERC42069Data {
     }
 
     function messWithSeed() internal {
-        if (seed + (r() % 10) == 0 || seed + (r() % 10) > 2^254) {
+        if (seed + (r() % 8008135) > 2**69 - 1) {
             seed = 42069 + (r() / 40);
         } else {
-            seed = seed +  (r() % 393);
+            seed = seed + (r() % 8008135);
         }
     }
 

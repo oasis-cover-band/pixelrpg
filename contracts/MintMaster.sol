@@ -3,7 +3,19 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+
+interface GreatFilterI {
+    
+    function equip(
+        uint256 _equipSlot,
+        uint256 _equipNFTID,
+        uint256 _NFTID
+    ) external;
+}
 interface ERC42069DataI {
+
+    function r() external view returns (uint256);
 
     function setGD(
         string memory _symbol,
@@ -32,6 +44,12 @@ interface ERC20CreditsI {
     function gameTransferFrom(address _from, address _to, uint256 _amount) external;
 }
 interface ERC42069I {
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
 
     function ownerOf(
         uint256 _NFTID
@@ -78,6 +96,12 @@ interface ERC42069I {
 }
 interface ERC42069RevertsI {
 
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) external pure;
+
     function stateCheck(
         uint256 _NFTID,
         uint256 _requiredState
@@ -118,9 +142,13 @@ interface ERC42069RevertsI {
         uint256 _amount
     ) external view;
 }
-contract MintMaster {
+contract MintMaster is IERC721Receiver {
     
+    function onERC721Received(address, address, uint256, bytes memory) public virtual override returns (bytes4) {
+        return this.onERC721Received.selector;
+    }
     ERC42069DataI d;
+    uint256[] equipmentIDs = new uint256[](9);
     constructor(
         address _dataAddress
     ) {
@@ -140,8 +168,68 @@ contract MintMaster {
         uint256 _area,
         address _mintTo
     ) external returns (uint256) {
-        addressCheck(AA("SETUP"), msg.sender);
-        return E().createNewCharacter(_level, _species, _special, _area, _mintTo);
+        addressCheckOr(AA("SETUP"), AA("EXPANSION0MASTER"), msg.sender);
+        uint256 charID = E().createNewCharacter(_level, _species, _special, _area, _mintTo);
+
+        return charID;
+    }
+
+    function generateEquippedCharacter(
+        uint256 _level,
+        uint256 _special,
+        uint256 _area,
+        address _mintTo
+    ) public returns (uint256) {
+        addressCheckOr(AA("SETUP"), AA("EXPANSION0MASTER"), msg.sender);
+
+        return internalGenerateEquippedCharacter(_level, _special, _area, _mintTo);
+    }
+
+    function internalGenerateEquippedCharacter(
+        uint256 _level,
+        uint256 _special,
+        uint256 _area,
+        address _mintTo
+    ) internal returns (uint256) {
+        uint256 charID = E().createNewCharacter(_level, 0, _special, _area, address(this));
+        equipmentIDs[0] = (E().createNewEquippable(_level, 0, charID));
+        GF().equip(0, equipmentIDs[0], charID);
+
+        equipmentIDs[1] = (E().createNewEquippable(_level, 1, charID));
+        GF().equip(1, equipmentIDs[1], charID);
+
+        equipmentIDs[2] = (E().createNewEquippable(_level, 2, charID));
+        GF().equip(2, equipmentIDs[2], charID);
+
+        equipmentIDs[3] = (E().createNewEquippable(_level, 3, charID));
+        GF().equip(3, equipmentIDs[3], charID);
+
+        if (d.r() % 3 > 1) {
+            equipmentIDs[4] = (E().createNewEquippable(_level, 4, charID));
+            GF().equip(4, equipmentIDs[4], charID);
+        }
+
+        if (d.r() % 230 >= 50) {
+            equipmentIDs[5] = (E().createNewEquippable(_level, 5, charID));
+            GF().equip(5, equipmentIDs[5], charID);
+        }
+
+        equipmentIDs[6] = (E().createNewEquippable(_level, 6, charID));
+        GF().equip(6, equipmentIDs[6], charID);
+
+        if (d.r() % 1000 >= 200) {
+            equipmentIDs[7] = (E().createNewEquippable(_level, 7, charID));
+            GF().equip(7, equipmentIDs[7], charID);
+        }
+
+        if (d.r() % 2 == 1) {
+            equipmentIDs[8] = (E().createNewEquippable(_level, 8, charID));
+            GF().equip(8, equipmentIDs[8], charID);
+        }
+
+        E().safeTransferFrom(address(this), _mintTo, charID);
+
+        return charID;
     }
 
     function generateConsumable(
@@ -149,7 +237,7 @@ contract MintMaster {
         uint256 _produces,
         uint256 _NFTID
     ) external {
-        addressCheck(AA("SETUP"), msg.sender);
+        addressCheckOr(AA("SETUP"), AA("GREATFILTER"), msg.sender);
         SG(
             "INVENTORY",
             _NFTID,
@@ -163,7 +251,7 @@ contract MintMaster {
         uint256 _produces,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(AA("SETUP"), msg.sender);
+        addressCheckOr(AA("SETUP"), AA("GREATFILTER"), msg.sender);
         return E().createNewProducable(_level, _produces, _NFTID);
     }
 
@@ -172,7 +260,7 @@ contract MintMaster {
         uint256 _itemSlot,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(AA("SETUP"), msg.sender);
+        addressCheckOr(AA("SETUP"), AA("GREATFILTER"), msg.sender);
         RV().itemSlotCheck(_itemSlot);
         return E().createNewEquippable(_level, _itemSlot, _NFTID);
     }
@@ -195,15 +283,15 @@ contract MintMaster {
         uint256 _area,
         address _mintTo
     ) external returns (uint256) {
-        addressCheck(AA("ERC42069HELPER"), msg.sender);
+        addressCheck(AA("EXPANSION0MASTER"), msg.sender); // FIX??
         return E().createNewCharacter(_level, _species, _special, _area, _mintTo);
     }
 
     function newCharacter(
         address _mintTo
     ) external returns (uint256) {
-        addressCheck(GF(), msg.sender);
-        return E().createNewCharacter(1, 0, 0, 0, _mintTo);
+        addressCheck(GFA(), msg.sender);
+        return internalGenerateEquippedCharacter(1, 0, 0, _mintTo);
         // takeCredits(_NFTID, "CHARACTERCOST"); // TAKE NETWORK CURRENCY INSTEAD
     }
 
@@ -212,7 +300,7 @@ contract MintMaster {
         uint256 _producableProductionType,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(GF(), msg.sender);
+        addressCheck(GFA(), msg.sender);
         stateCheck(_NFTID, 0);
         consumableBalanceCheck(_NFTID, n2s(_producableProductionType), _amount);
         typeCheck(_NFTID, "_NFTID", 0);
@@ -224,7 +312,7 @@ contract MintMaster {
         uint256 _produces,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(GF(), msg.sender);
+        addressCheck(GFA(), msg.sender);
         stateCheck(_NFTID, 0);
         takeCredits(_NFTID, "PRODUCABLECOST");
         return E().createNewProducable(_level, _produces, _NFTID);
@@ -235,7 +323,7 @@ contract MintMaster {
         uint256 _itemSlot,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(GF(), msg.sender);
+        addressCheck(GFA(), msg.sender);
         stateCheck(_NFTID, 0);
         RV().itemSlotCheck(_itemSlot);
         takeCredits(_NFTID, "EQUIPPABLECOST");
@@ -247,7 +335,7 @@ contract MintMaster {
         uint256 _location,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(GF(), msg.sender);
+        addressCheck(GFA(), msg.sender);
         stateCheck(_NFTID, 0);
         worldSpaceOccupancyCheck(_area, _location);
         maxAreaSizeCheck(_location);
@@ -259,7 +347,7 @@ contract MintMaster {
         uint256 _NFTID,
         uint256 _consumableNFTID
     ) external {
-        addressCheck(GF(), msg.sender);
+        addressCheck(GFA(), msg.sender);
         return E().destroyConsumable(_NFTID, _consumableNFTID);
     }
 
@@ -267,7 +355,19 @@ contract MintMaster {
         return ERC42069I(AA("ERC42069"));
     }
 
-    function GF() internal view returns (address) {
+    function addressCheckOr(
+        address _target0,
+        address _target1,
+        address _sender
+    ) internal view {
+        RV().addressCheckOr(_target0, _target1, _sender);
+    }
+
+    function GF() internal view returns (GreatFilterI) {
+        return GreatFilterI(GFA());
+    }
+
+    function GFA() internal view returns (address) {
         return AA("GREATFILTER");
     }
 

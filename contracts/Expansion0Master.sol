@@ -169,14 +169,15 @@ contract Expansion0Master {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
+        uint256 bc = battleCount;
         addressCheck(AA("GREATFILTER"), msg.sender);
         startBattleChecks(_NFT0ID, _NFT1ID);
         SG("CHARACTER", _NFT0ID, "STATE", 420);
         SG("CHARACTER", _NFT1ID, "STATE", 420);
         SG("CHARACTER", _NFT0ID, "VS", _NFT1ID);
         SG("CHARACTER", _NFT1ID, "VS", _NFT0ID);
-        SG("CHARACTER", _NFT0ID, "BATTLEID", battleCount);
-        SG("CHARACTER", _NFT1ID, "BATTLEID", battleCount);
+        SG("CHARACTER", _NFT0ID, "BATTLEID", bc);
+        SG("CHARACTER", _NFT1ID, "BATTLEID", bc);
         SG("STATS", _NFT0ID, "FIGHTS", GG("STATS", _NFT0ID, "FIGHTS") + 1);
         battleCount++;
     }
@@ -214,6 +215,7 @@ contract Expansion0Master {
         captureEnemyChecks(_NFT0ID, _NFT1ID);
         SG("GENERAL", _NFT1ID, "SPECIAL", 0);
         SG("STATS", _NFT0ID, "CAPTURED", GG("STATS", _NFT0ID, "CAPTURED") + 1);
+        SG("CHARACTER", _NFT1ID, "STATE", 0);
         ERC42069I(AA("ERC42069I")).gameTransferFrom(
             _NFT1ID,
             ERC42069I(AA("ERC42069I")).ownerOf(_NFT0ID)
@@ -230,6 +232,7 @@ contract Expansion0Master {
         SG("CHARACTER", _NFTID, "STATE", 42069);
         SG("CHARACTER", _NFTID, "QUESTID", _questID);
         SG("CHARACTER", _NFTID, "QUESTTIMER", GS("QUESTTIMER") * _questID);
+        SG("STATS", _NFTID, "QUESTS", GG("STATS", _NFTID, "QUESTS") + 1);
     }
 
     function finishQuest(
