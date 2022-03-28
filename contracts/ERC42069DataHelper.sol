@@ -126,6 +126,34 @@ contract ERC42069DataHelper {
         );
     }
 
+    function getCharacterAttacks0(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "42069"),
+            getGD("CHARACTER", _NFTID, "42070"),
+            getGD("CHARACTER", _NFTID, "42071"),
+            getGD("CHARACTER", _NFTID, "42072"),
+            getGD("CHARACTER", _NFTID, "42073"),
+            getGD("CHARACTER", _NFTID, "42074"),
+            getGD("CHARACTER", _NFTID, "42075")
+        );
+    }
+
+    function getCharacterAttacks1(
+        uint256 _NFTID
+    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
+        return (
+            getGD("CHARACTER", _NFTID, "42076"),
+            getGD("CHARACTER", _NFTID, "42077"),
+            getGD("CHARACTER", _NFTID, "42078"),
+            getGD("CHARACTER", _NFTID, "42079"),
+            getGD("CHARACTER", _NFTID, "42080"),
+            getGD("CHARACTER", _NFTID, "42081"),
+            getGD("CHARACTER", _NFTID, "42082")
+        );
+    }
+
     function getProducableInfo(
         uint256 _NFTID
     ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {

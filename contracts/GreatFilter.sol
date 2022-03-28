@@ -33,6 +33,18 @@ interface Expansion0MasterI {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external returns (uint256, uint256);
+    
+    function attackEnemy(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        uint256 _specialAttack
+    ) external returns (uint256, uint256);
+
+    function teachSpecial(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        uint256 _skill
+    ) external;
 
     function startBattle(
         uint256 _NFT0ID,
@@ -239,6 +251,17 @@ contract GreatFilter {
     ) external returns (uint256, uint256) {
         addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         (uint256 _NFT0Dmg, uint256 _NFT1Dmg) = E0M().attackEnemy(_NFT0ID, _NFT1ID);
+        emit Attack(_NFT0Dmg, _NFT1Dmg);
+        return (_NFT0Dmg, _NFT1Dmg);
+    }
+
+    function attackEnemy(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        uint256 _specialAttack
+    ) external returns (uint256, uint256) {
+        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        (uint256 _NFT0Dmg, uint256 _NFT1Dmg) = E0M().attackEnemy(_NFT0ID, _NFT1ID, _specialAttack);
         emit Attack(_NFT0Dmg, _NFT1Dmg);
         return (_NFT0Dmg, _NFT1Dmg);
     }

@@ -355,6 +355,7 @@ contract MintMaster is IERC721Receiver {
         ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(NFTID, 1000 * 100);
         uint256 companionNFTID = internalGenerateCharacter(1, 1, 0, 0, _mintTo);
         SG("COMPANION", NFTID, "0", companionNFTID);
+        SG("CHARACTER", NFTID, n2s((d.r() % 3) + 42069), companionNFTID);
         internalGenerateConsumable(5, 0, NFTID);
         internalGenerateConsumable(5, 1, NFTID);
         return NFTID;

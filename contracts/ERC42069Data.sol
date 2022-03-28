@@ -9,8 +9,15 @@ contract ERC42069Data {
 
     mapping(string => address) public aa; // ACTIONABLE ADDRESSES
     mapping(string => mapping(uint256 => mapping(string => uint256))) gd; // GAME DATA
-    // CHARACTER -> 0 -> "42069" (SPECIAL ATTACK NUMBER IS X + 42069) -> GREATER THAN 1?
-    // SPECIALS -> 42069 -> STRENGTHMULTIPLIER -> VALUE
+    // CHARACTER -> 0 -> "42069" (SPECIAL ATTACK NUMBER IS X + 42069) -> GREATER THAN 1? CAN USE THIS SPECIAL.
+    // SPECIALS -> 42069 ->
+    // STRENGTHDAMAGE
+    // DEXTERITYDAMAGE
+    // INTELLIGENCEDAMAGE
+    // CHARISMADAMAGE
+    // ENERGYCOST
+    // -> VALUE
+    // (NEED TO ADD A LEARN SPECIAL)
     mapping(string => mapping(uint256 => mapping(string => string))) gdn; // GAME DATA NAME
     mapping(string => uint256) gs; // GAME SETTINGS
     uint256 setup;

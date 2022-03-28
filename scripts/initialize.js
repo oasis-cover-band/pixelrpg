@@ -2009,6 +2009,7 @@ async function deploy() {
 
 async function setup() {
   await setGameSettings();
+  await setSpecialAttackTypes();
   await setConsumableType();
   await setAddresses();
   await setWorld();
@@ -2071,6 +2072,62 @@ async function setGameSettings() {
   await dataContract.setGS("MAXAREAS", 4096);
   await dataContract.setGS("QUESTTIMER", 3600);
   await dataContract.setGS("QUESTREWARD", 10);
+  await dataContract.setGS("MAXSPECIALS", 7);
+}
+
+async function setSpecialAttackTypes() {
+  // STRENGTHDAMAGE
+  // DEXTERITYDAMAGE
+  // INTELLIGENCEDAMAGE
+  // CHARISMADAMAGE
+  // ENERGYCOST
+  await dataContract.setGD("SPECIALS", 42069, "STRENGTHDAMAGE", 250, "SETUP");
+  await dataContract.setGD("SPECIALS", 42069, "DEXTERITYDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42069, "INTELLIGENCEDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42069, "CHARISMADAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42069, "ENERGYCOST", 20, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42070, "STRENGTHDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42070, "DEXTERITYDAMAGE", 250, "SETUP");
+  await dataContract.setGD("SPECIALS", 42070, "INTELLIGENCEDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42070, "CHARISMADAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42070, "ENERGYCOST", 20, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42071, "STRENGTHDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42071, "DEXTERITYDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42071, "INTELLIGENCEDAMAGE", 250, "SETUP");
+  await dataContract.setGD("SPECIALS", 42071, "CHARISMADAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42071, "ENERGYCOST", 20, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42072, "STRENGTHDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42072, "DEXTERITYDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42072, "INTELLIGENCEDAMAGE", 10, "SETUP");
+  await dataContract.setGD("SPECIALS", 42072, "CHARISMADAMAGE", 250, "SETUP");
+  await dataContract.setGD("SPECIALS", 42072, "ENERGYCOST", 20, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42073, "STRENGTHDAMAGE", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42073, "DEXTERITYDAMAGE", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42073, "INTELLIGENCEDAMAGE", 200, "SETUP");
+  await dataContract.setGD("SPECIALS", 42073, "CHARISMADAMAGE", 200, "SETUP");
+  await dataContract.setGD("SPECIALS", 42073, "ENERGYCOST", 40, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42074, "STRENGTHDAMAGE", 200, "SETUP");
+  await dataContract.setGD("SPECIALS", 42074, "DEXTERITYDAMAGE", 200, "SETUP");
+  await dataContract.setGD("SPECIALS", 42074, "INTELLIGENCEDAMAGE", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42074, "CHARISMADAMAGE", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42074, "ENERGYCOST", 40, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42075, "STRENGTHDAMAGE", 350, "SETUP");
+  await dataContract.setGD("SPECIALS", 42075, "DEXTERITYDAMAGE", 350, "SETUP");
+  await dataContract.setGD("SPECIALS", 42075, "INTELLIGENCEDAMAGE", 350, "SETUP");
+  await dataContract.setGD("SPECIALS", 42075, "CHARISMADAMAGE", 350, "SETUP");
+  await dataContract.setGD("SPECIALS", 42075, "ENERGYCOST", 70, "SETUP");
+
+  await dataContract.setGD("SPECIALS", 42076, "STRENGTHDAMAGE", 400, "SETUP");
+  await dataContract.setGD("SPECIALS", 42076, "DEXTERITYDAMAGE", 400, "SETUP");
+  await dataContract.setGD("SPECIALS", 42076, "INTELLIGENCEDAMAGE", 400, "SETUP");
+  await dataContract.setGD("SPECIALS", 42076, "CHARISMADAMAGE", 400, "SETUP");
+  await dataContract.setGD("SPECIALS", 42076, "ENERGYCOST", 150, "SETUP");
 }
 
 async function setConsumableType() {

@@ -13,6 +13,7 @@ error UintDiffersString(uint256 _uint, string _string);
 error EmptyEquipmentSlot(uint256 _current, uint256 _slot, uint256 _NFTID);
 error IncorrectEquipmentSlot(uint256 _slot);
 error InvalidType(uint256 _NFTID, string _variableName, uint256 _type);
+error InvalidTeacher(uint256 _student, uint256 _teacher, uint256 _skill);
 error InvalidSpecies(uint256 _NFT0ID, uint256 _NFT1ID, string _variableName);
 error InvalidSingleSpecies(uint256 _NFTID, uint256 _requiredSpecies);
 error InsufficientBalance(address _from, uint256 _amount);
@@ -271,6 +272,27 @@ contract ERC42069Reverts {
             revert SameNFT({
                 _NFT0ID: _NFT0ID,
                 _NFT1ID: _NFT1ID
+            });
+        }
+    }
+
+    function teachCheck(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        uint256 _skill
+    ) external view {
+        // IF NOT LAST TAUGHT BY THIS NFTNPC
+        // IF THIS NFT IS AN NPC (SPECIAL === 1)
+        // IF THIS NPC CAN TEACH THIS SKILL (ID % _skill)
+        if (
+            GG("CHARACTER", _NFT1ID, "LASTTAUGHT") == _NFT0ID ||
+            GG("GENERAL", _NFT1ID, "SPECIAL") != 1 ||
+            _NFT1ID % _skill != 0
+        ) {
+            revert InvalidTeacher({
+                _student: _NFT0ID,
+                _teacher: _NFT1ID,
+                _skill: _skill
             });
         }
     }
