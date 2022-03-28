@@ -5,6 +5,8 @@ import "hardhat/console.sol";
 
 interface ERC42069RevertsI {
 
+    function n2s(uint _i) external pure returns (string memory);
+
     function timerCheck(
         uint256 _value,
         uint256 _mustBeBefore,
@@ -127,11 +129,45 @@ contract Expansion0Master {
         damageReceived,   GG("CHARACTER", _NFT1ID, "HEALTH"));
         return (damageDone, damageReceived);
     }
-    // function attackEnemy(uint256 _NFT0ID, uint256 _NFT1ID, string memory _specialAttackName) external returns (uint256 output0_, uint256 output1_) {
-    //     addressCheck(AA("GREATFILTER"), msg.sender);
-    //     attackChecks(_NFT0ID, _NFT1ID);
-    //     // return (specialAttack(_NFTID, _ENEMYID, _specialAttackName), enemyAttack(_NFTID, _ENEMYID));
-    // }
+    function attackEnemy(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _specialAttack) external returns (uint256 output0_, uint256 output1_) {
+        addressCheck(AA("GREATFILTER"), msg.sender);
+        attackChecks(_NFT0ID, _NFT1ID);
+        uint256 damageDone = specialAttack(_NFT0ID, _NFT1ID, _specialAttack);
+        uint256 damageReceived = enemyAttack(_NFT0ID, _NFT1ID);
+        console.log("sAttack0:'%s', HP0:'%s'", 
+        damageDone, GG("CHARACTER", _NFT0ID, "HEALTH"));
+        console.log("Attack1:'%s', HP1:'%s'", 
+        damageReceived,   GG("CHARACTER", _NFT1ID, "HEALTH"));
+        return (damageDone, damageReceived);
+    }
+    function specialAttack(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _specialAttack) internal returns (uint256 output_) {
+        if(GG("CHARACTER", _NFT0ID, n2s(_specialAttack)) > 1 && (GG("CHARACTER", _NFT0ID, "ENERGY") >= pnd.getSpecialAttackData(_specialAttack, "ENERGYCOST"))) {
+            uint256 mod = (
+                pnd.getData(_NFT0ID, "STRENGTH") * pnd.getSpecialAttackData(_specialAttack, "STRENGTHDAMAGE")
+                + pnd.getData(_NFT0ID, "DEXTERITY") * pnd.getSpecialAttackData(_specialAttack, "DEXTERITYDAMAGE")
+                + pnd.getData(_NFT0ID, "CHARISMA") * pnd.getSpecialAttackData(_specialAttack, "CHARISMADAMAGE")
+                + pnd.getData(_NFT0ID, "INTELLIGENCE") * pnd.getSpecialAttackData(_specialAttack, "INTELLIGENCEDAMAGE")
+            ) * pnd.getData(_NFT0ID, _specialAttack);
+            uint256 dmg = 1 + ((attackCount * 4324839092 + pnd.random256()) % mod);
+            uint256 ehp = pnd.getData(_NFT1ID, "HEALTH");
+            uint256 nrgcost = pnd.getSpecialAttackData(_specialAttack, "ENERGYCOST");
+            uint256 nrg = pnd.getData(_NFT0ID, "ENERGY");
+            if (nrgcost >= nrg) {
+                pnd.setData(_NFT0ID, "ENERGY", 0, "NFTBATTLER");
+            } else {
+                pnd.setData(_NFT0ID, "ENERGY", nrg - nrgcost, "NFTBATTLER");
+            }
+            if (dmg >= ehp) {
+                pnd.setData(_NFT1ID, "HEALTH", 0, "NFTBATTLER");
+            } else {
+                pnd.setData(_NFT1ID, "HEALTH", ehp - dmg, "NFTBATTLER");
+            }
+            attackCount++;
+            return dmg;
+        } else {
+            return basicAttack(_NFT0ID, _NFT1ID);
+        }
+    }
     function enemyAttack(
         uint256 _NFT0ID,
         uint256 _NFT1ID

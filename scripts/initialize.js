@@ -1948,9 +1948,10 @@ let equipment = [
   0,
   0
 ]
+let accounts;
 
 async function getAccounts() {
-  const accounts = await hre.ethers.getSigners();
+  accounts = await hre.ethers.getSigners();
   address = accounts[1].address;
 }
 
@@ -2026,6 +2027,7 @@ async function setAddresses() {
   console.log("NAMEGENERATOR", contracts[8].address);
   console.log("MINTMASTER", contracts[9].address);
   console.log("WEB3BYPASSER", "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+  console.log("TREASURY", accounts[1].address);
   await dataContract.setAA("ERC20CREDITS", contracts[0].address);
   await dataContract.setAA("ERC42069", contracts[1].address);
   await dataContract.setAA("ERC42069HELPER", contracts[2].address);
@@ -2037,6 +2039,7 @@ async function setAddresses() {
   await dataContract.setAA("NAMEGENERATOR", contracts[8].address);
   await dataContract.setAA("MINTMASTER", contracts[9].address);
   await dataContract.setAA("WEB3BYPASSER", "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+  await dataContract.setAA("TREASURY", accounts[1].address);
 }
 
 async function setGameSettings() {

@@ -151,24 +151,6 @@ interface GameMasterI {
         uint256 _consumableNFTID
     ) external;
     
-    function newProducable(
-        uint256 _level,
-        uint256 _produces,
-        uint256 _NFTID
-    ) external returns (uint256);
-
-    function newEquippable(
-        uint256 _level,
-        uint256 _itemSlot,
-        uint256 _NFTID
-    ) external returns (uint256);
-
-    function newBuilding(
-        uint256 _area,
-        uint256 _location,
-        uint256 _NFTID
-    ) external returns (uint256);
-    
     function equip(
         uint256 _equipSlot,
         uint256 _equipNFTID,

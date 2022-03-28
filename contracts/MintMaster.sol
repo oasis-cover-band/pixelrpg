@@ -46,6 +46,7 @@ interface ERC20CreditsI {
 }
 interface ERC42069I {
 
+    function count() external view returns(uint256);
     function safeTransferFrom(
         address from,
         address to,
@@ -150,25 +151,41 @@ contract MintMaster is IERC721Receiver {
     }
     ERC42069DataI d;
     uint256[] equipmentIDs = new uint256[](9);
-    mapping(uint256 => bool) filledAreas;
+    mapping(uint256 => mapping(uint256 => bool)) filledAreas;
+    uint256 placedBuildings = 0;
+    uint256 placedEnemies = 0;
+    uint256 placedNPCs = 0;
     constructor(
         address _dataAddress
     ) {
         d = ERC42069DataI(_dataAddress);
     }
 
-    function setArea(uint256 _area) external {
-        if (filledAreas[_area] == false) {
-            filledAreas[_area] = true;
-            for (uint256 index = 0; index < 128; index++) {
-                if (index % 3 == 1) {
-                    internalGenerateCharacter(index % (_area + 1), 1, 2, _area, 0x000000000000000000000000000000000000dEaD);
-                }
-                if (index % 10 == 1) {
-                    internalGenerateEquippedCharacter(index % (_area + 1), 1, _area, 0x000000000000000000000000000000000000dEaD);
-                }
-                internalGenerateBuilding(_area, index, 1);
-            }
+    function setArea(uint256 _area, uint256 _index) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        if (ERC42069I(AA("ERC42069")).count() == 1) {
+            internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
+        }
+        if (filledAreas[_area][_index] == false && _area < GS("MAXAREAS") && placedBuildings < 2048) {
+                filledAreas[_area][_index] = true;
+                internalGenerateBuilding(_area, _index, 1);
+                placedBuildings++;
+        }
+    }
+
+    function setEnemies(uint256 _area) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        if (placedEnemies < 32768) {
+            internalGenerateCharacter(d.r() % (_area + 1), (d.r() % 2) + 1, 2, _area, 0x000000000000000000000000000000000000dEaD);
+            placedEnemies++;
+        }
+    }
+
+    function setNPCs(uint256 _area) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        if (placedNPCs < 4096) {
+            internalGenerateEquippedCharacter(d.r() % (_area + 1), 1, _area, 0x000000000000000000000000000000000000dEaD);
+            placedNPCs++;
         }
     }
 
@@ -340,7 +357,6 @@ contract MintMaster is IERC721Receiver {
         SG("COMPANION", NFTID, "0", companionNFTID);
         internalGenerateConsumable(5, 0, NFTID);
         internalGenerateConsumable(5, 1, NFTID);
-        internalGenerateEquippable(1, 0, NFTID);
         return NFTID;
         // takeCredits(_NFTID, "CHARACTERCOST"); // TAKE NETWORK CURRENCY INSTEAD
     }
