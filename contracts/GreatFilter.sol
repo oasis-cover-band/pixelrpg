@@ -134,7 +134,7 @@ interface GameMasterI {
     
     function placeProducable(
         uint256 _NFTID,
-        string memory _location,
+        uint256 _location,
         uint256 _buildingNFTID
     ) external;
 
@@ -210,7 +210,7 @@ interface ERC42069I {
 
     function ownerOf(
         uint256 _NFTID
-    ) external returns (address);   
+    ) external view returns (address);   
 }
 
 contract GreatFilter {
@@ -232,7 +232,7 @@ contract GreatFilter {
         uint256 _NFTID,
         uint256 _questID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "STARTQUEST");
+        addressCheck(ownerOf(_NFTID), msg.sender, "STARTQUEST");
         E0M().startQuest(_NFTID, _questID);
     }
 
@@ -240,16 +240,25 @@ contract GreatFilter {
         uint256 _NFTID,
         uint256 _questID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "ENDQUEST");
+        addressCheck(ownerOf(_NFTID), msg.sender, "ENDQUEST");
         giveQuestReward(_NFTID, _questID);
         E0M().finishQuest(_NFTID, _questID);
+    }
+
+    function teachSpecial(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        uint256 _skill
+    ) external {
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        E0M().teachSpecial(_NFT0ID, _NFT1ID, _skill);
     }
 
     function attackEnemy(
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external returns (uint256, uint256) {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         (uint256 _NFT0Dmg, uint256 _NFT1Dmg) = E0M().attackEnemy(_NFT0ID, _NFT1ID);
         emit Attack(_NFT0Dmg, _NFT1Dmg);
         return (_NFT0Dmg, _NFT1Dmg);
@@ -260,7 +269,7 @@ contract GreatFilter {
         uint256 _NFT1ID,
         uint256 _specialAttack
     ) external returns (uint256, uint256) {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         (uint256 _NFT0Dmg, uint256 _NFT1Dmg) = E0M().attackEnemy(_NFT0ID, _NFT1ID, _specialAttack);
         emit Attack(_NFT0Dmg, _NFT1Dmg);
         return (_NFT0Dmg, _NFT1Dmg);
@@ -270,7 +279,7 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         E0M().startBattle(_NFT0ID, _NFT1ID);
     }
 
@@ -278,7 +287,7 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         giveFightReward(_NFT0ID, _NFT1ID);
         E0M().endBattle(_NFT0ID, _NFT1ID);
     }
@@ -287,7 +296,7 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         E0M().fleeBattle(_NFT0ID, _NFT1ID);
     }
 
@@ -295,7 +304,7 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         giveFightReward(_NFT0ID, _NFT1ID);
         E0M().captureEnemy(_NFT0ID, _NFT1ID);
     }
@@ -434,7 +443,7 @@ contract GreatFilter {
     function evolve(
         uint256 _NFTID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "EVOLVE");
+        addressCheck(ownerOf(_NFTID), msg.sender, "EVOLVE");
         GM().evolve(_NFTID);
     }
 
@@ -442,18 +451,18 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
         GM().setCompanion(_NFT0ID, _NFT1ID);
     }
     
     function placeProducable(
         uint256 _NFTID,
-        string memory _location,
+        uint256 _location,
         uint256 _buildingNFTID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
-        addressCheck(E().ownerOf(_buildingNFTID), msg.sender, "OWNBUILDINGNFT");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
+        addressCheck(ownerOf(_buildingNFTID), msg.sender, "OWNBUILDINGNFT");
         GM().placeProducable(_NFTID, _location, _buildingNFTID);
     }
 
@@ -461,7 +470,7 @@ contract GreatFilter {
         string memory _location,
         uint256 _NFTID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
         GM().retrieveFromBuilding(_location, _NFTID);
     }
 
@@ -471,8 +480,8 @@ contract GreatFilter {
         uint256 _producableProductionType,
         uint256 _amount
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
-        addressCheck(E().ownerOf(_consumingNFTID), msg.sender, "OWNNFT");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
+        addressCheck(ownerOf(_consumingNFTID), msg.sender, "OWNNFT");
         GM().consume(_NFTID, _consumingNFTID, _producableProductionType, _amount);
     }
 
@@ -483,7 +492,7 @@ contract GreatFilter {
         uint256 _intelligence,
         uint256 _charisma
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNNFT");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
         GM().giveStat(_NFTID, _strength, "STRENGTH");
         GM().giveStat(_NFTID, _dexterity, "DEXTERITY");
         GM().giveStat(_NFTID, _intelligence, "INTELLIGENCE");
@@ -494,8 +503,8 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external returns (uint256) {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
         uint256 newNFTID = GM().breedTwoCharacters(_NFT0ID, _NFT1ID);
         emit NewNFT(newNFTID);
         return newNFTID;
@@ -505,8 +514,8 @@ contract GreatFilter {
         uint256 _NFT0ID,
         uint256 _NFT1ID
     ) external returns (uint256) {
-        addressCheck(E().ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        addressCheck(E().ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
+        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
+        addressCheck(ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
         uint256 newNFTID = GM().mergeTwoCharacters(_NFT0ID, _NFT1ID);
         emit NewNFT(newNFTID);
         return newNFTID;
@@ -524,7 +533,7 @@ contract GreatFilter {
         uint256 _NFTID,
         string memory _newName
     ) external returns (string memory) {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE");
         string memory newNFTName = E0M().rename(_NFTID, _newName);
         emit NewNFTName(newNFTName);
         return newNFTName;
@@ -534,8 +543,8 @@ contract GreatFilter {
         uint256 _NFTID,
         uint256 _consumableNFTID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(E().ownerOf(_consumableNFTID), msg.sender, "OWNTYPE2");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(_consumableNFTID), msg.sender, "OWNTYPE2");
         GM().destroyConsumable(_NFTID, _consumableNFTID);
     }
 
@@ -543,8 +552,8 @@ contract GreatFilter {
         uint256 _NFTID,
         uint256 _producableNFTID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(E().ownerOf(GG("PRODUCABLE", _producableNFTID, "PLACEDIN")), msg.sender, "OWNTYPE5");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(GG("PRODUCABLE", _producableNFTID, "PLACEDIN")), msg.sender, "OWNTYPE5");
         GM().produce(
             _NFTID,
             _producableNFTID
@@ -555,7 +564,7 @@ contract GreatFilter {
         uint256 _produces,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         uint256 newNFTID = MM().newProducable(
             2,
             _produces,
@@ -569,7 +578,7 @@ contract GreatFilter {
         uint256 _itemSlot,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         uint256 newNFTID = MM().newEquippable(
             2,
             _itemSlot,
@@ -584,7 +593,7 @@ contract GreatFilter {
         uint256 _location,
         uint256 _NFTID
     ) external returns (uint256) {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         uint256 newNFTID = MM().newBuilding(
             _area,
             _location,
@@ -599,8 +608,8 @@ contract GreatFilter {
         uint256 _equipNFTID,
         uint256 _NFTID
     ) external {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(E().ownerOf(_equipNFTID), msg.sender, "OWNTYPE3");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(_equipNFTID), msg.sender, "OWNTYPE3");
         GM().equip(
             _equipSlot,
             _equipNFTID,
@@ -612,11 +621,15 @@ contract GreatFilter {
         uint256 _equipSlot,
         uint256 _NFTID
     ) public {
-        addressCheck(E().ownerOf(_NFTID), msg.sender, "OWNTYPE0");
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         GM().unequip(
             _equipSlot,
             _NFTID
         );
+    }
+    
+    function ownerOf(uint256 _NFTID) internal view returns (address) {
+        return E().ownerOf(_NFTID);
     }
 
     function E() internal view returns (ERC42069I) {

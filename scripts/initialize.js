@@ -2072,7 +2072,7 @@ async function setGameSettings() {
   await dataContract.setGS("MAXAREAS", 4096);
   await dataContract.setGS("QUESTTIMER", 3600);
   await dataContract.setGS("QUESTREWARD", 10);
-  await dataContract.setGS("MAXSPECIALS", 7);
+  await dataContract.setGS("MAXSPECIALS", 4);
 }
 
 async function setSpecialAttackTypes() {

@@ -183,7 +183,7 @@ contract Expansion0Master {
                 + (GG("CHARACTER", _NFT0ID, "CHARISMA") * GG("SPECIALS", _specialAttack, "CHARISMADAMAGE"))
                 + (GG("CHARACTER", _NFT0ID, "INTELLIGENCE") * GG("SPECIALS", _specialAttack, "INTELLIGENCEDAMAGE"))
             ) * GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack));
-            uint256 dmg = 1 + ((attackCount * 4324839092 + d.r()) % (mod / 100));
+            uint256 dmg = 1 + ((attackCount * 4324839092 + d.r()) % ((mod + 100) / 100));
             uint256 ehp = GG("CHARACTER", _NFT1ID, "HEALTH");
             uint256 nrgcost = GG("SPECIALS", _specialAttack, "ENERGYCOST") * GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack));
             uint256 nrg = GG("CHARACTER", _NFT0ID, "ENERGY");

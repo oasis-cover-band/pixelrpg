@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
 error InvalidHelperSender(address _target, address _sender);
 
 interface ERC42069DataI {
@@ -282,6 +283,7 @@ contract ERC42069Helper {
         uint256 producableNFTID = GG("BUILDING", _NFTID, _location);
         SG("PRODUCABLE", producableNFTID, "PLACEDIN", 0);
         SG("BUILDING", _NFTID, _location, 0);
+        console.log(producableNFTID);
         return producableNFTID;
     }
     
