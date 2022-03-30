@@ -217,6 +217,7 @@ contract ERC42069 is ERC721 {
         uint256 _NFTID,
         address _to
     ) internal {
+        console.log(ownerOf(_NFTID));
         _transfer(
         ownerOf(_NFTID),
         _to,

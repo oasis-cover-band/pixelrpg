@@ -123,7 +123,7 @@ contract Expansion0Master {
     function attackEnemy(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external returns (uint256, uint256) {
+    ) external returns (uint256, uint256, uint256, uint256) {
         addressCheck(AA("GREATFILTER"), msg.sender);
         attackChecks(_NFT0ID, _NFT1ID);
         uint256 damageDone = basicAttack(_NFT0ID, _NFT1ID);
@@ -134,7 +134,11 @@ contract Expansion0Master {
         damageReceived,   GG("CHARACTER", _NFT1ID, "HEALTH"));
         return (damageDone, damageReceived);
     }
-    function attackEnemy(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _specialAttack) external returns (uint256 output0_, uint256 output1_) {
+    function attackEnemy(
+        uint256 _NFT0ID,
+        uint256 _NFT1ID,
+        uint256 _specialAttack
+    ) external returns (uint256, uint256, uint256, uint256) {
         addressCheck(AA("GREATFILTER"), msg.sender);
         attackChecks(_NFT0ID, _NFT1ID);
         uint256 damageDone = specialAttack(_NFT0ID, _NFT1ID, _specialAttack);
@@ -148,7 +152,7 @@ contract Expansion0Master {
     function enemyAttack(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) internal returns (uint256) {
+    ) internal returns (uint256, uint256) {
         uint256 _specialAttack = d.r() % GS("MAXSPECIALS");
         if(GG("CHARACTER", _NFT1ID, d.n2s(_specialAttack)) > 1 &&
         (GG("CHARACTER", _NFT1ID, "ENERGY") >= (GG("SPECIALS", _specialAttack, "ENERGYCOST")) * GG("CHARACTER", _NFT1ID, d.n2s(_specialAttack))) &&

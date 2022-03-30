@@ -283,7 +283,6 @@ contract ERC42069Helper {
         uint256 producableNFTID = GG("BUILDING", _NFTID, _location);
         SG("PRODUCABLE", producableNFTID, "PLACEDIN", 0);
         SG("BUILDING", _NFTID, _location, 0);
-        console.log(producableNFTID);
         return producableNFTID;
     }
     

@@ -32,13 +32,13 @@ interface Expansion0MasterI {
     function attackEnemy(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) external returns (uint256, uint256);
+    ) external returns (uint256, uint256, uint256, uint256);
     
     function attackEnemy(
         uint256 _NFT0ID,
         uint256 _NFT1ID,
         uint256 _specialAttack
-    ) external returns (uint256, uint256);
+    ) external returns (uint256, uint256, uint256, uint256);
 
     function teachSpecial(
         uint256 _NFT0ID,
@@ -214,7 +214,7 @@ interface ERC42069I {
 }
 
 contract GreatFilter {
-    event Attack(uint256 _NFT0Dmg, uint256 _NFT1Dmg);
+    event Attack(uint256 _NFT0Dmg, uint256 _NFT1Dmg, uint256 _special0Index, uint256 _special1Index);
     event NewNFT(uint256 _NFTID);
     event NewNFTName(string _newName);
     event FightReward(uint256 _experience, uint256 _credits);
@@ -259,8 +259,8 @@ contract GreatFilter {
         uint256 _NFT1ID
     ) external returns (uint256, uint256) {
         addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        (uint256 _NFT0Dmg, uint256 _NFT1Dmg) = E0M().attackEnemy(_NFT0ID, _NFT1ID);
-        emit Attack(_NFT0Dmg, _NFT1Dmg);
+        (uint256 _NFT0Dmg, uint256 _NFT1Dmg, uint256 _special0Index, uint256 _special1Index) = E0M().attackEnemy(_NFT0ID, _NFT1ID);
+        emit Attack(_NFT0Dmg, _NFT1Dmg, _special0Index, _special1Index);
         return (_NFT0Dmg, _NFT1Dmg);
     }
 
@@ -270,8 +270,8 @@ contract GreatFilter {
         uint256 _specialAttack
     ) external returns (uint256, uint256) {
         addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        (uint256 _NFT0Dmg, uint256 _NFT1Dmg) = E0M().attackEnemy(_NFT0ID, _NFT1ID, _specialAttack);
-        emit Attack(_NFT0Dmg, _NFT1Dmg);
+        (uint256 _NFT0Dmg, uint256 _NFT1Dmg, uint256 _special0Index, uint256 _special1Index) = E0M().attackEnemy(_NFT0ID, _NFT1ID, _specialAttack);
+        emit Attack(_NFT0Dmg, _NFT1Dmg, _special0Index, _special1Index);
         return (_NFT0Dmg, _NFT1Dmg);
     }
 
