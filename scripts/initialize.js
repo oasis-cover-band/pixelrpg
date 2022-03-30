@@ -1950,9 +1950,16 @@ let equipment = [
 ]
 let accounts;
 
+let baseNonce = 0;
+let nonceOffset = 0;
+function getNonce() {
+  nonceOffset++;
+  console.log(nonceOffset);
+  return baseNonce + nonceOffset;
+}
 async function getAccounts() {
   accounts = await hre.ethers.getSigners();
-  address = accounts[1].address;
+  address = accounts[0].address;
 }
 
 async function deploy() {
@@ -1984,16 +1991,36 @@ async function deploy() {
     [dataContract.address]
   ];
   contracts = [
-    await factories[0].deploy(...args[0]),
-    await factories[1].deploy(...args[1]),
-    await factories[2].deploy(...args[2]),
-    await factories[3].deploy(...args[3]),
-    await factories[4].deploy(...args[4]),
-    await factories[5].deploy(...args[5]),
-    await factories[6].deploy(...args[6]),
-    await factories[7].deploy(...args[7]),
-    await factories[8].deploy(...args[8]),
-    await factories[9].deploy(...args[9])
+    await factories[0].deploy(...args[0], {
+      nonce: getNonce()
+    }),
+    await factories[1].deploy(...args[1], {
+      nonce: getNonce()
+    }),
+    await factories[2].deploy(...args[2], {
+      nonce: getNonce()
+    }),
+    await factories[3].deploy(...args[3], {
+      nonce: getNonce()
+    }),
+    await factories[4].deploy(...args[4], {
+      nonce: getNonce()
+    }),
+    await factories[5].deploy(...args[5], {
+      nonce: getNonce()
+    }),
+    await factories[6].deploy(...args[6], {
+      nonce: getNonce()
+    }),
+    await factories[7].deploy(...args[7], {
+      nonce: getNonce()
+    }),
+    await factories[8].deploy(...args[8], {
+      nonce: getNonce()
+    }),
+    await factories[9].deploy(...args[9], {
+      nonce: getNonce()
+    })
   ];
   await contracts[0].deployed();
   await contracts[1].deployed();
@@ -2027,52 +2054,52 @@ async function setAddresses() {
   console.log("ERC42069DATAHELPER", contracts[7].address);
   console.log("NAMEGENERATOR", contracts[8].address);
   console.log("MINTMASTER", contracts[9].address);
-  console.log("WEB3BYPASSER", "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
-  console.log("TREASURY", accounts[1].address);
-  await dataContract.setAA("ERC20CREDITS", contracts[0].address);
-  await dataContract.setAA("ERC42069", contracts[1].address);
-  await dataContract.setAA("ERC42069HELPER", contracts[2].address);
-  await dataContract.setAA("ERC42069REVERTS", contracts[3].address);
-  await dataContract.setAA("GAMEMASTER", contracts[4].address);
-  await dataContract.setAA("GREATFILTER", contracts[5].address);
-  await dataContract.setAA("EXPANSION0MASTER", contracts[6].address);
-  await dataContract.setAA("ERC42069DATAHELPER", contracts[7].address);
-  await dataContract.setAA("NAMEGENERATOR", contracts[8].address);
-  await dataContract.setAA("MINTMASTER", contracts[9].address);
-  await dataContract.setAA("WEB3BYPASSER", "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
-  await dataContract.setAA("TREASURY", accounts[1].address);
+  console.log("WEB3BYPASSER", "0x7C7166395F279db94CF98e8d22dAdD722f9627B2");
+  console.log("TREASURY", accounts[0].address);
+  await dataContract.setAA("ERC20CREDITS", contracts[0].address, {nonce: getNonce()});
+  await dataContract.setAA("ERC42069", contracts[1].address, {nonce: getNonce()});
+  await dataContract.setAA("ERC42069HELPER", contracts[2].address, {nonce: getNonce()});
+  await dataContract.setAA("ERC42069REVERTS", contracts[3].address, {nonce: getNonce()});
+  await dataContract.setAA("GAMEMASTER", contracts[4].address, {nonce: getNonce()});
+  await dataContract.setAA("GREATFILTER", contracts[5].address, {nonce: getNonce()});
+  await dataContract.setAA("EXPANSION0MASTER", contracts[6].address, {nonce: getNonce()});
+  await dataContract.setAA("ERC42069DATAHELPER", contracts[7].address, {nonce: getNonce()});
+  await dataContract.setAA("NAMEGENERATOR", contracts[8].address, {nonce: getNonce()});
+  await dataContract.setAA("MINTMASTER", contracts[9].address, {nonce: getNonce()});
+  await dataContract.setAA("WEB3BYPASSER", "0x7C7166395F279db94CF98e8d22dAdD722f9627B2", {nonce: getNonce()});
+  await dataContract.setAA("TREASURY", accounts[0].address, {nonce: getNonce()});
 }
 
 async function setGameSettings() {
-  await dataContract.setGS("MAXTOTALLEVEL", 99);
-  await dataContract.setGS("MAXTOTALHEALTH", 1000000);
-  await dataContract.setGS("MAXTOTALENERGY", 5000);
-  await dataContract.setGS("MAXTOTALSTATS", 1000);
-  await dataContract.setGS("MAXITEMSLOTS", 9);
-  await dataContract.setGS("MAXITEMHEALTH", 100);
-  await dataContract.setGS("MAXITEMENERGY", 100);
-  await dataContract.setGS("MAXITEMSTATS", 20);
-  await dataContract.setGS("STARTINGHEALTH", 100);
-  await dataContract.setGS("STARTINGENERGY", 100);
-  await dataContract.setGS("STARTINGSTATS", 10);
-  await dataContract.setGS("MAXLEVELSTATS", 3);
-  await dataContract.setGS("BREEDINGRESET", 3600);
-  await dataContract.setGS("FIGHTEARNING", 10);
-  await dataContract.setGS("FIGHTEXPERIENCE", 20);
-  await dataContract.setGS("LEVELUP", 1000);
-  await dataContract.setGS("MAXPRODUCTION", 20);
-  await dataContract.setGS("PRODUCTIONRESET", 600);
-  await dataContract.setGS("CHARACTERCOST", 100);
-  await dataContract.setGS("EQUIPPABLECOST", 500);
-  await dataContract.setGS("PRODUCTIONCOST", 2500);
-  await dataContract.setGS("BUILDINGCOST", 10000);
-  await dataContract.setGS("EXPANDBUILDINGCOST", 5000);
-  await dataContract.setGS("AREABLOCKSIZE", 16);
-  await dataContract.setGS("AREASIZE", (16 * 16));
-  await dataContract.setGS("MAXAREAS", 4096);
-  await dataContract.setGS("QUESTTIMER", 3600);
-  await dataContract.setGS("QUESTREWARD", 10);
-  await dataContract.setGS("MAXSPECIALS", 4);
+  await dataContract.setGS("MAXTOTALLEVEL", 99, {nonce: getNonce()});
+  await dataContract.setGS("MAXTOTALHEALTH", 1000000, {nonce: getNonce()});
+  await dataContract.setGS("MAXTOTALENERGY", 5000, {nonce: getNonce()});
+  await dataContract.setGS("MAXTOTALSTATS", 1000, {nonce: getNonce()});
+  await dataContract.setGS("MAXITEMSLOTS", 9, {nonce: getNonce()});
+  await dataContract.setGS("MAXITEMHEALTH", 100, {nonce: getNonce()});
+  await dataContract.setGS("MAXITEMENERGY", 100, {nonce: getNonce()});
+  await dataContract.setGS("MAXITEMSTATS", 1, {nonce: getNonce()});
+  await dataContract.setGS("STARTINGHEALTH", 100, {nonce: getNonce()});
+  await dataContract.setGS("STARTINGENERGY", 100, {nonce: getNonce()});
+  await dataContract.setGS("STARTINGSTATS", 10, {nonce: getNonce()});
+  await dataContract.setGS("MAXLEVELSTATS", 3, {nonce: getNonce()});
+  await dataContract.setGS("BREEDINGRESET", 3600, {nonce: getNonce()});
+  await dataContract.setGS("FIGHTEARNING", 10, {nonce: getNonce()});
+  await dataContract.setGS("FIGHTEXPERIENCE", 20, {nonce: getNonce()});
+  await dataContract.setGS("LEVELUP", 1000, {nonce: getNonce()});
+  await dataContract.setGS("MAXPRODUCTION", 20, {nonce: getNonce()});
+  await dataContract.setGS("PRODUCTIONRESET", 600, {nonce: getNonce()});
+  await dataContract.setGS("CHARACTERCOST", 100, {nonce: getNonce()});
+  await dataContract.setGS("EQUIPPABLECOST", 500, {nonce: getNonce()});
+  await dataContract.setGS("PRODUCTIONCOST", 2500, {nonce: getNonce()});
+  await dataContract.setGS("BUILDINGCOST", 10000, {nonce: getNonce()});
+  await dataContract.setGS("EXPANDBUILDINGCOST", 5000, {nonce: getNonce()});
+  await dataContract.setGS("AREABLOCKSIZE", 16, {nonce: getNonce()});
+  await dataContract.setGS("AREASIZE", (16 * 16), {nonce: getNonce()});
+  await dataContract.setGS("MAXAREAS", 4096, {nonce: getNonce()});
+  await dataContract.setGS("QUESTTIMER", 3600, {nonce: getNonce()});
+  await dataContract.setGS("QUESTREWARD", 10, {nonce: getNonce()});
+  await dataContract.setGS("MAXSPECIALS", 4, {nonce: getNonce()});
 }
 
 async function setSpecialAttackTypes() {
@@ -2081,227 +2108,103 @@ async function setSpecialAttackTypes() {
   // INTELLIGENCEDAMAGE
   // CHARISMADAMAGE
   // ENERGYCOST
-  await dataContract.setGD("SPECIALS", 42069, "STRENGTHDAMAGE", 250, "SETUP");
-  await dataContract.setGD("SPECIALS", 42069, "DEXTERITYDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42069, "INTELLIGENCEDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42069, "CHARISMADAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42069, "ENERGYCOST", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42069, "STRENGTHDAMAGE", 250, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42069, "DEXTERITYDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42069, "INTELLIGENCEDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42069, "CHARISMADAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42069, "ENERGYCOST", 20, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42070, "STRENGTHDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42070, "DEXTERITYDAMAGE", 250, "SETUP");
-  await dataContract.setGD("SPECIALS", 42070, "INTELLIGENCEDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42070, "CHARISMADAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42070, "ENERGYCOST", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42070, "STRENGTHDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42070, "DEXTERITYDAMAGE", 250, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42070, "INTELLIGENCEDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42070, "CHARISMADAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42070, "ENERGYCOST", 20, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42071, "STRENGTHDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42071, "DEXTERITYDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42071, "INTELLIGENCEDAMAGE", 250, "SETUP");
-  await dataContract.setGD("SPECIALS", 42071, "CHARISMADAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42071, "ENERGYCOST", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42071, "STRENGTHDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42071, "DEXTERITYDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42071, "INTELLIGENCEDAMAGE", 250, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42071, "CHARISMADAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42071, "ENERGYCOST", 20, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42072, "STRENGTHDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42072, "DEXTERITYDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42072, "INTELLIGENCEDAMAGE", 10, "SETUP");
-  await dataContract.setGD("SPECIALS", 42072, "CHARISMADAMAGE", 250, "SETUP");
-  await dataContract.setGD("SPECIALS", 42072, "ENERGYCOST", 20, "SETUP");
+  await dataContract.setGD("SPECIALS", 42072, "STRENGTHDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42072, "DEXTERITYDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42072, "INTELLIGENCEDAMAGE", 10, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42072, "CHARISMADAMAGE", 250, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42072, "ENERGYCOST", 20, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42073, "STRENGTHDAMAGE", 20, "SETUP");
-  await dataContract.setGD("SPECIALS", 42073, "DEXTERITYDAMAGE", 20, "SETUP");
-  await dataContract.setGD("SPECIALS", 42073, "INTELLIGENCEDAMAGE", 200, "SETUP");
-  await dataContract.setGD("SPECIALS", 42073, "CHARISMADAMAGE", 200, "SETUP");
-  await dataContract.setGD("SPECIALS", 42073, "ENERGYCOST", 40, "SETUP");
+  await dataContract.setGD("SPECIALS", 42073, "STRENGTHDAMAGE", 20, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42073, "DEXTERITYDAMAGE", 20, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42073, "INTELLIGENCEDAMAGE", 200, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42073, "CHARISMADAMAGE", 200, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42073, "ENERGYCOST", 40, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42074, "STRENGTHDAMAGE", 200, "SETUP");
-  await dataContract.setGD("SPECIALS", 42074, "DEXTERITYDAMAGE", 200, "SETUP");
-  await dataContract.setGD("SPECIALS", 42074, "INTELLIGENCEDAMAGE", 20, "SETUP");
-  await dataContract.setGD("SPECIALS", 42074, "CHARISMADAMAGE", 20, "SETUP");
-  await dataContract.setGD("SPECIALS", 42074, "ENERGYCOST", 40, "SETUP");
+  await dataContract.setGD("SPECIALS", 42074, "STRENGTHDAMAGE", 200, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42074, "DEXTERITYDAMAGE", 200, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42074, "INTELLIGENCEDAMAGE", 20, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42074, "CHARISMADAMAGE", 20, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42074, "ENERGYCOST", 40, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42075, "STRENGTHDAMAGE", 350, "SETUP");
-  await dataContract.setGD("SPECIALS", 42075, "DEXTERITYDAMAGE", 350, "SETUP");
-  await dataContract.setGD("SPECIALS", 42075, "INTELLIGENCEDAMAGE", 350, "SETUP");
-  await dataContract.setGD("SPECIALS", 42075, "CHARISMADAMAGE", 350, "SETUP");
-  await dataContract.setGD("SPECIALS", 42075, "ENERGYCOST", 70, "SETUP");
+  await dataContract.setGD("SPECIALS", 42075, "STRENGTHDAMAGE", 350, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42075, "DEXTERITYDAMAGE", 350, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42075, "INTELLIGENCEDAMAGE", 350, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42075, "CHARISMADAMAGE", 350, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42075, "ENERGYCOST", 70, "SETUP", {nonce: getNonce()});
 
-  await dataContract.setGD("SPECIALS", 42076, "STRENGTHDAMAGE", 400, "SETUP");
-  await dataContract.setGD("SPECIALS", 42076, "DEXTERITYDAMAGE", 400, "SETUP");
-  await dataContract.setGD("SPECIALS", 42076, "INTELLIGENCEDAMAGE", 400, "SETUP");
-  await dataContract.setGD("SPECIALS", 42076, "CHARISMADAMAGE", 400, "SETUP");
-  await dataContract.setGD("SPECIALS", 42076, "ENERGYCOST", 150, "SETUP");
+  await dataContract.setGD("SPECIALS", 42076, "STRENGTHDAMAGE", 400, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42076, "DEXTERITYDAMAGE", 400, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42076, "INTELLIGENCEDAMAGE", 400, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42076, "CHARISMADAMAGE", 400, "SETUP", {nonce: getNonce()});
+  await dataContract.setGD("SPECIALS", 42076, "ENERGYCOST", 150, "SETUP", {nonce: getNonce()});
 }
 
 async function setConsumableType() {
-    await dataContract.setGD("CONSUMABLETYPE", 0, "HEALTHRESTORE", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 1, "ENERGYRESTORE", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 2, "STRENGTHBOOST", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 3, "DEXTERITYBOOST", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 4, "INTELLIGENCEBOOST", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 5, "CHARISMABOOST", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 6, "HEALTHBOOST", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 7, "ENERGYBOOST", 1, "SETUP");
-    await dataContract.setGD("CONSUMABLETYPE", 8, "BREEDINGRESET", 1, "SETUP");
+    await dataContract.setGD("CONSUMABLETYPE", 0, "HEALTHRESTORE", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 1, "ENERGYRESTORE", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 2, "STRENGTHBOOST", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 3, "DEXTERITYBOOST", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 4, "INTELLIGENCEBOOST", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 5, "CHARISMABOOST", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 6, "HEALTHBOOST", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 7, "ENERGYBOOST", 1, "SETUP", {nonce: getNonce()});
+    await dataContract.setGD("CONSUMABLETYPE", 8, "BREEDINGRESET", 1, "SETUP", {nonce: getNonce()});
 }
 
 async function setWorld() {
   await addNames();
 }
 
-async function setFreeProducables() {
-  await contracts[9].generateProducable(1, 0, 1);
-  await contracts[9].generateProducable(1, 1, 1);
-  await contracts[9].generateProducable(1, 2, 1);
-  await contracts[9].generateProducable(1, 3, 1);
-  await contracts[9].generateProducable(1, 4, 1);
-  await contracts[9].generateProducable(1, 5, 1);
-  await contracts[9].generateProducable(1, 6, 1);
-  await contracts[9].generateProducable(1, 7, 1);
-  await contracts[9].generateProducable(1, 8, 1);
-}
-
-async function setFreeCharacters() {
-  const address = "0xbcd4042de499d14e55001ccbb24a551f3b954096";
-  await contracts[9].generateEquippedCharacter(0, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateCharacter(1, 2, 0, 0, address);
-  await contracts[9].generateCharacter(1, 2, 0, 0, address);
-  await contracts[9].generateCharacter(1, 2, 0, 0, address);
-  await contracts[9].generateCharacter(1, 2, 0, 0, address);
-  await contracts[9].generateCharacter(33, 2, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateCharacter(33, 2, 0, 0, address);
-  await contracts[9].generateCharacter(33, 1, 0, 0, address);
-  await contracts[9].generateCharacter(66, 1, 0, 0, address);
-  await contracts[9].generateCharacter(34, 1, 0, 0, address);
-  await contracts[9].generateCharacter(70, 1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-  await contracts[9].generateEquippedCharacter(1, 0, 0, address);
-}
-
-async function setFreeRoamingCharacters() {
-  const index = 1;
-    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(1 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(5 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(3 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(2 * index, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateEquippedCharacter(59, 0, 0, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(4 * (index % 14) + 1, 2, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(5 * (index % 14) + 1, 2, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(5 * (index % 14) + 1, 2, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(2 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(3 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(4 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(5 * (index % 14) + 1, 0, 2, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(6 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-    await contracts[9].generateCharacter(7 * (index % 14) + 1, 1, 1, index, "0x000000000000000000000000000000000000dEaD");
-}
-
-async function setFreeConsumables() {
-  await contracts[9].generateConsumable(200, 0, 1);
-  await contracts[9].generateConsumable(200, 1, 1);
-  await contracts[9].generateConsumable(200, 2, 1);
-  await contracts[9].generateConsumable(200, 3, 1);
-  await contracts[9].generateConsumable(200, 4, 1);
-  await contracts[9].generateConsumable(200, 5, 1);
-  await contracts[9].generateConsumable(200, 6, 1);
-  await contracts[9].generateConsumable(200, 7, 1);
-  await contracts[9].generateConsumable(200, 8, 1);
-}
-
-async function setFreeItems() {
-  await contracts[9].generateEquippable(2, 0, 1);
-  await contracts[9].generateEquippable(2, 1, 1);
-  await contracts[9].generateEquippable(2, 2, 1);
-  await contracts[9].generateEquippable(2, 3, 1);
-  await contracts[9].generateEquippable(2, 4, 1);
-  await contracts[9].generateEquippable(2, 5, 1);
-  await contracts[9].generateEquippable(2, 6, 1);
-  await contracts[9].generateEquippable(2, 7, 1);
-  await contracts[9].generateEquippable(2, 8, 1);
-}
-
-async function setBuildings() {
-  for (let index = 0; index < 10; index++) {
-    await contracts[9].generateBuilding(0, index, 1);
-  }
-}
-
-async function setNPCs() {
-  for (let index = 0; index < npcs.length; index++) {
-    await contracts[9].generateCharacter(npcs[index].level, 0, 1, npcs[index].area, "0x000000000000000000000000000000000000dEaD");
-  }
-}
-
-async function setEnemies() {
-  for (let index = 0; index < enemies.length; index++) {
-    await contracts[9].generateCharacter(enemies[index].level, enemies[index].species, 2, enemies[index].area, "0x000000000000000000000000000000000000dEaD");
-  }
-}
 
 async function addNames() {
-    await contracts[8].addName(names.slice(0, 100));
-    await contracts[8].addName(names.slice(100, 200));
-    await contracts[8].addName(names.slice(200, 300));
-    await contracts[8].addName(names.slice(300, 400));
-    await contracts[8].addName(names.slice(400, 500));
-    await contracts[8].addName(names.slice(500, 600));
-    await contracts[8].addName(names.slice(600, 700));
-    await contracts[8].addName(names.slice(700, 800));
-    await contracts[8].addName(names.slice(800, 900));
-    await contracts[8].addName(names.slice(900, 1000));
-    await contracts[8].addName(names.slice(1000, 1100));
-    await contracts[8].addName(names.slice(1100, 1200));
-    await contracts[8].addName(names.slice(1200, 1300));
-    await contracts[8].addName(names.slice(1300, 1400));
-    await contracts[8].addName(names.slice(1400, 1500));
-    await contracts[8].addName(names.slice(1500, 1600));
-    await contracts[8].addName(names.slice(1600, 1700));
-    await contracts[8].addName(names.slice(1700, 1800));
-    await contracts[8].addName(names.slice(1800, 1900));
+    await contracts[8].addName(names.slice(0, 100), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(100, 200), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(200, 300), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(300, 400), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(400, 500), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(500, 600), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(600, 700), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(700, 800), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(800, 900), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(900, 1000), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1000, 1100), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1100, 1200), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1200, 1300), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1300, 1400), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1400, 1500), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1500, 1600), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1600, 1700), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1700, 1800), {nonce: getNonce()});
+    await contracts[8].addName(names.slice(1800, 1900), {nonce: getNonce()});
 }
 
 async function main() {
-  await deploy();
   await getAccounts();
+  await deploy();
   await setup();
 }
 
 main()
   .then(() => {
+    console.log(nonceOffset + baseNonce);
     process.exit(0);
   })
   .catch((error) => {

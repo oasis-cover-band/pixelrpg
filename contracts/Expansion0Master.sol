@@ -126,13 +126,13 @@ contract Expansion0Master {
     ) external returns (uint256, uint256, uint256, uint256) {
         addressCheck(AA("GREATFILTER"), msg.sender);
         attackChecks(_NFT0ID, _NFT1ID);
-        uint256 damageDone = basicAttack(_NFT0ID, _NFT1ID);
-        uint256 damageReceived = enemyAttack(_NFT0ID, _NFT1ID);
+        (uint256 damageDone, uint256 special0Index) = basicAttack(_NFT0ID, _NFT1ID);
+        (uint256 damageReceived, uint256 special1Index) = enemyAttack(_NFT0ID, _NFT1ID);
         console.log("Attack0:'%s', HP0:'%s'", 
         damageDone, GG("CHARACTER", _NFT0ID, "HEALTH"));
         console.log("Attack1:'%s', HP1:'%s'", 
         damageReceived,   GG("CHARACTER", _NFT1ID, "HEALTH"));
-        return (damageDone, damageReceived);
+        return (damageDone, damageReceived, special0Index, special1Index);
     }
     function attackEnemy(
         uint256 _NFT0ID,
@@ -141,13 +141,13 @@ contract Expansion0Master {
     ) external returns (uint256, uint256, uint256, uint256) {
         addressCheck(AA("GREATFILTER"), msg.sender);
         attackChecks(_NFT0ID, _NFT1ID);
-        uint256 damageDone = specialAttack(_NFT0ID, _NFT1ID, _specialAttack);
-        uint256 damageReceived = enemyAttack(_NFT0ID, _NFT1ID);
+        (uint256 damageDone, uint256 special0Index) = specialAttack(_NFT0ID, _NFT1ID, _specialAttack);
+        (uint256 damageReceived, uint256 special1Index) = enemyAttack(_NFT0ID, _NFT1ID);
         console.log("sAttack0:'%s', HP0:'%s'", 
         damageDone, GG("CHARACTER", _NFT0ID, "HEALTH"));
         console.log("Attack1:'%s', HP1:'%s'", 
         damageReceived,   GG("CHARACTER", _NFT1ID, "HEALTH"));
-        return (damageDone, damageReceived);
+        return (damageDone, damageReceived, special0Index, special1Index);
     }
     function enemyAttack(
         uint256 _NFT0ID,
@@ -166,7 +166,7 @@ contract Expansion0Master {
     function basicAttack(
         uint256 _NFT0ID,
         uint256 _NFT1ID
-    ) internal returns (uint256) {
+    ) internal returns (uint256, uint256) {
         uint256 dmg = 1 + (attackCount * 2312839012309 + d.r()) % GG("CHARACTER", _NFT0ID, "STRENGTH");
         uint256 ehp = GG("CHARACTER", _NFT1ID, "HEALTH");
         if (dmg >= ehp) {
@@ -176,11 +176,11 @@ contract Expansion0Master {
             SG("CHARACTER", _NFT1ID, "HEALTH", ehp - dmg);
         }
         attackCount++;
-        return dmg;
+        return (dmg, 0);
     }
-    function specialAttack(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _specialAttack) internal returns (uint256 output_) {
-        if(GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack)) > 1 &&
-        (GG("CHARACTER", _NFT0ID, "ENERGY") >= (GG("SPECIALS", _specialAttack, "ENERGYCOST")* GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack))))) {
+    function specialAttack(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _specialAttack) internal returns (uint256, uint256) {
+        if(GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack)) > 0 &&
+        (GG("CHARACTER", _NFT0ID, "ENERGY") >= (GG("SPECIALS", _specialAttack, "ENERGYCOST") * GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack))))) {
             uint256 mod = (
                 (GG("CHARACTER", _NFT0ID, "STRENGTH") * GG("SPECIALS", _specialAttack, "STRENGTHDAMAGE"))
                 + (GG("CHARACTER", _NFT0ID, "DEXTERITY") * GG("SPECIALS", _specialAttack, "DEXTERITYDAMAGE"))
@@ -202,8 +202,9 @@ contract Expansion0Master {
                 SG("CHARACTER", _NFT1ID, "HEALTH", ehp - dmg);
             }
             attackCount++;
-            return dmg;
+            return (dmg, _specialAttack);
         } else {
+            console.log("Failed Special Attack. CENERGY: '%s', RENERGY: '%s'', SLEVEL: '%s'", GG("CHARACTER", _NFT0ID, "ENERGY"), GG("SPECIALS", _specialAttack, "ENERGYCOST") * GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack)), GG("CHARACTER", _NFT0ID, d.n2s(_specialAttack))); 
             return basicAttack(_NFT0ID, _NFT1ID);
         }
     }

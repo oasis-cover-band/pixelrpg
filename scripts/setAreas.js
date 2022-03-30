@@ -8,9 +8,15 @@ const hre = require("hardhat");
 let factories;
 let contracts;
 
+let baseNonce = 0;
+let nonceOffset = 119;
+function getNonce() {
+nonceOffset++;
+return baseNonce + nonceOffset;
+}
 async function getAccounts() {
   const accounts = await hre.ethers.getSigners();
-  address = accounts[1].address;
+  address = accounts[0].address;
 }
 
 async function deploy() {
@@ -42,33 +48,34 @@ async function deploy() {
 
 async function setArea(area) {
   for(let index = 0; index < 20; index++) {
-    await contracts[9].setArea(area, index);
+    await contracts[9].setArea(area, index, {nonce: getNonce()});
   }
 }
 async function setEnemies(area) {
   for(let index = 0; index < 20; index++) {
-    await contracts[9].setEnemies(area);
+    await contracts[9].setEnemies(area, {nonce: getNonce()});
   }
 }
 async function setNPCs(area) {
   for(let index = 0; index < 5; index++) {
-    await contracts[9].setNPCs(area);
+    await contracts[9].setNPCs(area, {nonce: getNonce()});
   }
 }
+areas = [0, 4095, 4032, 1, 63];
 
 async function main() {
   await deploy();
   await getAccounts();
-  await setArea(0);
-  await setEnemies(0);
-  await setNPCs(0);
-  for(let area = 0; area < 4; area++) {
-    setTimeout(async () => {
-      await setArea(area);
-      await setEnemies(area);
-      await setNPCs(area);
-    }, area * 10000);
+  for (let index = 0; index < this.areas.length; index++) {
+    await setAreaFull(this.areas[index]);
+    this.areas.pop();
   }
+}
+
+async function setAreaFull(area) {
+  await setArea(area);
+  await setEnemies(area);
+  await setNPCs(area);
 }
 
 main()
@@ -78,5 +85,6 @@ main()
   .catch((error) => {
     console.error(error);
     // process.exit(1); // keep running the script!
+    main();
   });
   
