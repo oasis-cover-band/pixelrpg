@@ -1950,7 +1950,7 @@ let equipment = [
 ]
 let accounts;
 
-let baseNonce = 0;
+let baseNonce = 929;
 let nonceOffset = 0;
 function getNonce() {
   nonceOffset++;

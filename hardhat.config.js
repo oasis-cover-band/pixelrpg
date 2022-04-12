@@ -1,9 +1,11 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ganache");
 require('hardhat-contract-sizer');
+require("hardhat-gas-reporter");
 
 const ROPSTEN_ALCHEMY_URL = "https://eth-ropsten.alchemyapi.io/v2/EBbF5DnGDkdIJWap_6Lv0caEs3sEv1DW";
 const RINKEBY_ALCHEMY_URL = "https://eth-rinkeby.alchemyapi.io/v2/e102b787251011f89ebb8901ae93e455a53b26e4b633b3912244b42b72af1089";
+const MUMBAI_ALCHEMY_URL = "https://polygon-mumbai.g.alchemy.com/v2/BQ3IwNvNBPUlyt4K2L0TRj0ZjFzgg3ta";
 const RINKEBY_INFURA_URL = "https://rinkeby.infura.io/v3/21fc828c47394e7591eb60b4bc807d07";
 const PRIVATE_KEY = "da052c767b5bccbf1f76f7a73de53e3fc958c2e2636b85a188ef50b4f6b8ae3d";
 const GANACHE_URL = 'http://127.0.0.1:7545';
@@ -33,6 +35,10 @@ module.exports = {
       gasMultiplier: 1.3,
       // gas: 50000000000,
       gasPrice: 10000000000
+    },
+    matic: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      accounts: [PRIVATE_KEY, PRIVATE_KEY]
     },
     rinkeby: {
       url: RINKEBY_INFURA_URL,

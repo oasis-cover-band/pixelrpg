@@ -9,7 +9,7 @@ let factories;
 let contracts;
 
 let baseNonce = 0;
-let nonceOffset = 929;
+let nonceOffset = 164;
 function getNonce() {
 nonceOffset++;
 return baseNonce + nonceOffset;
@@ -21,7 +21,7 @@ async function getAccounts() {
 
 async function deploy() {
   factories = [
-    await hre.ethers.getContractFactory("ERC20Credits"),
+    await hre.ethers.getContractFactory("ERC42069Data"),
     await hre.ethers.getContractFactory("ERC42069"),
     await hre.ethers.getContractFactory("ERC42069Helper"),
     await hre.ethers.getContractFactory("ERC42069Reverts"),
@@ -42,42 +42,29 @@ async function deploy() {
     0,
     0,
     0,
-    await factories[9].attach("0x763B0FAE0d61550dC8966DE515E356821FF69108")
+    await factories[0].attach("0x763B0FAE0d61550dC8966DE515E356821FF69108")
   ];
 }
 
-async function setArea(area) {
+async function getArea(area) {
   for(let index = 0; index < 20; index++) {
     console.log(area, index);
-    await contracts[9].setArea(area, index, {nonce: getNonce()});
+    console.log(await contracts[9].getGD("WORLD", area, index.toString()));
   }
 }
-async function setEnemies(area) {
-  for(let index = 0; index < 20; index++) {
-    await contracts[9].setEnemies(area, {nonce: getNonce()});
-  }
-}
-async function setNPCs(area) {
-  for(let index = 0; index < 5; index++) {
-    await contracts[9].setNPCs(area, {nonce: getNonce()});
-  }
-}
-// areas = [1];
-areas = [4092];
+areas = [0];
 
-async function main(areas = this.areas) {
-  await deploy();
+async function main() {
   await getAccounts();
+  await deploy();
   for (let index = 0; index < this.areas.length; index++) {
-    await setAreaFull(this.areas[index]);
-    areas.pop();
+    await getAreaFull(this.areas[index]);
+    this.areas.pop();
   }
 }
 
-async function setAreaFull(area) {
-  await setArea(area);
-  await setEnemies(area);
-  await setNPCs(area);
+async function getAreaFull(area) {
+  await getArea(area);
 }
 
 main()
@@ -87,6 +74,6 @@ main()
   .catch((error) => {
     console.error(error);
     // process.exit(1); // keep running the script!
-    // main(this.areas);
+    main();
   });
   

@@ -264,7 +264,7 @@ contract GreatFilter {
         return (_NFT0Dmg, _NFT1Dmg);
     }
 
-    function attackEnemy(
+    function specialAttackEnemy(
         uint256 _NFT0ID,
         uint256 _NFT1ID,
         uint256 _specialAttack
@@ -516,7 +516,7 @@ contract GreatFilter {
     ) external returns (uint256) {
         addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         addressCheck(ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
-        uint256 newNFTID = GM().mergeTwoCharacters(_NFT0ID, _NFT1ID);
+        uint256 newNFTID = GM().mergeTwoCharacters(_NFT0ID, _NFT1ID);   
         emit NewNFT(newNFTID);
         return newNFTID;
     }

@@ -152,7 +152,6 @@ contract MintMaster is IERC721Receiver {
     ERC42069DataI d;
     uint256[] equipmentIDs = new uint256[](9);
     mapping(uint256 => mapping(uint256 => bool)) filledAreas;
-    uint256 placedBuildings = 0;
     uint256 placedEnemies = 0;
     uint256 placedNPCs = 0;
     constructor(
@@ -166,10 +165,9 @@ contract MintMaster is IERC721Receiver {
         if (ERC42069I(AA("ERC42069")).count() == 1) {
             internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
         }
-        if (filledAreas[_area][_index] == false && _area < GS("MAXAREAS") && placedBuildings < 2048) {
+        if (!filledAreas[_area][_index] && _area < GS("MAXAREAS")) {
                 filledAreas[_area][_index] = true;
                 internalGenerateBuilding(_area, _index, 1);
-                placedBuildings++;
         }
     }
 
