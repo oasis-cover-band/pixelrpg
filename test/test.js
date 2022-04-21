@@ -160,7 +160,7 @@ async function setGameSettings() {
   await dataContract.setGS("PRODUCTIONCOST", 2500);
   await dataContract.setGS("BUILDINGCOST", 10000);
   await dataContract.setGS("EXPANDBUILDINGCOST", 5000);
-  await dataContract.setGS("AREABLOCKSIZE", 16);
+  await dataContract.setGS("CITYBLOCKROWSIZE", 16);
   await dataContract.setGS("AREASIZE", (16 * 16));
   await dataContract.setGS("MAXAREAS", 4096);
 }

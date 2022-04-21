@@ -160,7 +160,7 @@ contract MintMaster is IERC721Receiver {
         d = ERC42069DataI(_dataAddress);
     }
 
-    function setArea(uint256 _area, uint256 _index) external {
+    function setArea(uint256 _area, uint256 _index, uint256 _expandx, uint256 _expandy) external {
         addressCheck(AA("SETUP"), msg.sender);
         if (ERC42069I(AA("ERC42069")).count() == 1) {
             internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
@@ -169,6 +169,15 @@ contract MintMaster is IERC721Receiver {
                 filledAreas[_area][_index] = true;
                 internalGenerateBuilding(_area, _index, 1);
         }
+    }
+
+    function buildSingle(uint256 _area, uint256 _index) external {
+        addressCheck(AA("SETUP"), msg.sender);
+        if (!filledAreas[_area][_index] && _area < GS("MAXAREAS")) {
+                filledAreas[_area][_index] = true;
+                internalGenerateBuilding(_area, _index, 1);
+        }
+
     }
 
     function setEnemies(uint256 _area) external {
