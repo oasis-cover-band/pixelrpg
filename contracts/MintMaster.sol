@@ -160,38 +160,37 @@ contract MintMaster is IERC721Receiver {
         d = ERC42069DataI(_dataAddress);
     }
 
-    function setArea(uint256 _area, uint256 _index, uint256 _expandx, uint256 _expandy) external {
+    function setArea(uint256 areas) external {
         addressCheck(AA("SETUP"), msg.sender);
+        require(areas < GS("NUMBEROFREGIONS"));
         if (ERC42069I(AA("ERC42069")).count() == 1) {
-            internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
+            uint256 NFTID = internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
+            ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(NFTID, 1000000 * 100);
         }
-        if (!filledAreas[_area][_index] && _area < GS("MAXAREAS")) {
-                filledAreas[_area][_index] = true;
-                internalGenerateBuilding(_area, _index, 1);
-        }
+            if (areas == 4096 || areas == 0 || areas == 1 || areas == 2 || areas == 4096 || areas == 4092 || areas == 4095) {
+                uint256 NFTID = internalGenerateBuilding(areas, 0, 1);
+                SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 3);
+                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "1", NFTID);
+                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "16", NFTID);
+                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "17", NFTID);
+                NFTID = internalGenerateBuilding(areas, 2, 1);
+                SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
+                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "3", NFTID);
+            }
     }
 
-    function buildSingle(uint256 _area, uint256 _index) external {
-        addressCheck(AA("SETUP"), msg.sender);
-        if (!filledAreas[_area][_index] && _area < GS("MAXAREAS")) {
-                filledAreas[_area][_index] = true;
-                internalGenerateBuilding(_area, _index, 1);
-        }
-
-    }
-
-    function setEnemies(uint256 _area) external {
+    function setEnemies(uint256 _area, uint256 _species) external {
         addressCheck(AA("SETUP"), msg.sender);
         if (placedEnemies < 32768) {
-            internalGenerateCharacter(d.r() % (_area + 1), (d.r() % 2) + 1, 2, _area, 0x000000000000000000000000000000000000dEaD);
+            internalGenerateCharacter(d.r() % (_area + 1), _species, 2, _area, 0x000000000000000000000000000000000000dEaD);
             placedEnemies++;
         }
     }
 
-    function setNPCs(uint256 _area) external {
+    function setNPCs(uint256 _area, uint256 _special) external {
         addressCheck(AA("SETUP"), msg.sender);
         if (placedNPCs < 4096) {
-            internalGenerateEquippedCharacter(d.r() % (_area + 1), 1, _area, 0x000000000000000000000000000000000000dEaD);
+            internalGenerateEquippedCharacter(d.r() % (_area + 1), _special, _area, 0x000000000000000000000000000000000000dEaD);
             placedNPCs++;
         }
     }
@@ -247,36 +246,56 @@ contract MintMaster is IERC721Receiver {
         equipmentIDs[0] = (E().createNewEquippable(_level, 0, charID));
         GF().equip(0, equipmentIDs[0], charID);
 
-        equipmentIDs[1] = (E().createNewEquippable(_level, 1, charID));
-        GF().equip(1, equipmentIDs[1], charID);
-
         equipmentIDs[2] = (E().createNewEquippable(_level, 2, charID));
         GF().equip(2, equipmentIDs[2], charID);
 
         equipmentIDs[3] = (E().createNewEquippable(_level, 3, charID));
         GF().equip(3, equipmentIDs[3], charID);
 
-        if (d.r() % 3 > 1) {
-            equipmentIDs[4] = (E().createNewEquippable(_level, 4, charID));
-            GF().equip(4, equipmentIDs[4], charID);
-        }
+        equipmentIDs[6] = (E().createNewEquippable(_level, 6, charID));
+        GF().equip(6, equipmentIDs[6], charID);
 
-        if (d.r() % 230 >= 50) {
-            equipmentIDs[5] = (E().createNewEquippable(_level, 5, charID));
-            GF().equip(5, equipmentIDs[5], charID);
-        }
+        if (_special < 2) {
+        equipmentIDs[1] = (E().createNewEquippable(_level, 1, charID));
+        GF().equip(1, equipmentIDs[1], charID);
 
-        if (d.r() % 1000 >= 200) {
-            equipmentIDs[6] = (E().createNewEquippable(_level, 6, charID));
-            GF().equip(6, equipmentIDs[6], charID);
-        }
+            if (d.r() % 3 > 1) {
+                equipmentIDs[4] = (E().createNewEquippable(_level, 4, charID));
+                GF().equip(4, equipmentIDs[4], charID);
+            }
 
-        equipmentIDs[7] = (E().createNewEquippable(_level, 7, charID));
-        GF().equip(7, equipmentIDs[7], charID);
+            if (d.r() % 230 >= 50) {
+                equipmentIDs[5] = (E().createNewEquippable(_level, 5, charID));
+                GF().equip(5, equipmentIDs[5], charID);
+            }
 
-        if (d.r() % 2 == 1) {
-            equipmentIDs[8] = (E().createNewEquippable(_level, 8, charID));
-            GF().equip(8, equipmentIDs[8], charID);
+            equipmentIDs[7] = (E().createNewEquippable(_level, 7, charID));
+            GF().equip(7, equipmentIDs[7], charID);
+
+            if (d.r() % 2 == 1) {
+                equipmentIDs[8] = (E().createNewEquippable(_level, 8, charID));
+                GF().equip(8, equipmentIDs[8], charID);
+            }
+        } else {
+
+                equipmentIDs[5] = (E().createNewEquippable(_level, 5, charID));
+                GF().equip(5, equipmentIDs[5], charID);
+
+            if (_special > 3) { // BOOTS
+                equipmentIDs[4] = (E().createNewEquippable(_level, 4, charID));
+                GF().equip(4, equipmentIDs[4], charID);
+
+                equipmentIDs[1] = (E().createNewEquippable(_level, 6, charID));
+                GF().equip(1, equipmentIDs[1], charID);
+            }
+
+                equipmentIDs[7] = (E().createNewEquippable(_level, 7, charID));
+                GF().equip(7, equipmentIDs[7], charID);
+
+            if (_special > 4) { // CAPE
+                equipmentIDs[8] = (E().createNewEquippable(_level, 8, charID));
+                GF().equip(8, equipmentIDs[8], charID);
+            }
         }
 
         E().safeTransferFrom(address(this), _mintTo, charID);

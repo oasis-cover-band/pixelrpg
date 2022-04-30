@@ -109,7 +109,7 @@ contract ERC42069Reverts {
             (GG("WORLD", _area, d.n2s(_location - 1)) != _NFTID &&  _location - 1 % GS("CITYBLOCKROWSIZE") != 0) && // NOT LEFT
             (GG("WORLD", _area, d.n2s(_location + 1)) != _NFTID && _location + 1 % GS("CITYBLOCKROWSIZE") != GS("CITYBLOCKROWSIZE") - 1) && // NOT RIGHT
             (GG("WORLD", _area, d.n2s(_location - GS("CITYBLOCKROWSIZE"))) != _NFTID && _location > GS("CITYBLOCKROWSIZE")) && // NOT ABOVE
-            (GG("WORLD", _area, d.n2s(_location + GS("CITYBLOCKROWSIZE"))) != _NFTID && _location < GS("MAXREGIONSIZE")) // NOT BELOW
+            (GG("WORLD", _area, d.n2s(_location + GS("CITYBLOCKROWSIZE"))) != _NFTID && _location < GS("REGIONSIZE")) // NOT BELOW
         ) {
             revert NotBorderingWorldSpace({
                 _targetArea: _area,
@@ -123,7 +123,7 @@ contract ERC42069Reverts {
         uint256 _location
     ) external view {
         if (
-            _location >= GS("AREASIZE")
+            _location >= GS("REGIONSIZE")
         ) {
             revert MaxAreaSize({
                 _targetPlacementIndex: _location

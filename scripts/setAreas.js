@@ -9,13 +9,14 @@ let factories;
 let contracts;
 
 let baseNonce = 0;
-let nonceOffset = 929;
+let nonceOffset = 119;
+let accounts;
 function getNonce() {
 nonceOffset++;
 return baseNonce + nonceOffset;
 }
 async function getAccounts() {
-  const accounts = await hre.ethers.getSigners();
+  accounts = await hre.ethers.getSigners();
   address = accounts[0].address;
 }
 
@@ -42,51 +43,131 @@ async function deploy() {
     0,
     0,
     0,
-    await factories[9].attach("0x763B0FAE0d61550dC8966DE515E356821FF69108")
+    await factories[9].attach("0x610178dA211FEF7D417bC0e6FeD39F05609AD788")
   ];
 }
 
 async function setArea(area) {
-  for(let index = 0; index < 20; index++) {
-    console.log(area, index);
-    await contracts[9].setArea(area, index, {nonce: getNonce()});
-  }
+  // await contracts[9].setArea(area, {});
 }
+  
+
 async function setEnemies(area) {
-  for(let index = 0; index < 20; index++) {
-    await contracts[9].setEnemies(area, {nonce: getNonce()});
-  }
+    if (area < 2056) {
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    } else if (area < (2056+1028)) {
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+    } else {
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    }
+}
+async function setGuards(area) {
+    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    if (area % 32 === 0) {
+      await contracts[9].setNPCs(area, 4, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setNPCs(area, 4, {gasLimit: Math.floor(5429212 * 1.25)});
+    }
+    if (area % 64 === 0) {
+      await contracts[9].setNPCs(area, 5, {gasLimit: Math.floor(5429212 * 1.25)});
+    }
 }
 async function setNPCs(area) {
-  for(let index = 0; index < 5; index++) {
-    await contracts[9].setNPCs(area, {nonce: getNonce()});
+  await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+  if (area % 32 === 0) {
+    const nonce =  getNonce();
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+  } else if (area % 64 === 0) {
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+  } else if (area % 128 === 0) {
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
   }
 }
-// areas = [1];
-areas = [4092];
 
-async function main(areas = this.areas) {
+areas = [0, 1, 2, 3, 64, 4096, 4092, 4032, 4033, 4034];
+
+async function main() {
   await deploy();
   await getAccounts();
-  for (let index = 0; index < this.areas.length; index++) {
-    await setAreaFull(this.areas[index]);
-    areas.pop();
+  
+  // console.log(await accounts[0].estimateGas(await contracts[9].setNPCs(0, 2, {})));
+  for(let index = 0; index < 1; index++) {
+    await setAreaFull(areas[index]);
+    // areas.splice(index);
+    // console.log(accounts[0]);
   }
 }
 
 async function setAreaFull(area) {
-  await setArea(area);
-  await setEnemies(area);
-  await setNPCs(area);
+  await setArea(area).then(async after => {
+    await setGuards(area).then(async after => {
+      await setEnemies(area).then(async after => {
+        await setNPCs(area);
+      });
+    });
+  });
 }
 
 main()
   .then(() => {
-    process.exit(0);
+    if (areas.length === 0) {
+      process.exit(0);
+    }
   })
   .catch((error) => {
     console.error(error);
-    // process.exit(1); // keep running the script!
-    // main(this.areas);
+    process.exit(1);
   });
   

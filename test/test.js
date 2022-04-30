@@ -66,6 +66,9 @@ let equipment = [
 async function getAccounts() {
   const accounts = await hre.ethers.getSigners();
   address = accounts[0].address;
+  for(let index = 0; index < accounts.length; index++) {
+    console.log(accounts[index].address);
+  }
 }
 
 async function deploy() {
@@ -82,10 +85,12 @@ async function deploy() {
     await hre.ethers.getContractFactory("Expansion0Master"),
     await hre.ethers.getContractFactory("ERC42069DataHelper"),
     await hre.ethers.getContractFactory("NameGenerator"),
+    await hre.ethers.getContractFactory("MintMaster")
   ];
   args = [
     ["Pixel Credits", "CREDITS", dataContract.address],
     ["Pixel Asset", "PIXEL", dataContract.address],
+    [dataContract.address],
     [dataContract.address],
     [dataContract.address],
     [dataContract.address],
@@ -103,7 +108,8 @@ async function deploy() {
     await factories[5].deploy(...args[5]),
     await factories[6].deploy(...args[6]),
     await factories[7].deploy(...args[7]),
-    await factories[8].deploy(...args[8])
+    await factories[8].deploy(...args[8]),
+    await factories[9].deploy(...args[9])
   ];
 }
 
@@ -161,8 +167,8 @@ async function setGameSettings() {
   await dataContract.setGS("BUILDINGCOST", 10000);
   await dataContract.setGS("EXPANDBUILDINGCOST", 5000);
   await dataContract.setGS("CITYBLOCKROWSIZE", 16);
-  await dataContract.setGS("AREASIZE", (16 * 16));
-  await dataContract.setGS("MAXAREAS", 4096);
+  await dataContract.setGS("REGIONSIZE", (16 * 16));
+  await dataContract.setGS("NUMBEROFREGIONS", 4096);
 }
 
 async function setConsumableType() {
@@ -178,11 +184,6 @@ async function setConsumableType() {
 }
 
 async function setWorld() {
-  await setFreeCharacters();
-  await setNPCs();
-  await setEnemies();
-  await setBuildings();
-  await setFreeItems();
 }
 
 async function setFreeCharacters() {
@@ -228,13 +229,13 @@ async function setupGame() {
 describe("PixelRPG", async function () {
   it("Should set up all contracts and variables", async function () {
     await setupGame().then(async(data) => {
-      
+      await contracts[9].setArea();
     });
   });
-  it("Should equip item #16 in item slot #6 to NFT #1", async function () {
-    console.log(await dataContract.getGD("GENERAL", 16, "DNA"));
-    console.log(await dataContract.getGD("GENERAL", 17, "DNA"));
-    let equipTX = await contracts[5].equip(6, 16, 1);
-    equipTX.wait();
-  });
+  // it("Should equip item #16 in item slot #6 to NFT #1", async function () {
+  //   console.log(await dataContract.getGD("GENERAL", 16, "DNA"));
+  //   console.log(await dataContract.getGD("GENERAL", 17, "DNA"));
+  //   let equipTX = await contracts[5].equip(6, 16, 1);
+  //   equipTX.wait();
+  // });
 });
