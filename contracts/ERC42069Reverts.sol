@@ -92,9 +92,9 @@ contract ERC42069Reverts {
         uint256 _buildingNFTID,
         uint256 _location
     ) external view {
-        if (_location >= GG("BUILDING", _buildingNFTID, "SIZE")) {
+        if (_location >= GG("LOT", _buildingNFTID, "SIZE")) {
             revert GreaterThanBuildingSize({
-                _size: GG("BUILDING", _buildingNFTID, "SIZE"),
+                _size: GG("LOT", _buildingNFTID, "SIZE"),
                 _location: _location
             });
         }
