@@ -171,9 +171,9 @@ contract ERC42069DataHelper {
         uint256 _NFTID
     ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
         return (
-            getGD("LOT", _NFTID, "SIZE"),
-            getGD("LOT", _NFTID, "STORIES"),
-            getGD("LOT", _NFTID, "LOCATION"),
+            getGD("BUILDING", _NFTID, "SIZE"),
+            getGD("BUILDING", _NFTID, "STORIES"),
+            getGD("BUILDING", _NFTID, "LOCATION"),
             getGD("GENERAL", _NFTID, "DNA"),
             getGD("GENERAL", _NFTID, "TYPE"),
             getGD("GENERAL", _NFTID, "AREA")

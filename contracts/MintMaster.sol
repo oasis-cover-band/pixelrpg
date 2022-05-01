@@ -169,12 +169,12 @@ contract MintMaster is IERC721Receiver {
         }
             if (areas == 4096 || areas == 0 || areas == 1 || areas == 2 || areas == 4096 || areas == 4092 || areas == 4095) {
                 uint256 NFTID = internalGenerateBuilding(areas, 0, 1);
-                SG("LOT", NFTID, "SIZE", GG("LOT", NFTID, "SIZE") + 3);
+                SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 3);
                 SG("WORLD", GG("GENERAL", NFTID, "AREA"), "1", NFTID);
                 SG("WORLD", GG("GENERAL", NFTID, "AREA"), "16", NFTID);
                 SG("WORLD", GG("GENERAL", NFTID, "AREA"), "17", NFTID);
                 NFTID = internalGenerateBuilding(areas, 2, 1);
-                SG("LOT", NFTID, "SIZE", GG("LOT", NFTID, "SIZE") + 1);
+                SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
                 SG("WORLD", GG("GENERAL", NFTID, "AREA"), "3", NFTID);
             }
     }

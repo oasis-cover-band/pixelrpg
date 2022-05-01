@@ -222,7 +222,7 @@ contract ERC42069Helper {
         SG("CONSUMABLE", _consumableNFTID, "AMOUNT", 0);
     }
 
-    function createNewLot(
+    function createNewBuilding(
         uint256 _area,
         string memory _location,
         uint256 _locationUint,
@@ -230,17 +230,12 @@ contract ERC42069Helper {
     ) external returns (uint256) {
         addressCheck(msg.sender);
         uint256 r = dr() + _createdNFTID;
-        SG("LOT", _createdNFTID, "LOCATION", _locationUint);
-        // SG("LOT", _createdNFTID, "0", 0);
+        SG("BUILDING", _createdNFTID, "SIZE", 1);
+        SG("BUILDING", _createdNFTID, "STORIES", 1);
+        SG("BUILDING", _createdNFTID, "LOCATION", _locationUint);
+        // SG("BUILDING", _createdNFTID, "0", 0);
         setBasics(r, 5, 0, _area, _createdNFTID);
         SG("WORLD", _area, _location, _createdNFTID);
-        return _createdNFTID;
-    }
-
-    function createNewBuilding(
-        uint256 _createdNFTID
-    ) external returns (uint256) {
-        SG("LOT", _createdNFTID, "BUILDING", 1);
         return _createdNFTID;
     }
     
@@ -251,9 +246,9 @@ contract ERC42069Helper {
     ) external {
         addressCheck(msg.sender);
         if (_up > 0) {
-            SG("LOT", _NFTID, "STORIES", GG("LOT", _NFTID, "STORIES") + 1);
+            SG("BUILDING", _NFTID, "STORIES", GG("BUILDING", _NFTID, "STORIES") + 1);
         } else {
-            SG("LOT", _NFTID, "SIZE", GG("LOT", _NFTID, "SIZE") + 1);
+            SG("BUILDING", _NFTID, "SIZE", GG("BUILDING", _NFTID, "SIZE") + 1);
             SG("WORLD", GG("GENERAL", _NFTID, "AREA"), _location, _NFTID);
         }
     }
@@ -265,11 +260,11 @@ contract ERC42069Helper {
     ) external returns (uint256) {
         addressCheck(msg.sender);
         uint256 producableNFTID = 0;
-        if (GG("LOT", _NFTID, _location) != 0) {
+        if (GG("BUILDING", _NFTID, _location) != 0) {
             producableNFTID = internalRetrieveFromBuilding(_location, _buildingNFTID);
         }
         SG("PRODUCABLE", _NFTID, "PLACEDIN", _buildingNFTID);
-        SG("LOT", _buildingNFTID, _location, _NFTID);
+        SG("BUILDING", _buildingNFTID, _location, _NFTID);
         return producableNFTID;
     }
     
@@ -285,9 +280,9 @@ contract ERC42069Helper {
         string memory _location,
         uint256 _NFTID
     ) internal returns (uint256) {
-        uint256 producableNFTID = GG("LOT", _NFTID, _location);
+        uint256 producableNFTID = GG("BUILDING", _NFTID, _location);
         SG("PRODUCABLE", producableNFTID, "PLACEDIN", 0);
-        SG("LOT", _NFTID, _location, 0);
+        SG("BUILDING", _NFTID, _location, 0);
         return producableNFTID;
     }
     
