@@ -152,6 +152,7 @@ contract MintMaster is IERC721Receiver {
     ERC42069DataI d;
     uint256[] equipmentIDs = new uint256[](9);
     mapping(uint256 => mapping(uint256 => bool)) filledAreas;
+    uint256 placedBuildings = 0;
     uint256 placedEnemies = 0;
     uint256 placedNPCs = 0;
     constructor(
@@ -160,29 +161,41 @@ contract MintMaster is IERC721Receiver {
         d = ERC42069DataI(_dataAddress);
     }
 
-    function setArea(uint256 areas) external {
+    function setArea(uint256 areas, uint256 _location, uint256 _big, uint256 _long, uint256 _business) external {
         addressCheck(AA("SETUP"), msg.sender);
         require(areas < GS("NUMBEROFREGIONS"));
         if (ERC42069I(AA("ERC42069")).count() == 1) {
             uint256 NFTID = internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
             ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(NFTID, 1000000 * 100);
         }
-            if (areas == 4096 || areas == 0 || areas == 1 || areas == 2 || areas == 4096 || areas == 4092 || areas == 4095) {
-                uint256 NFTID = internalGenerateBuilding(areas, 0, 1);
-                SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 3);
-                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "1", NFTID);
-                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "16", NFTID);
-                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "17", NFTID);
-                NFTID = internalGenerateBuilding(areas, 2, 1);
-                SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
-                SG("WORLD", GG("GENERAL", NFTID, "AREA"), "3", NFTID);
+            if (placedBuildings < 100) {
+                uint256 NFTID = internalGenerateBuilding(areas, _location, 1);
+                if (_business > 0) {
+                    SG("BUILDING", NFTID, "BUSINESS", _business);
+                }
+                if (_big > 0) {
+                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
+                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + 1), NFTID);
+                }
+                if (_big > 0 && _long > 0) {
+                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
+                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + GS("CITYBLOCKROWSIZE")), NFTID);
+                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
+                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + GS("CITYBLOCKROWSIZE") + 1), NFTID);
+                } else if (_long > 0) {
+                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
+                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + GS("CITYBLOCKROWSIZE")), NFTID);
+                }
+                placedBuildings++;
             }
     }
+    
 
-    function setEnemies(uint256 _area, uint256 _species) external {
+    function setEnemies(uint256 _area, uint256 _species, uint256 _evolution) external {
         addressCheck(AA("SETUP"), msg.sender);
         if (placedEnemies < 32768) {
-            internalGenerateCharacter(d.r() % (_area + 1), _species, 2, _area, 0x000000000000000000000000000000000000dEaD);
+            uint256 NFTID = internalGenerateCharacter(d.r() % (_area + 1), _species, 2, _area, 0x000000000000000000000000000000000000dEaD);
+            SG("CHARACTER", NFTID, "EVOLUTION", _evolution);
             placedEnemies++;
         }
     }

@@ -2094,8 +2094,8 @@ async function setGameSettings() {
   await dataContract.setGS("PRODUCTIONCOST", 2500, {nonce: getNonce()});
   await dataContract.setGS("BUILDINGCOST", 10000, {nonce: getNonce()});
   await dataContract.setGS("EXPANDBUILDINGCOST", 5000, {nonce: getNonce()});
-  await dataContract.setGS("CITYBLOCKROWSIZE", 16, {nonce: getNonce()});
-  await dataContract.setGS("REGIONSIZE", (16 * 16), {nonce: getNonce()});
+  await dataContract.setGS("CITYBLOCKROWSIZE", 5, {nonce: getNonce()});
+  await dataContract.setGS("REGIONSIZE", (5 * 5), {nonce: getNonce()});
   await dataContract.setGS("NUMBEROFREGIONS", 4096, {nonce: getNonce()});
   await dataContract.setGS("QUESTTIMER", 3600, {nonce: getNonce()});
   await dataContract.setGS("QUESTREWARD", 10, {nonce: getNonce()});

@@ -48,64 +48,64 @@ async function deploy() {
 }
 
 async function setArea(area) {
-  // await contracts[9].setArea(area, {});
+  // await contracts[9].setArea(area, 0, 1, 1, 1, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 3, 1, 1, 2, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 15, 1, 1, 3, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 18, 1, 1, 4, {gasLimit: Math.floor(8429212 * 1.25)});
 }
   
 
 async function setEnemies(area) {
-    if (area < 2056) {
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+    if (area === 0) {
+      await contracts[9].setEnemies(area, 1, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, 1, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 1, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+    } else if (area < 2056) {
+      await contracts[9].setEnemies(area, 1, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      if (area % 4 === 0) {
+      await contracts[9].setEnemies(area, 1, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
+      if (area % 8 === 0) {
+        await contracts[9].setEnemies(area, 1, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
     } else if (area < (2056+1028)) {
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 2, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 2, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      if (area % 4 === 0) {
+      await contracts[9].setEnemies(area, 2, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
+      if (area % 8 === 0) {
+        await contracts[9].setEnemies(area, 2, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
     } else {
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setEnemies(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      await contracts[9].setEnemies(area, 3, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      if (area % 4 === 0) {
+        await contracts[9].setEnemies(area, 3, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
+      if (area % 8 === 0) {
+        await contracts[9].setEnemies(area, 3, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
+      if (area % 16 === 0) {
+        await contracts[9].setEnemies(area, 3, 0, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
     }
 }
 async function setGuards(area) {
-    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+    if (area % 8 === 0) {
+      await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      if (area % 16 === 0) {
+        await contracts[9].setNPCs(area, 3, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
+    }
     if (area % 32 === 0) {
       await contracts[9].setNPCs(area, 4, {gasLimit: Math.floor(5429212 * 1.25)});
-      await contracts[9].setNPCs(area, 4, {gasLimit: Math.floor(5429212 * 1.25)});
+      if (area > 2056) {
+        await contracts[9].setNPCs(area, 4, {gasLimit: Math.floor(5429212 * 1.25)});
+      }
     }
     if (area % 64 === 0) {
       await contracts[9].setNPCs(area, 5, {gasLimit: Math.floor(5429212 * 1.25)});
@@ -118,20 +118,7 @@ async function setNPCs(area) {
     await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
   } else if (area % 64 === 0) {
     await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
   } else if (area % 128 === 0) {
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
     await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
   }
 }

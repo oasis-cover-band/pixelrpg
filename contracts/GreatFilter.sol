@@ -112,6 +112,12 @@ interface MintMasterI {
 }
 interface GameMasterI {
 
+    function expandBuilding(
+        uint256 _NFTID,
+        uint256 _location,
+        uint256 _up
+    ) external;
+
     function evolve(
         uint256 _NFTID
     ) external;
@@ -307,6 +313,23 @@ contract GreatFilter {
         addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         giveFightReward(_NFT0ID, _NFT1ID);
         E0M().captureEnemy(_NFT0ID, _NFT1ID);
+    }
+
+    function turnIntoBusiness(
+        uint256 _NFTID,
+        uint256 _business
+    ) external {
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
+        SG("BUILDING", _NFTID, "BUSINESS", _business);
+    }
+
+    function expandBuilding(
+        uint256 _NFTID,
+        uint256 _location,
+        uint256 _up
+    ) external {
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
+        GM().expandBuilding(_NFTID, _location, _up);
     }
 
     function giveQuestReward(

@@ -135,7 +135,13 @@ contract ERC42069Reverts {
         uint256 _area,
         uint256 _location
     ) external view {
-        if (GG("WORLD", _area, d.n2s(_location)) != 0) {
+        if (GG("WORLD", _area, d.n2s(_location)) != 0 ||
+        _location % 5 == 2 ||
+        _location == 10 ||
+        _location == 11 ||
+        _location == 12 ||
+        _location == 13 ||
+        _location == 14) {
             revert OccupiedWorldSpace({
                 _targetArea: _area,
                 _targetPlacementIndex: d.n2s(_location),
