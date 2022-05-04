@@ -48,10 +48,10 @@ async function deploy() {
 }
 
 async function setArea(area) {
-  // await contracts[9].setArea(area, 0, 1, 1, 1, {gasLimit: Math.floor(8429212 * 1.25)});
-  // await contracts[9].setArea(area, 3, 1, 1, 2, {gasLimit: Math.floor(8429212 * 1.25)});
-  // await contracts[9].setArea(area, 15, 1, 1, 3, {gasLimit: Math.floor(8429212 * 1.25)});
-  // await contracts[9].setArea(area, 18, 1, 1, 4, {gasLimit: Math.floor(8429212 * 1.25)});
+  await contracts[9].setArea(area, 0, 1, 1, 1, {gasLimit: Math.floor(8429212 * 1.25)});
+  await contracts[9].setArea(area, 3, 1, 1, 2, {gasLimit: Math.floor(8429212 * 1.25)});
+  await contracts[9].setArea(area, 15, 1, 1, 3, {gasLimit: Math.floor(8429212 * 1.25)});
+  await contracts[9].setArea(area, 18, 1, 1, 4, {gasLimit: Math.floor(8429212 * 1.25)});
 }
   
 

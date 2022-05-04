@@ -28,6 +28,7 @@ error InvalidEndBattleState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALT
 error InvalidFleeBattleState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
 error InvalidCaptureEnemyState(uint256 _NFT0ID, uint256 _NFT1ID, uint256 _NFT0HEALTH, uint256 _NFT1HEALTH, uint256 _NFT0BATTLEID, uint256 _NFT1BATTLEID);
 error InvalidQuest(uint256 _NFTID, uint256 _questID);
+error Unplaceable(uint256 _NFTID, uint256 _businessNFTID);
 
 interface ERC20CreditsI {
 
@@ -209,6 +210,23 @@ contract ERC42069Reverts {
                 _NFTID: _NFTID,
                 _variableName: _variableName,
                 _type: _type
+            });
+        }
+    }
+
+    function producableOrCharacterHasCompanionAndBusiness(
+        uint256 _NFTID,
+        uint256 _businessNFTID
+    ) external view {
+        if(GG("GENERAL", _NFTID, "TYPE") != 4 ||
+        (GG("GENERAL", _NFTID, "TYPE") != 0) ||
+        GG("GENERAL", _NFTID, "SPECIES") != 0 ||
+        GG("COMPANION", _NFTID, "0") != 0 ||
+        GG("BUILDING", _NFTID, "BUSINESS") == 0
+        ) {
+            revert Unplaceable({
+                _NFTID: _NFTID,
+                _businessNFTID: _businessNFTID
             });
         }
     }

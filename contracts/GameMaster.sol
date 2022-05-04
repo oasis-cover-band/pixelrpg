@@ -92,6 +92,11 @@ interface ERC42069DataI {
     function getGS(string memory _setting) external view returns (uint256);
 }
 interface ERC42069RevertsI {
+    
+    function producableOrCharacterHasCompanionAndBusiness(
+        uint256 _NFTID,
+        uint256 _businessNFTID
+    ) external view;
 
     function singleSpeciesCheck(
         uint256 _NFTID,
@@ -194,7 +199,8 @@ contract GameMaster {
         uint256 _buildingNFTID
     ) external {
         addressCheck(GF(), msg.sender);
-        typeCheck(_NFTID, "_NFTID", 4);
+        // typeCheck(_NFTID, "_NFTID", 4); OR typeCheck(_NFTID, "_NFTID", 0) AND SPECIES 0 AND THIS BUILDING IS A BUSINESS OR GYM
+        producableOrCharacterHasCompanionAndBusiness(_NFTID, _buildingNFTID);
         typeCheck(_buildingNFTID, "_BUILDINGNFTID", 5);
         maxBuildingSizeCheck(_buildingNFTID, _location);
         E().placeProducable(_NFTID, n2s(_location), _buildingNFTID);
@@ -544,6 +550,16 @@ contract GameMaster {
         string memory _value
     ) internal view {
         RV().companionCheck(_NFT0ID, _NFT1ID, _value);
+    }
+    
+    function producableOrCharacterHasCompanionAndBusiness(
+        uint256 _NFTID,
+        uint256 _businessNFTID
+    ) internal view {
+        RV().producableOrCharacterHasCompanionAndBusiness(
+            _NFTID,
+            _businessNFTID
+        );
     }
 
     function timerCheck(
