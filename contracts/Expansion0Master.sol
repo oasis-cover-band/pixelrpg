@@ -99,6 +99,16 @@ interface ERC42069I {
         uint256 _NFTID
     ) external returns (address);
 }
+interface MintMasterI {
+
+    function replaceCapturedOrKilledCharacter(
+        uint256 _level,
+        uint256 _species,
+        uint256 _special,
+        uint256 _area,
+        address _mintTo
+    ) external returns (uint256);
+}
 contract Expansion0Master {
     
     ERC42069DataI d;
@@ -274,19 +284,21 @@ contract Expansion0Master {
             _NFT1ID,
             ERC42069I(AA("ERC42069")).ownerOf(_NFT0ID)
         );
+        MintMasterI(AA("MINTMASTER")).replaceCapturedOrKilledCharacter(
+            d.r() % GS("MAXTOTALLEVEL") + 1,
+            d.r() % GS("MAXSPECIES") + 1,
+            GG("GENERAL", _NFT1ID, "SPECIAL"),
+            GG("GENERAL", _NFT1ID, "AREA"),
+            0x000000000000000000000000000000000000dEaD
+        );
     }
 
     function teachSpecial(
-        uint256 _NFT0ID,
-        uint256 _NFT1ID,
+        uint256 _NFTID,
         uint256 _skill
     ) external {
         addressCheck(AA("GREATFILTER"), msg.sender);
-        teachCheck(_NFT0ID, _NFT1ID, _skill);
-        if (_skill < GS("MAXSPECIALS")) {
-            SG("CHARACTER", _NFT0ID, d.n2s(_skill + 42069), GG("CHARACTER", _NFT0ID, d.n2s(_skill + 42069)) + 1);
-            SG("CHARACTER", _NFT1ID, "LASTTAUGHT", _NFT0ID);
-        }
+        SG("CHARACTER", _NFTID, d.n2s(_skill + 42069), GG("CHARACTER", _NFTID, d.n2s(_skill + 42069)) + 1);
     }
 
     function startQuest(

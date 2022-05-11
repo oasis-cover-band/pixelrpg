@@ -78,6 +78,7 @@ contract ERC42069Helper {
         SG("CHARACTER", _createdNFTID, "PARENT0", _NFT0ID);
         SG("CHARACTER", _createdNFTID, "PARENT1", _NFT1ID);
         setCharacter(1, GG("CHARACTER", _NFT0ID, "SPECIES"), 0,  GG("CHARACTER", _NFT0ID, "AREA"), _createdNFTID);
+        SG("CHARACTER", _createdNFTID, "DNA", GG("GENERAL", _NFT1ID, "DNA"));
     }
 
     function mergeTwoCharacters(
@@ -220,70 +221,6 @@ contract ERC42069Helper {
         addressCheck(msg.sender);
         SG("INVENTORY", _NFTID, d.n2s(GG("CONSUMABLE", _consumableNFTID, "TYPE")), GG("INVENTORY", _NFTID, d.n2s(GG("CONSUMABLE", _consumableNFTID, "TYPE"))) + GG("CONSUMABLE", _consumableNFTID, "AMOUNT"));
         SG("CONSUMABLE", _consumableNFTID, "AMOUNT", 0);
-    }
-
-    function createNewBuilding(
-        uint256 _area,
-        string memory _location,
-        uint256 _locationUint,
-        uint256 _createdNFTID
-    ) external returns (uint256) {
-        addressCheck(msg.sender);
-        uint256 r = dr() + _createdNFTID;
-        SG("BUILDING", _createdNFTID, "SIZE", 1);
-        SG("BUILDING", _createdNFTID, "STORIES", 1);
-        SG("BUILDING", _createdNFTID, "LOCATION", _locationUint);
-        // SG("BUILDING", _createdNFTID, "0", 0);
-        setBasics(r, 5, 0, _area, _createdNFTID);
-        SG("WORLD", _area, _location, _createdNFTID);
-        return _createdNFTID;
-    }
-    
-    function expandBuilding(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _up
-    ) external {
-        addressCheck(msg.sender);
-        if (_up > 0) {
-            SG("BUILDING", _NFTID, "STORIES", GG("BUILDING", _NFTID, "STORIES") + 1);
-        } else {
-            SG("BUILDING", _NFTID, "SIZE", GG("BUILDING", _NFTID, "SIZE") + 1);
-            SG("WORLD", GG("GENERAL", _NFTID, "AREA"), _location, _NFTID);
-        }
-    }
-    
-    function placeProducable(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _buildingNFTID
-    ) external returns (uint256) {
-        addressCheck(msg.sender);
-        uint256 producableNFTID = 0;
-        if (GG("BUILDING", _NFTID, _location) != 0) {
-            producableNFTID = internalRetrieveFromBuilding(_location, _buildingNFTID);
-        }
-        SG("PRODUCABLE", _NFTID, "PLACEDIN", _buildingNFTID);
-        SG("BUILDING", _buildingNFTID, _location, _NFTID);
-        return producableNFTID;
-    }
-    
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external returns (uint256) {
-        addressCheck(msg.sender);
-        return internalRetrieveFromBuilding(_location, _NFTID);
-    }
-    
-    function internalRetrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) internal returns (uint256) {
-        uint256 producableNFTID = GG("BUILDING", _NFTID, _location);
-        SG("PRODUCABLE", producableNFTID, "PLACEDIN", 0);
-        SG("BUILDING", _NFTID, _location, 0);
-        return producableNFTID;
     }
     
     function consume(

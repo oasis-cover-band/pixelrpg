@@ -39,23 +39,6 @@ interface ERC42069DataI {
 }
 interface ERC42069HelperI {
     
-    function placeProducable(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _buildingNFTID
-    ) external returns (uint256);
-
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external returns (uint256);
-
-    function expandBuilding(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _up
-    ) external;
-    
     function consume(
         uint256 _NFTID,
         uint256 _consumingNFTID,
@@ -119,13 +102,6 @@ interface ERC42069HelperI {
         uint256 _NFTID,
         uint256 _consumableNFTID
     ) external;
-
-    function createNewBuilding(
-        uint256 _area,
-        string memory _location,
-        uint256 _locationUint,
-        uint256 _createdNFTID
-    ) external;
 }
 interface ERC42069RevertsI {
 
@@ -163,28 +139,6 @@ contract ERC42069 is ERC721 {
     
     function exists(uint256 tokenId) external view virtual returns (bool) {
         return _exists(tokenId);
-    }
-
-
-    function placeProducable(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _buildingNFTID
-    ) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
-        uint256 producableNFTID = ERC42069HelperI(AA("ERC42069HELPER")).placeProducable(_NFTID, _location, _buildingNFTID);
-        if(producableNFTID > 0) {
-            internalGameTransfer(producableNFTID, ownerOf(_buildingNFTID));
-        }
-        internalGameTransfer(_NFTID, address(this));
-    }
-
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
-        internalGameTransfer(ERC42069HelperI(AA("ERC42069HELPER")).retrieveFromBuilding(_location, _NFTID), ownerOf(_NFTID));
     }
     
     function consume(
@@ -392,42 +346,6 @@ contract ERC42069 is ERC721 {
             _consumableNFTID
         );
         console.log("Destroyed ERC42069 Token (Consumable): AMOUNT:'%s' SentNFTID:'%s' ID:'%s'", GG("CONSUMABLE", _consumableNFTID, "AMOUNT"), _NFTID, _consumableNFTID);
-    }
-
-    function createNewBuilding(
-        uint256 _area,
-        string memory _location,
-        uint256 _locationUint,
-        uint256 _NFTID
-    ) external returns (uint256) {
-        addressCheck(AA("MINTMASTER"), msg.sender);
-        uint256 c = count;
-        ERC42069HelperI(AA("ERC42069HELPER")).createNewBuilding(
-            _area,
-            _location,
-            
-            _locationUint,
-            c
-        );
-        _safeMint(ownerOf(_NFTID), c);
-        count = c + 1;
-        console.log("Created ERC42069 Token (Building): Sent:'%s' SentNFTID:'%s' ID:'%s'", ownerOf(_NFTID), _NFTID, c);
-        console.log("Building '%s' placed in Area '%s' Location '%s'", c, _area, _location);
-        return c;
-    }
-
-    function expandBuilding(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _up
-    ) external {
-        addressCheck(AA("GAMEMASTER"), msg.sender);
-        ERC42069HelperI(AA("ERC42069HELPER")).expandBuilding(
-        _NFTID,
-        _location,
-        _up
-        );
-        console.log("Expanded ERC42069 Token (Building): ID:'%s' INDEX:'%s' UP?:'%s'", _NFTID, _location, _up);
     }
 
     function AA(

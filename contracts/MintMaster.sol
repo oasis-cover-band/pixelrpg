@@ -55,15 +55,7 @@ interface ERC42069I {
 
     function ownerOf(
         uint256 _NFTID
-    ) external returns (address); 
-
-    function createNewBuilding(
-        uint256 _area,
-        string memory _location,
-        uint256 _locationUint,
-        uint256 _NFTID
-    ) external returns (uint256);
-
+    ) external returns (address);
     function createNewConsumable(
         uint256 _amount,
         string memory _producableProductionType,
@@ -161,36 +153,6 @@ contract MintMaster is IERC721Receiver {
         d = ERC42069DataI(_dataAddress);
     }
 
-    function setArea(uint256 areas, uint256 _location, uint256 _big, uint256 _long, uint256 _business) external {
-        addressCheck(AA("SETUP"), msg.sender);
-        require(areas < GS("NUMBEROFREGIONS"));
-        if (ERC42069I(AA("ERC42069")).count() == 1) {
-            uint256 NFTID = internalGenerateEquippedCharacter(10, 1, 0, msg.sender);
-            ERC20CreditsI(AA("ERC20CREDITS")).mintCoins(NFTID, 1000000 * 100);
-        }
-            if (placedBuildings < 100) {
-                uint256 NFTID = internalGenerateBuilding(areas, _location, 1);
-                if (_business > 0) {
-                    SG("BUILDING", NFTID, "BUSINESS", _business);
-                }
-                if (_big > 0) {
-                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
-                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + 1), NFTID);
-                }
-                if (_big > 0 && _long > 0) {
-                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
-                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + GS("CITYBLOCKROWSIZE")), NFTID);
-                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
-                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + GS("CITYBLOCKROWSIZE") + 1), NFTID);
-                } else if (_long > 0) {
-                    SG("BUILDING", NFTID, "SIZE", GG("BUILDING", NFTID, "SIZE") + 1);
-                    SG("WORLD", GG("GENERAL", NFTID, "AREA"), d.n2s(_location + GS("CITYBLOCKROWSIZE")), NFTID);
-                }
-                placedBuildings++;
-            }
-    }
-    
-
     function setEnemies(uint256 _area, uint256 _species, uint256 _evolution) external {
         addressCheck(AA("SETUP"), msg.sender);
         if (placedEnemies < 32768) {
@@ -208,10 +170,10 @@ contract MintMaster is IERC721Receiver {
         }
     }
 
-    function takeCredits(uint256 _NFTID, string memory _costs) internal {
-        balanceCheck(E().ownerOf(_NFTID), GS(_costs));
-        ERC20CreditsI(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (GS(_costs) / 4));
-        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(E().ownerOf(_NFTID), AA("TREASURY"), GS(_costs) / 4);
+    function takeCredits(uint256 _NFTID, uint256 _costs) internal {
+        balanceCheck(E().ownerOf(_NFTID), _costs);
+        ERC20CreditsI(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (_costs / 4));
+        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(E().ownerOf(_NFTID), AA("TREASURY"), _costs / 4);
     }
 
     function generateCharacter(
@@ -365,16 +327,6 @@ contract MintMaster is IERC721Receiver {
         return E().createNewEquippable(_level, _itemSlot, _NFTID);
     }
 
-    function internalGenerateBuilding(
-        uint256 _area,
-        uint256 _location,
-        uint256 _NFTID
-    ) internal returns (uint256) {
-        worldSpaceOccupancyCheck(_area, _location);
-        maxAreaSizeCheck(_location);
-        return E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
-    }
-
     function replaceCapturedOrKilledCharacter(
         uint256 _level,
         uint256 _species,
@@ -420,7 +372,7 @@ contract MintMaster is IERC721Receiver {
     ) external returns (uint256) {
         addressCheck(GFA(), msg.sender);
         stateCheck(_NFTID, 0);
-        takeCredits(_NFTID, "PRODUCABLECOST");
+        takeCredits(_NFTID, GS("PRODUCABLECOST"));
         return E().createNewProducable(_level, _produces, _NFTID);
     }
     
@@ -432,23 +384,10 @@ contract MintMaster is IERC721Receiver {
         addressCheck(GFA(), msg.sender);
         stateCheck(_NFTID, 0);
         RV().itemSlotCheck(_itemSlot);
-        takeCredits(_NFTID, "EQUIPPABLECOST");
+        takeCredits(_NFTID, GS("EQUIPPABLECOST"));
         return E().createNewEquippable(_level, _itemSlot, _NFTID);
     }
 
-    function newBuilding(
-        uint256 _area,
-        uint256 _location,
-        uint256 _NFTID
-    ) external returns (uint256) {
-        addressCheck(GFA(), msg.sender);
-        stateCheck(_NFTID, 0);
-        worldSpaceOccupancyCheck(_area, _location);
-        maxAreaSizeCheck(_location);
-        takeCredits(_NFTID, "BUILDINGCOST");
-        return E().createNewBuilding(_area, n2s(_location), _location, _NFTID);
-    }
-    
     function destroyConsumable(
         uint256 _NFTID,
         uint256 _consumableNFTID

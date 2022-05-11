@@ -42,7 +42,6 @@ interface Expansion0MasterI {
 
     function teachSpecial(
         uint256 _NFT0ID,
-        uint256 _NFT1ID,
         uint256 _skill
     ) external;
 
@@ -111,12 +110,7 @@ interface MintMasterI {
     ) external returns (uint256);
 }
 interface GameMasterI {
-
-    function expandBuilding(
-        uint256 _NFTID,
-        uint256 _location,
-        uint256 _up
-    ) external;
+    function takeCredits(uint256 _NFTID, uint256 _costs) external;
 
     function evolve(
         uint256 _NFTID
@@ -138,16 +132,6 @@ interface GameMasterI {
         address _mintTo
     ) external returns (uint256);
     
-    function placeProducable(
-        uint256 _NFTID,
-        uint256 _location,
-        uint256 _buildingNFTID
-    ) external;
-
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external;
 
     function giveStat(
         uint256 _NFTID,
@@ -178,11 +162,6 @@ interface GameMasterI {
     function unequip(
         uint256 _equipSlot,
         uint256 _NFTID
-    ) external;
-
-    function produce(
-        uint256 _NFTID,
-        uint256 _producableNFTID
     ) external;
 }
 interface ERC42069DataI {
@@ -251,15 +230,6 @@ contract GreatFilter {
         E0M().finishQuest(_NFTID, _questID);
     }
 
-    function teachSpecial(
-        uint256 _NFT0ID,
-        uint256 _NFT1ID,
-        uint256 _skill
-    ) external {
-        addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        E0M().teachSpecial(_NFT0ID, _NFT1ID, _skill);
-    }
-
     function attackEnemy(
         uint256 _NFT0ID,
         uint256 _NFT1ID
@@ -311,25 +281,17 @@ contract GreatFilter {
         uint256 _NFT1ID
     ) external {
         addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
-        giveFightReward(_NFT0ID, _NFT1ID);
         E0M().captureEnemy(_NFT0ID, _NFT1ID);
     }
-
-    function turnIntoBusiness(
+    
+    function buyPotion(
         uint256 _NFTID,
-        uint256 _business
+        uint256 _produces,
+        uint256 _amount
     ) external {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
-        SG("BUILDING", _NFTID, "BUSINESS", _business);
-    }
-
-    function expandBuilding(
-        uint256 _NFTID,
-        uint256 _location,
-        uint256 _up
-    ) external {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
-        GM().expandBuilding(_NFTID, _location, _up);
+        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT0");
+        MM().generateConsumable(_amount, _produces, _NFTID);
+        GM().takeCredits(_NFTID, _produces * _amount);
     }
 
     function giveQuestReward(
@@ -348,45 +310,60 @@ contract GreatFilter {
                 _level = 10;
             } else if (_modifier >= 499900) {
                 _level = 9;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 499500) {
                 _level = 8;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 499000) {
                 _level = 7;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 498000) {
                 _level = 6;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 497000) {
                 _level = 5;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 496000) {
                 _level = 4;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 495000) {
                 _level = 3;
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 494000) {
                 _level = 2;
-            } else if (_modifier > 490000) {
+                teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
+            } else if (_modifier > 480000) {
+                _level = 1;
+            } else if (_modifier > 470000) {
+                _level = 3;
+            } else if (_modifier > 460000) {
+                _level = 2;
+            } else if (_modifier > 450000) {
+                _level = 2;
+            } else if (_modifier > 440000) {
+                _level = 1;
+            } else if (_modifier > 430000) {
+                _level = 3;
+            } else if (_modifier > 420000) {
+                _level = 2;
+            } else if (_modifier > 410000) {
+                _level = 2;
+            } else if (_modifier > 400000) {
                 _level = 1;
             }
-            if ((_modifier + 758421) % 100 <= 15) {
-                    MM().generateConsumable((_level + 1) * 10, (_modifier + _questID) % 2, _NFTID);
+            if ((_modifier + 758421) % 100 <= 10) {
+                        MM().generateConsumable((_level + 1) * 2, _NFTID % 2, _NFTID);
                 emit RewardItem(
                         0,
                         2,
                         _level
                     );
-            } else if ((_modifier + 758421) % 100 <= 20 && GG("CHARACTER", _NFTID, "LEVEL") >= 33) {
+            } else if ((_modifier + 758421) % 100 <= 40 && GG("CHARACTER", _NFTID, "LEVEL") >= 3) {
                 emit RewardItem(
-                        MM().generateProducable(_level + 1, (_modifier + _questID) % 2, _NFTID),
-                        4,
-                        _level
-                    );
-            } else if ((_modifier + 758421) % 100 <= 22 && GG("CHARACTER", _NFTID, "LEVEL") >= 33) {
-                emit RewardItem(
-                        MM().generateProducable(_level + 1, (_modifier + _questID) % 6, _NFTID),
-                        4,
-                        _level
-                    );
-            } else if ((_modifier + 758421) % 100 <= 25 && GG("CHARACTER", _NFTID, "LEVEL") >= 66) {
-                emit RewardItem(
-                        MM().generateEquippable(_level + 1, (_modifier + _questID) % GS("MAXITEMSLOTS"), _NFTID),
+                        MM().generateEquippable(_level, _NFTID % GS("MAXITEMSLOTS"), _NFTID),
                         3,
                         _level
                     );
@@ -415,23 +392,51 @@ contract GreatFilter {
             uint256 _modifier = (d.r() + 94329432) % 500000;
             if (_modifier >= 499999) {
                 _level = 10;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier >= 499900) {
                 _level = 9;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 499500) {
                 _level = 8;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 499000) {
                 _level = 7;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 498000) {
                 _level = 6;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 497000) {
                 _level = 5;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 496000) {
                 _level = 4;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 495000) {
                 _level = 3;
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
             } else if (_modifier > 494000) {
                 _level = 2;
-            } else if (_modifier > 490000) {
+                teachSpecial(_NFT0ID, d.r() % GS("MAXSPECIALS"));
+            } else if (_modifier > 480000) {
+                _level = 1;
+            } else if (_modifier > 470000) {
+                _level = 3;
+            } else if (_modifier > 460000) {
+                _level = 2;
+            } else if (_modifier > 450000) {
+                _level = 2;
+            } else if (_modifier > 440000) {
+                _level = 1;
+            } else if (_modifier > 430000) {
+                _level = 3;
+            } else if (_modifier > 420000) {
+                _level = 2;
+            } else if (_modifier > 410000) {
+                _level = 2;
+            } else if (_modifier > 400000) {
                 _level = 1;
             }
             if ((_modifier + 758421) % 100 <= 10) {
@@ -441,19 +446,7 @@ contract GreatFilter {
                         2,
                         _level
                     );
-            } else if ((_modifier + 758421) % 100 <= 15 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 33) {
-                emit RewardItem(
-                        MM().generateProducable(_level, _NFT1ID % 2, _NFT0ID),
-                        4,
-                        _level
-                    );
-            } else if ((_modifier + 758421) % 100 <= 16 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 33) {
-                emit RewardItem(
-                        MM().generateProducable(_level, _NFT1ID % 6, _NFT0ID),
-                        4,
-                        _level
-                    );
-            } else if ((_modifier + 758421) % 100 <= 18 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 66) {
+            } else if ((_modifier + 758421) % 100 <= 18 && GG("CHARACTER", _NFT1ID, "LEVEL") >= 12) {
                 emit RewardItem(
                         MM().generateEquippable(_level, _NFT1ID % GS("MAXITEMSLOTS"), _NFT0ID),
                         3,
@@ -463,10 +456,18 @@ contract GreatFilter {
         }
     }
 
+    function teachSpecial(
+        uint256 _NFTID,
+        uint256 _skill
+    ) internal {
+        E0M().teachSpecial(_NFTID, _skill);
+    }
+
     function evolve(
         uint256 _NFTID
     ) external {
         addressCheck(ownerOf(_NFTID), msg.sender, "EVOLVE");
+        teachSpecial(_NFTID, d.r() % GS("MAXSPECIALS"));
         GM().evolve(_NFTID);
     }
 
@@ -477,24 +478,6 @@ contract GreatFilter {
         addressCheck(ownerOf(_NFT0ID), msg.sender, "OWNNFT0");
         addressCheck(ownerOf(_NFT1ID), msg.sender, "OWNNFT1");
         GM().setCompanion(_NFT0ID, _NFT1ID);
-    }
-    
-    function placeProducable(
-        uint256 _NFTID,
-        uint256 _location,
-        uint256 _buildingNFTID
-    ) external {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
-        addressCheck(ownerOf(_buildingNFTID), msg.sender, "OWNBUILDINGNFT");
-        GM().placeProducable(_NFTID, _location, _buildingNFTID);
-    }
-
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNNFT");
-        GM().retrieveFromBuilding(_location, _NFTID);
     }
 
     function consume(
@@ -569,61 +552,6 @@ contract GreatFilter {
         addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
         addressCheck(ownerOf(_consumableNFTID), msg.sender, "OWNTYPE2");
         GM().destroyConsumable(_NFTID, _consumableNFTID);
-    }
-
-    function produce(
-        uint256 _NFTID,
-        uint256 _producableNFTID
-    ) external {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        addressCheck(ownerOf(GG("PRODUCABLE", _producableNFTID, "PLACEDIN")), msg.sender, "OWNTYPE5");
-        GM().produce(
-            _NFTID,
-            _producableNFTID
-        );
-    }
-    
-    function buyProducable(
-        uint256 _produces,
-        uint256 _NFTID
-    ) external returns (uint256) {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        uint256 newNFTID = MM().newProducable(
-            2,
-            _produces,
-            _NFTID
-        );
-        emit NewNFT(newNFTID);
-        return newNFTID;
-    }
-    
-    function buyEquippable(
-        uint256 _itemSlot,
-        uint256 _NFTID
-    ) external returns (uint256) {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        uint256 newNFTID = MM().newEquippable(
-            2,
-            _itemSlot,
-            _NFTID
-        );
-        emit NewNFT(newNFTID);
-        return newNFTID;
-    }
-
-    function buyBuilding(
-        uint256 _area,
-        uint256 _location,
-        uint256 _NFTID
-    ) external returns (uint256) {
-        addressCheck(ownerOf(_NFTID), msg.sender, "OWNTYPE0");
-        uint256 newNFTID = MM().newBuilding(
-            _area,
-            _location,
-            _NFTID
-        );
-        emit NewNFT(newNFTID);
-        return newNFTID;
     }
     
     function equip(

@@ -9,23 +9,6 @@ interface ERC42069I {
         uint256 _NFTID
     ) external;
 
-    function placeProducable(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _buildingNFTID
-    ) external;
-
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external;
-
-    function expandBuilding(
-        uint256 _NFTID,
-        string memory _location,
-        uint256 _up
-    ) external;
-
     function consume(
         uint256 _NFTID,
         uint256 _consumingNFTID,
@@ -193,19 +176,6 @@ contract GameMaster {
         d = ERC42069DataI(_dataAddress);
     }
 
-    function placeProducable(
-        uint256 _NFTID,
-        uint256 _location,
-        uint256 _buildingNFTID
-    ) external {
-        addressCheck(GF(), msg.sender);
-        // typeCheck(_NFTID, "_NFTID", 4); OR typeCheck(_NFTID, "_NFTID", 0) AND SPECIES 0 AND THIS BUILDING IS A BUSINESS OR GYM
-        producableOrCharacterHasCompanionAndBusiness(_NFTID, _buildingNFTID);
-        typeCheck(_buildingNFTID, "_BUILDINGNFTID", 5);
-        maxBuildingSizeCheck(_buildingNFTID, _location);
-        E().placeProducable(_NFTID, n2s(_location), _buildingNFTID);
-    }
-
     function evolve(
         uint256 _NFTID
     ) external {
@@ -225,33 +195,6 @@ contract GameMaster {
         stateCheck(_NFT1ID, 0);
         companionCheck(_NFT0ID, _NFT1ID, "Invalid Species");
         SG("COMPANION", _NFT0ID, "0", _NFT1ID);
-    }
-
-    function retrieveFromBuilding(
-        string memory _location,
-        uint256 _NFTID
-    ) external {
-        addressCheck(GF(), msg.sender);
-        typeCheck(_NFTID, "_NFTID", 5);
-        E().retrieveFromBuilding(_location, _NFTID);
-    }
-
-    function expandBuilding(
-        uint256 _NFTID,
-        uint256 _location,
-        uint256 _up
-    ) external {
-        addressCheck(GF(), msg.sender);
-        typeCheck(_NFTID, "_NFTID", 5);
-        takeCredits(_NFTID, "EXPANDBUILDINGCOST");
-        worldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), _location);
-        maxAreaSizeCheck(_location);
-        borderingWorldSpaceOccupancyCheck(GG("GENERAL", _NFTID, "AREA"), n2s(_location), _NFTID);
-        E().expandBuilding(
-            _NFTID,
-            n2s(_location),
-            _up
-        );
     }
 
     function giveStat(
@@ -332,10 +275,11 @@ contract GameMaster {
         SG("CHARACTER", _NFTID, n2s(_equipSlot), _equipNFTID);
     }
 
-    function takeCredits(uint256 _NFTID, string memory _costs) internal {
-        balanceCheck(E().ownerOf(_NFTID), GS(_costs));
-        ERC20CreditsI(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (GS(_costs) / 4));
-        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(E().ownerOf(_NFTID), AA("TREASURY"), GS(_costs) / 4);
+    function takeCredits(uint256 _NFTID, uint256 _costs) external {
+        addressCheck(GF(), msg.sender);
+        balanceCheck(E().ownerOf(_NFTID), _costs);
+        ERC20CreditsI(AA("ERC20CREDITS")).burnCoins(_NFTID, 3 * (_costs) / 4);
+        ERC20CreditsI(AA("ERC20CREDITS")).gameTransferFrom(E().ownerOf(_NFTID), AA("TREASURY"), _costs / 4);
     }
 
     function unequip(
@@ -364,24 +308,6 @@ contract GameMaster {
         SG("CHARACTER", _NFTID, "CHARISMA", GG("CHARACTER", _NFTID, "CHARISMA") - GG("EQUIPPABLE", GG("CHARACTER", _NFTID, _equipSlot), "CHARISMABOOST"));
         
         SG("CHARACTER", _NFTID, _equipSlot, 0);
-    }
-    
-    function produce(
-        uint256 _NFTID,
-        uint256 _producableNFTID
-    ) external {
-        addressCheck(GF(), msg.sender);
-        typeCheck(_NFTID, "_NFTID", 0);
-        stateCheck(_NFTID, 0);
-        timerCheck(GG("PRODUCABLE", _producableNFTID, "NEXTPRODUCTION"), block.timestamp, "PRODUCE");
-        SG("PRODUCABLE", _producableNFTID, "NEXTPRODUCTION", block.timestamp + GS("PRODUCTIONRESET")); 
-        SG(
-            "INVENTORY",
-            _NFTID,
-            n2s(GG("PRODUCABLE", _producableNFTID, "PRODUCES")),
-            GG("INVENTORY", _NFTID, n2s(GG("PRODUCABLE", _producableNFTID, "PRODUCES")))
-            + d.r() % GG("PRODUCABLE", _producableNFTID, "PRODUCTION")
-        ); 
     }
 
     function consume(

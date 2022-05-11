@@ -167,19 +167,6 @@ contract ERC42069DataHelper {
         );
     }
 
-    function getBuildingInfo(
-        uint256 _NFTID
-    ) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
-        return (
-            getGD("BUILDING", _NFTID, "SIZE"),
-            getGD("BUILDING", _NFTID, "STORIES"),
-            getGD("BUILDING", _NFTID, "LOCATION"),
-            getGD("GENERAL", _NFTID, "DNA"),
-            getGD("GENERAL", _NFTID, "TYPE"),
-            getGD("GENERAL", _NFTID, "AREA")
-        );
-    }
-
     function getConsumableInfo(
         uint256 _NFTID
     ) external view returns (uint256, uint256, uint256, uint256) {

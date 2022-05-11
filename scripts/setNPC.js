@@ -9,7 +9,7 @@ let factories;
 let contracts;
 
 let baseNonce = 0;
-let nonceOffset = 119;
+let nonceOffset = 120;
 let accounts;
 function getNonce() {
 nonceOffset++;
@@ -48,10 +48,10 @@ async function deploy() {
 }
 
 async function setArea(area) {
-  await contracts[9].setArea(area, 0, 1, 1, 1, {gasLimit: Math.floor(8429212 * 1.25)});
-  await contracts[9].setArea(area, 3, 1, 1, 2, {gasLimit: Math.floor(8429212 * 1.25)});
-  await contracts[9].setArea(area, 15, 1, 1, 3, {gasLimit: Math.floor(8429212 * 1.25)});
-  await contracts[9].setArea(area, 18, 1, 1, 4, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 0, 1, 1, 1, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 3, 1, 1, 2, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 15, 1, 1, 3, {gasLimit: Math.floor(8429212 * 1.25)});
+  // await contracts[9].setArea(area, 18, 1, 1, 4, {gasLimit: Math.floor(8429212 * 1.25)});
 }
   
 
@@ -112,13 +112,8 @@ async function setGuards(area) {
     }
 }
 async function setNPCs(area) {
-  await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-  if (area % 32 === 0) {
+  if (area % 4 === 0) {
     const nonce =  getNonce();
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-  } else if (area % 64 === 0) {
-    await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
-  } else if (area % 128 === 0) {
     await contracts[9].setNPCs(area, 1, {gasLimit: Math.floor(5429212 * 1.25)});
   }
 }
@@ -130,7 +125,7 @@ async function main() {
   await getAccounts();
   
   // console.log(await accounts[0].estimateGas(await contracts[9].setNPCs(0, 2, {})));
-  for(let index = 0; index < 1; index++) {
+  for(let index = 0; index < 4096; index++) {
     await setAreaFull(areas[index]);
     // areas.splice(index);
     // console.log(accounts[0]);
@@ -138,12 +133,8 @@ async function main() {
 }
 
 async function setAreaFull(area) {
-  await setArea(area).then(async after => {
-    await setGuards(area).then(async after => {
-      await setEnemies(area).then(async after => {
-        await setNPCs(area);
-      });
-    });
+  await setGuards(area).then(async after => {
+      await setNPCs(area);
   });
 }
 

@@ -2100,6 +2100,7 @@ async function setGameSettings() {
   await dataContract.setGS("QUESTTIMER", 3600, {nonce: getNonce()});
   await dataContract.setGS("QUESTREWARD", 10, {nonce: getNonce()});
   await dataContract.setGS("MAXSPECIALS", 4, {nonce: getNonce()});
+  await dataContract.setGS("MAXSPECIES", 3, {nonce: getNonce()});
 }
 
 async function setSpecialAttackTypes() {
