@@ -130,8 +130,8 @@ async function main() {
   await getAccounts();
   
   // console.log(await accounts[0].estimateGas(await contracts[9].setNPCs(0, 2, {})));
-  for(let index = 0; index < 4096; index++) {
-    await setAreaFull(areas[index]);
+  for(let index = 2; index < 4096; index++) {
+    await setAreaFull(index);
     // areas.splice(index);
     // console.log(accounts[0]);
   }

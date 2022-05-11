@@ -60,7 +60,7 @@ contract ERC42069Data {
 
     function messWithSeed() internal {
         if (seed + (r() % 8008135) > 2**69 - 1) {
-            seed = 42069 + (r() / 40);
+            seed = 42069 + (r() % 80085);
         } else {
             seed = seed + (r() % 8008135);
         }
@@ -117,7 +117,7 @@ contract ERC42069Data {
         return aa[_name];
     }
     function r() public view returns (uint256) {
-        return 40 + (uint(keccak256(abi.encodePacked(seed, block.timestamp))) / 2);
+        return (uint(keccak256(abi.encodePacked(seed, block.timestamp))) / 2);
     }
     function n2s(
         uint _i

@@ -7,8 +7,9 @@ const ROPSTEN_ALCHEMY_URL = "https://eth-ropsten.alchemyapi.io/v2/EBbF5DnGDkdIJW
 const RINKEBY_ALCHEMY_URL = "https://eth-rinkeby.alchemyapi.io/v2/e102b787251011f89ebb8901ae93e455a53b26e4b633b3912244b42b72af1089";
 const MUMBAI_ALCHEMY_URL = "https://polygon-mumbai.g.alchemy.com/v2/BQ3IwNvNBPUlyt4K2L0TRj0ZjFzgg3ta";
 const RINKEBY_INFURA_URL = "https://rinkeby.infura.io/v3/21fc828c47394e7591eb60b4bc807d07";
-const PRIVATE_KEY = "da052c767b5bccbf1f76f7a73de53e3fc958c2e2636b85a188ef50b4f6b8ae3d";
+const PRIVATE_KEY = "6a1c3881731e235c3d17035060a009a12c4912905a79e56508dd87778e5943ea";
 const GANACHE_URL = 'http://127.0.0.1:7545';
+const TEVM_URL = "https://testnet.telos.net/evm";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -48,6 +49,12 @@ module.exports = {
     },
     ganache: {
       url: GANACHE_URL,
+      gasLimit: 6000000000,
+      defaultBalanceEther: 10,
+    },
+    tevm: {
+      url: TEVM_URL,
+      accounts: [PRIVATE_KEY, PRIVATE_KEY],
       gasLimit: 6000000000,
       defaultBalanceEther: 10,
     },
